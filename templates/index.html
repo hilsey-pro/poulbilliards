@@ -1,83 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hilsey Pro | AI Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #0f172a; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .sidebar-item { cursor: pointer; transition: 0.3s; }
-        .sidebar-item:hover { background: rgba(139, 92, 246, 0.3); border-radius: 8px; }
+        body { background: #0f172a; color: white; display: flex; height: 100vh; margin: 0; }
+        .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
+        .main { flex: 1; padding: 40px; overflow-y: auto; }
+        .btn-tool { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .btn-tool:hover { background: #4f46e5; }
+        .output-box { background: #1e293b; border: 1px solid #4f46e5; padding: 20px; border-radius: 10px; min-height: 200px; white-space: pre-wrap; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
-
-    <div class="w-72 glass p-6 flex flex-col gap-4 border-r border-gray-700">
-        <h1 class="text-2xl font-bold text-purple-400 mb-8 tracking-tight">HILSEY PRO</h1>
-        
-        <nav class="flex-1 space-y-2">
-            <p class="text-xs text-gray-500 uppercase font-bold mb-4">Professional Tools</p>
-            <div onclick="setMode('chat')" class="sidebar-item p-3 flex items-center gap-2">💬 AI Assistant</div>
-            <div onclick="setMode('cv')" class="sidebar-item p-3 flex items-center gap-2">📄 10 CV Templates</div>
-            <div onclick="setMode('proposal')" class="sidebar-item p-3 flex items-center gap-2">💼 Business Proposals</div>
-            <div onclick="setMode('report')" class="sidebar-item p-3 flex items-center gap-2">📊 Field Reports</div>
-            <div onclick="setMode('meeting')" class="sidebar-item p-3 flex items-center gap-2">📹 Meeting Minutes</div>
-        </nav>
-
-        <button onclick="clearChat()" class="bg-red-500/20 text-red-400 border border-red-500/50 p-2 rounded hover:bg-red-500 hover:text-white transition mt-auto">Clear Conversation</button>
+<body>
+    <div class="sidebar">
+        <h2 class="text-xl font-bold text-indigo-400 mb-8">HILSEY PRO</h2>
+        <div class="btn-tool" onclick="setType('CV')">📄 CV Generator</div>
+        <div class="btn-tool" onclick="setType('Proposal')">💼 Business Proposal</div>
+        <div class="btn-tool" onclick="setType('Report')">📊 Field Report</div>
     </div>
-
-    <div class="flex-1 flex flex-col p-8 bg-[#0b1120]">
-        <div id="display-area" class="flex-1 overflow-y-auto mb-6 space-y-4 pr-4">
-            <div class="glass p-6 rounded-2xl max-w-3xl border-l-4 border-purple-500">
-                <h2 class="text-xl font-bold mb-2">Welcome to your AI Suite</h2>
-                <p class="text-gray-300">I am ready to help you draft your CV, write proposals, or manage your reports. What should we start with?</p>
-            </div>
-        </div>
-
-        <div class="max-w-4xl mx-auto w-full glass p-2 rounded-2xl flex gap-4 items-center px-4 border border-gray-700 shadow-2xl">
-            <input id="user-input" type="text" placeholder="Tell me what you need..." class="bg-transparent flex-1 py-3 outline-none text-white">
-            <button onclick="sendMessage()" class="bg-purple-600 px-8 py-3 rounded-xl font-bold hover:bg-purple-500 shadow-lg shadow-purple-500/20 transition-all">Generate</button>
-        </div>
+    <div class="main">
+        <h1 id="tool-title" class="text-2xl font-bold mb-4">Select a Tool</h1>
+        <textarea id="userInput" class="w-full p-4 bg-gray-800 border border-gray-700 rounded mb-4" placeholder="Describe what you need..."></textarea>
+        <button onclick="askAI()" class="bg-indigo-600 px-6 py-2 rounded font-bold hover:bg-indigo-500">Generate with AI</button>
+        <div id="response" class="output-box mt-8">Your AI content will appear here...</div>
     </div>
 
     <script>
-        function setMode(mode) {
-            const area = document.getElementById('display-area');
-            const modes = {
-                'cv': 'Which CV style do you need? (Modern, Corporate, Creative, Executive, etc.)',
-                'proposal': 'Tell me the project name and I will draft a professional proposal.',
-                'report': 'Describe the field work and I will generate the report template.',
-                'meeting': 'Paste the meeting notes and I will summarize the minutes.'
-            };
-            area.innerHTML += `<div class="glass p-4 border-l-4 border-cyan-400 self-start animate-pulse"><b>Hilsey Pro:</b> ${modes[mode]}</div>`;
-            area.scrollTop = area.scrollHeight;
+        let currentType = "Document";
+        function setType(t) { 
+            currentType = t; 
+            document.getElementById('tool-title').innerText = t + " Mode";
         }
 
-        function clearChat() { document.getElementById('display-area').innerHTML = ''; }
-
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const area = document.getElementById('display-area');
-            if(!input.value) return;
-
-            area.innerHTML += `<div class="bg-purple-600/20 p-4 rounded-xl self-end text-right max-w-xl ml-auto border border-purple-500/30">${input.value}</div>`;
+        async function askAI() {
+            const msg = document.getElementById('userInput').value;
+            const resBox = document.getElementById('response');
+            resBox.innerText = "Processing...";
             
-            const message = input.value;
-            input.value = '';
-
-            const response = await fetch('/chat', {
+            const response = await fetch('/generate', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: message})
+                body: JSON.stringify({ type: currentType, message: msg })
             });
             const data = await response.json();
-            
-            area.innerHTML += `<div class="glass p-4 rounded-xl max-w-2xl border border-gray-700">${data.response}</div>`;
-            area.scrollTop = area.scrollHeight;
+            resBox.innerText = data.success ? data.content : "Error: " + data.error;
         }
     </script>
 </body>
