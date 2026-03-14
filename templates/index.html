@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hilsey Pro | AI Suite</title>
+    <title>Hilsey Pro | Student Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { background: #0f172a; color: white; display: flex; height: 100vh; margin: 0; }
         .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
         .main { flex: 1; padding: 40px; overflow-y: auto; }
-        .btn-tool { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
-        .btn-tool:hover { background: #4f46e5; }
-        .output-box { background: #1e293b; border: 1px solid #4f46e5; padding: 20px; border-radius: 10px; min-height: 200px; white-space: pre-wrap; }
+        .btn-sidebar { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; width: 100%; text-align: left; }
+        .btn-sidebar:hover { background: #4f46e5; }
+        #notepad { background: white; color: black; padding: 30px; border-radius: 4px; min-height: 500px; width: 100%; outline: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2 class="text-xl font-bold text-indigo-400 mb-8">HILSEY PRO</h2>
-        <div class="btn-tool" onclick="setType('CV')">📄 CV Generator</div>
-        <div class="btn-tool" onclick="setType('Proposal')">💼 Business Proposal</div>
-        <div class="btn-tool" onclick="setType('Report')">📊 Field Report</div>
+        <button class="btn-sidebar" onclick="alert('Working on it!')">📄 AI CV Gen</button>
+        <button class="btn-sidebar" onclick="location.reload()">✍️ New Draft</button>
+        <hr class="border-gray-700 my-4">
+        <button onclick="downloadPDF()" class="w-full bg-green-600 hover:bg-green-500 p-3 rounded font-bold">💾 Save as PDF</button>
     </div>
+
     <div class="main">
-        <h1 id="tool-title" class="text-2xl font-bold mb-4">Select a Tool</h1>
-        <textarea id="userInput" class="w-full p-4 bg-gray-800 border border-gray-700 rounded mb-4" placeholder="Describe what you need..."></textarea>
-        <button onclick="askAI()" class="bg-indigo-600 px-6 py-2 rounded font-bold hover:bg-indigo-500">Generate with AI</button>
-        <div id="response" class="output-box mt-8">Your AI content will appear here...</div>
+        <h1 class="text-2xl font-bold mb-4 text-gray-300">Assignment Draft Pad</h1>
+        <p class="text-sm text-gray-500 mb-4 italic">Type your work below. When finished, click "Save as PDF" on the left.</p>
+        
+        <div id="notepad" contenteditable="true">
+            <h2>Assignment Title: </h2>
+            <p>Start typing your work here...</p>
+        </div>
     </div>
 
     <script>
-        let currentType = "Document";
-        function setType(t) { 
-            currentType = t; 
-            document.getElementById('tool-title').innerText = t + " Mode";
-        }
+        function downloadPDF() {
+            const element = document.getElementById('notepad');
+            const opt = {
+                margin:       1,
+                filename:     'Hilsey_Pro_Assignment.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
 
-        async function askAI() {
-            const msg = document.getElementById('userInput').value;
-            const resBox = document.getElementById('response');
-            resBox.innerText = "Processing...";
-            
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ type: currentType, message: msg })
-            });
-            const data = await response.json();
-            resBox.innerText = data.success ? data.content : "Error: " + data.error;
+            // New Promise-based usage:
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>
