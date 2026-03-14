@@ -5,7 +5,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 # 🔑 Your Key is active here
-genai.configure(api_key="DOAQ5Q5SR6S62Q3ACWPZE7Z6NTH3ZMLF")
+genai.configure(api_key=AIzaSyA5RkM41g8DQP1FLs6cyb7S8Q7fVMTX4Ko)
 model = genai.GenerativeModel('gemini-pro')
 
 @app.route('/')
