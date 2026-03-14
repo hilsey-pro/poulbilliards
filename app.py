@@ -4,20 +4,21 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# 🔑 YOUR API KEY
+# 🔑 Your Key is active here
 genai.configure(api_key="DOAQ5Q5SR6S62Q3ACWPZE7Z6NTH3ZMLF")
 model = genai.GenerativeModel('gemini-pro')
 
 @app.route('/')
 def index():
+    # This line is the "Switch" that turns on the Dark Layout
     return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
         data = request.json
-        doc_type = data.get("type") # CV, Proposal, etc.
-        user_input = data.get("message")
+        doc_type = data.get("type", "Document")
+        user_input = data.get("message", "")
 
         prompt = f"You are Hilsey Pro. Create a professional {doc_type} based on: {user_input}"
         response = model.generate_content(prompt)
