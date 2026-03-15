@@ -18,17 +18,20 @@ def get_db_data():
         with open(DB_FILE, 'r') as f:
             try:
                 data = json.load(f)
-                if "users" not in data: data = {"users": data, "projects": []}
+                # Ensure the structure exists
+                if "users" not in data: data = {"users": data, "projects": [], "messages": []}
+                if "projects" not in data: data["projects"] = []
+                if "messages" not in data: data["messages"] = []
                 return data
             except:
-                return {"users": {}, "projects": []}
-    return {"users": {}, "projects": []}
+                return {"users": {}, "projects": [], "messages": []}
+    return {"users": {}, "projects": [], "messages": []}
 
 def save_db_data(data):
     with open(DB_FILE, 'w') as f:
         json.dump(data, f)
 
-# --- PAGE ROUTES ---
+# --- AUTH ROUTES ---
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -48,6 +51,8 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+# --- MAIN PAGE ROUTES ---
 
 @app.route('/')
 def index():
@@ -78,7 +83,7 @@ def student_data():
 @app.route('/hub')
 def discussion_hub():
     if 'user' not in session: return redirect(url_for('login'))
-    return render_template('hub.html')
+    return render_template('hub.html', user=session['user'])
 
 @app.route('/workspace')
 def workspace():
@@ -86,7 +91,7 @@ def workspace():
     data = get_db_data()
     return render_template('workspace.html', projects=data.get("projects", []))
 
-# --- API & AI ROUTES ---
+# --- API & AI ENGINE ---
 
 @app.route('/save', methods=['POST'])
 def save_draft():
@@ -94,6 +99,7 @@ def save_draft():
     req_data = request.json
     db_data = get_db_data()
     username = session['user']
+    
     if username not in db_data["users"]: db_data["users"][username] = []
     
     db_data["users"][username].append({
@@ -119,14 +125,16 @@ def ai_assist():
         req_data = request.json
         mode, content = req_data.get("mode"), req_data.get("content")
         prompts = {
-            "polish": f"Improve academic tone: {content}",
-            "summarize": f"Summarize: {content}",
+            "polish": f"Improve academic tone and grammar of this text: {content}",
+            "summarize": f"Summarize this text: {content}",
             "suggest": f"Suggest 3 research references for: {content}"
         }
         response = model.generate_content(prompts.get(mode, "Help with: " + content))
         return jsonify({"success": True, "result": response.text})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
+
+# --- GROUP & HUB LOGIC ---
 
 @app.route('/add-task', methods=['POST'])
 def add_task():
@@ -138,6 +146,23 @@ def add_task():
         "status": "Pending",
         "date": datetime.now().strftime("%H:%M")
     })
+    save_db_data(data)
+    return jsonify({"success": True})
+
+@app.route('/get-messages')
+def get_messages():
+    data = get_db_data()
+    return jsonify(data.get("messages", []))
+
+@app.route('/send-message', methods=['POST'])
+def send_message():
+    data = get_db_data()
+    msg = {
+        "user": session.get('user', 'User'),
+        "text": request.json.get('text'),
+        "time": datetime.now().strftime("%H:%M")
+    }
+    data["messages"].append(msg)
     save_db_data(data)
     return jsonify({"success": True})
 
