@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hilsey Pro | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
+        .card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; items-center: center; gap: 12px; text-decoration: none; }
+        .nav-item:hover { color: var(--primary); background: rgba(58, 134, 255, 0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="p-6"><h1 class="text-2xl font-black italic text-white">HILSEY<span class="text-blue-500">PRO</span></h1></div>
+        <nav>
+            <a href="/dashboard" class="nav-item" style="color:white; border-left: 4px solid #3A86FF; background: rgba(58,134,255,0.1);">📊 Dashboard</a>
+            <a href="/" class="nav-item">✍️ Assignment Pad</a>
+            <a href="/database" class="nav-item">☁️ Student Cloud</a>
+            <a href="/logout" class="nav-item text-red-400 mt-20">🚪 Logout</a>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10 overflow-y-auto">
+        <header class="mb-10 flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-bold">Welcome back, {{ user }}</h2>
+                <p class="text-gray-400">Here is your academic overview ({{ role.upper() }} ACCESS)</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs text-gray-500 uppercase">System Status</p>
+                <p class="text-green-400 font-bold">● Online</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="card">
+                <p class="text-gray-400 text-xs uppercase mb-1">Total Cloud Files</p>
+                <h3 class="text-4xl font-bold text-blue-400">{{ stats.total_files }}</h3>
+            </div>
+            <div class="card">
+                <p class="text-gray-400 text-xs uppercase mb-1">Lifetime Word Count</p>
+                <h3 class="text-4xl font-bold text-emerald-400">{{ stats.total_words }}</h3>
+            </div>
+            <div class="card">
+                <p class="text-gray-400 text-xs uppercase mb-1">Role Security</p>
+                <h3 class="text-2xl font-bold text-purple-400 capitalize">{{ role }}</h3>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="text-xl font-bold mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="location.href='/'" class="bg-blue-600 p-4 rounded-lg font-bold hover:bg-blue-500 transition">Create New Draft</button>
+                <button onclick="location.href='/database'" class="bg-slate-700 p-4 rounded-lg font-bold hover:bg-slate-600 transition">View Cloud Storage</button>
+                {% if role == 'admin' %}
+                <button onclick="location.href='/lecturer-portal'" class="bg-red-600/20 text-red-400 border border-red-500/50 p-4 rounded-lg font-bold hover:bg-red-600/30 transition">Admin Console</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
