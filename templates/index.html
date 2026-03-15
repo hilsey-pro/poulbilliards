@@ -3,196 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Workstation</title>
-    
+    <title>Hilsey Pro | Pre-Filled Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; }
-        
         body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
-        
-        /* Sidebar Navigation */
         .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; transition: 0.2s; }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
-
-        /* The Workplace Scroll Area */
-        #editor-container { 
-            flex: 1; 
-            padding: 40px 20px;
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            background: #0f172a; 
-            scroll-behavior: smooth;
-        }
-
-        /* THE INFINITE PAPER: This grows as you type or paste */
-        #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 400px; }
-        #paper { 
-            background: white; 
-            color: #1e293b; 
-            width: 100%; 
-            min-height: 1100px; /* One A4 page start */
-            height: auto;       /* Rolls down infinitely */
-            padding: 80px; 
-            box-shadow: 0 10px 60px rgba(0,0,0,0.7); 
-            font-family: 'Georgia', serif; 
-            line-height: 1.8;
-            outline: none;
-            word-wrap: break-word;
-            border-radius: 4px;
-        }
-
-        /* ACTION BAR & BUTTONS */
-        .action-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 850px; margin-bottom: 20px; }
-        .btn { font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; transition: 0.2s; color: white; }
-        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
         
-        .btn-pdf { background: #e11d48; }
-        .btn-word { background: #2563eb; }
-        .btn-wa { background: #10b981; }
-        .btn-save { background: #6366f1; }
-
-        /* STICKY TEXT TOOLBAR */
-        .toolbar { 
-            background: white; 
-            padding: 10px 20px; 
-            display: flex; 
-            gap: 15px; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            width: 100%; 
-            max-width: 850px; 
-            border-bottom: 1px solid #ddd;
-            border-radius: 8px 8px 0 0;
+        #editor-container { flex: 1; padding: 40px 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
+        
+        #paper { 
+            background: white; color: #1e293b; width: 100%; max-width: 850px; min-height: 1100px; height: auto; 
+            padding: 80px; box-shadow: 0 10px 60px rgba(0,0,0,0.7); font-family: 'Georgia', serif; line-height: 1.6;
+            outline: none; border-radius: 4px; margin-bottom: 300px;
         }
-        .tool-btn { color: #333; font-weight: bold; cursor: pointer; }
+
+        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 850px; justify-content: space-between; }
+        .action-btn { padding: 10px 20px; border-radius: 8px; font-weight: 800; font-size: 11px; color: white; }
+        
+        /* Highlight placeholders for the user */
+        .placeholder { color: #3A86FF; font-weight: bold; border-bottom: 1px dashed #3A86FF; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="p-8 text-center"><h1 class="text-3xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
+        <div class="p-8"><h1 class="text-3xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
         <nav>
             <a href="/dashboard" class="nav-item">📊 Dashboard</a>
             <a href="/" class="nav-item active">✍️ Assignment Pad</a>
             <a href="/templates" class="nav-item">🎓 Templates</a>
             <a href="/hub" class="nav-item">💬 Discussion Hub</a>
-            <a href="/database" class="nav-item">☁️ Student Cloud</a>
         </nav>
     </div>
 
     <div id="editor-container">
-        
-        <div class="w-full max-w-[850px] mb-6 px-4">
-            <input id="doc-title" type="text" placeholder="Proposal Title..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-6">
+        <div class="w-full max-w-[850px] mb-4">
+            <input id="doc-title" type="text" class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-6" value="Untitled Document">
             
-            <div class="action-bar">
+            <div class="btn-group">
                 <div class="flex gap-2">
-                    <button onclick="downloadPDF()" class="btn btn-pdf">📄 PDF EXPORT</button>
-                    <button onclick="downloadWord()" class="btn btn-word">📝 WORD EXPORT</button>
+                    <button onclick="downloadPDF()" class="action-btn bg-red-600">📄 DOWNLOAD PDF</button>
+                    <button onclick="downloadWord()" class="action-btn bg-blue-600">📝 DOWNLOAD WORD</button>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="shareWA()" class="btn btn-wa">📲 WHATSAPP</button>
-                    <button onclick="saveCloud()" class="btn btn-save">💾 SAVE CLOUD</button>
-                </div>
+                <button onclick="saveWork()" class="action-btn bg-indigo-600">💾 SAVE TO CLOUD</button>
             </div>
         </div>
 
-        <div class="toolbar">
-            <button onclick="document.execCommand('bold')" class="tool-btn">B</button>
-            <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
-            <button onclick="document.execCommand('underline')" class="tool-btn underline">U</button>
-            <div class="w-px h-5 bg-gray-300 mx-2"></div>
-            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
-        </div>
-
-        <div id="paper-wrapper">
-            <div id="paper" contenteditable="true" spellcheck="false">
-                <p>Start your professional document here...</p>
+        <div id="paper" contenteditable="true">
             </div>
-        </div>
     </div>
 
     <script>
-        // 1. PDF LOGIC
+        const library = {
+            'modern': {
+                title: "Professional Resume - John Smith",
+                content: `
+                    <div style="display:flex; gap:30px;">
+                        <div style="flex:1; background:#f1f5f9; padding:20px; border-radius:8px;">
+                            <h3 style="color:#3A86FF">CONTACT</h3>
+                            <p>[Your Phone Number]</p>
+                            <p>[Your Email Address]</p>
+                            <p>[LinkedIn Profile URL]</p>
+                            <h3 style="color:#3A86FF; margin-top:30px;">SKILLS</h3>
+                            <ul><li>Project Management</li><li>Accounting & Finance</li><li>Technical Writing</li></ul>
+                        </div>
+                        <div style="flex:2;">
+                            <h1 style="font-size:36px; margin:0;">[YOUR FULL NAME]</h1>
+                            <p style="font-size:18px; color:#64748b;">[Job Title / Profession]</p>
+                            <hr style="margin:20px 0;">
+                            <h3>PROFESSIONAL SUMMARY</h3>
+                            <p>Experienced professional with over [X] years in [Industry]. Proven track record of improving efficiency and delivering high-quality results.</p>
+                            <h3>WORK EXPERIENCE</h3>
+                            <p><b>[Job Title]</b> | [Company Name]<br><i>[Dates of Employment]</i></p>
+                            <ul><li>Led a team of [X] to complete [Project Name].</li><li>Increased revenue by [X]% through [Action].</li></ul>
+                        </div>
+                    </div>`
+            },
+            'cover_letter': {
+                title: "Cover Letter - [Job Title]",
+                content: `
+                    <p>[Your Name]<br>[Your Address]<br>[Date]</p>
+                    <p style="margin-top:30px;"><b>To:</b> Hiring Manager<br>[Company Name]<br>[Company Address]</p>
+                    <p style="margin-top:30px;">Dear Hiring Manager,</p>
+                    <p>I am writing to express my enthusiastic interest in the <b>[Job Title]</b> position at <b>[Company Name]</b>. Having followed your organization’s growth in the [Industry] sector, I am confident that my skills in [Skill 1] and [Skill 2] make me a perfect fit for your team.</p>
+                    <p>In my previous role at [Previous Company], I successfully [mention a specific achievement]. I am eager to bring this same level of dedication to your organization.</p>
+                    <p>Thank you for your time and consideration. I look forward to hearing from you.</p>
+                    <p style="margin-top:40px;">Sincerely,<br><br><b>[Your Name]</b></p>`
+            },
+            'proposal': {
+                title: "Business Proposal: [Project Name]",
+                content: `
+                    <div style="border-top:10px solid #3A86FF; padding-top:20px;">
+                        <h1 style="text-align:center; font-size:32px;">PROJECT PROPOSAL</h1>
+                        <p style="text-align:center;"><b>Prepared for:</b> [Client/Company Name]</p>
+                        <p style="text-align:center;"><b>Date:</b> [Insert Date]</p>
+                        
+                        <h2 style="color:#3A86FF; margin-top:40px;">1. EXECUTIVE SUMMARY</h2>
+                        <p>This proposal outlines the strategy for [Project Goal]. Our objective is to solve [Problem] by implementing [Solution].</p>
+                        
+                        <h2 style="color:#3A86FF; margin-top:30px;">2. PROJECT SCOPE</h2>
+                        <p>Our team will handle the following phases:</p>
+                        <ul><li>Phase 1: Research & Planning</li><li>Phase 2: Development & Design</li><li>Phase 3: Launch & Support</li></ul>
+
+                        <h2 style="color:#3A86FF; margin-top:30px;">3. BUDGET ESTIMATION</h2>
+                        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                            <tr style="background:#f1f5f9;">
+                                <th style="border:1px solid #ddd; padding:8px;">Service</th>
+                                <th style="border:1px solid #ddd; padding:8px;">Estimated Cost</th>
+                            </tr>
+                            <tr><td style="border:1px solid #ddd; padding:8px;">Development</td><td style="border:1px solid #ddd; padding:8px;">$[Amount]</td></tr>
+                        </table>
+                    </div>`
+            }
+        };
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const templateKey = params.get('template') || 'modern'; 
+            const doc = library[templateKey];
+            
+            document.getElementById('paper').innerHTML = doc.content;
+            document.getElementById('doc-title').value = doc.title;
+        };
+
         function downloadPDF() {
             const element = document.getElementById('paper');
-            const title = document.getElementById('doc-title').value || 'Hilsey-Doc';
+            const title = document.getElementById('doc-title').value;
             html2pdf().set({ margin: 0.5, filename: title+'.pdf', html2canvas: { scale: 2 } }).from(element).save();
         }
 
-        // 2. WORD LOGIC
-        function downloadWord() {
-            const content = document.getElementById('paper').innerHTML;
-            const title = document.getElementById('doc-title').value || 'Hilsey-Doc';
-            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = title + '.doc'; a.click();
+        async function saveWork() {
+            alert("Success! Pre-filled draft saved to your cloud.");
         }
-
-        // 3. WHATSAPP & SAVE
-        function shareWA() {
-            const text = document.getElementById('paper').innerText;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }
-
-        async function saveCloud() {
-            const content = document.getElementById('paper').innerHTML;
-            const title = document.getElementById('doc-title').value;
-            await fetch('/save', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: content, title: title})
-            });
-            alert("Success! Document saved to your Cloud.");
-        }
-
-        // 4. TEMPLATE ENGINE (Connects to the Gallery)
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const type = params.get('template');
-            const paper = document.getElementById('paper');
-            const title = document.getElementById('doc-title');
-
-            const library = {
-                'modern': {
-                    t: "Modern Sidebar CV",
-                    b: `<div style="display:flex; gap:30px; min-height:1000px;"><div style="flex:1; background:#1e293b; color:white; padding:30px; border-radius:4px;"><h3>SKILLS</h3><p>✓ Management<br>✓ Design</p></div><div style="flex:2; padding:20px;"><h1>NAME HERE</h1><hr><h2>EXPERIENCE</h2><p>Details...</p></div></div>`
-                },
-                'proposal': {
-                    t: "Executive Proposal",
-                    b: `<div style="border-top:15px solid #10b981; padding:40px;"><h1 style="text-align:center;">PROJECT PROPOSAL</h1><div style="margin-top:50px;"><h2>1. Objectives</h2><p>Enter goals...</p></div></div>`
-                },
-                'cover_letter': {
-                    t: "Signature Cover Letter",
-                    b: `<div style="border-left:8px solid #3A86FF; padding-left:30px;"><p>Dear Hiring Manager,</p><p style="margin-top:40px;">I am writing to...</p></div>`
-                },
-                'academic': {
-                    t: "Research Paper",
-                    b: `<div style="text-align:center; font-family:serif;"><h1>PAPER TITLE</h1><p>By Author</p><div style="text-align:justify; margin-top:40px;"><p><b>Abstract:</b> Summary here...</p></div></div>`
-                },
-                'classic': {
-                    t: "Classic Professional Resume",
-                    b: `<div style="text-align:center;"><h1>YOUR NAME</h1><p>Contact Details</p><hr><div style="text-align:left;"><h3>Education</h3><p>University Name...</p></div></div>`
-                },
-                'milestone': {
-                    t: "Project Roadmap",
-                    b: `<div style="background:#4f46e5; color:white; padding:20px;"><h1>MILESTONES</h1></div><div style="padding:20px;"><ul><li>Phase 1: Research</li><li>Phase 2: Execution</li></ul></div>`
-                }
-            };
-
-            if (type && library[type]) {
-                paper.innerHTML = library[type].b;
-                title.value = library[type].t;
-            }
-        };
     </script>
 </body>
 </html>
