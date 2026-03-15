@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lecturer Portal | Hilsey Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-height-screen font-sans">
+
+    <nav class="bg-slate-800 border-b border-indigo-500/30 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-indigo-400">👨‍🏫 Lecturer Command Center</h1>
+            <div class="flex gap-4">
+                <a href="/hub" class="text-sm bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-500 transition">Join Discussion Hub</a>
+                <a href="/logout" class="text-sm border border-red-500 text-red-400 px-4 py-2 rounded hover:bg-red-500 hover:text-white transition">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-gray-400 text-xs uppercase tracking-widest mb-1">Active Students</p>
+                <h2 class="text-3xl font-bold">Live</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-gray-400 text-xs uppercase tracking-widest mb-1">Total Cloud Drafts</p>
+                <h2 id="total-drafts" class="text-3xl font-bold text-indigo-400">0</h2>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <p class="text-gray-400 text-xs uppercase tracking-widest mb-1">Server Status</p>
+                <h2 class="text-3xl font-bold text-green-500">Online</h2>
+            </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">Student Submission Logs</h3>
+                <button onclick="location.reload()" class="text-xs text-indigo-400 hover:underline underline-offset-4">Refresh Feed</button>
+            </div>
+            <table class="w-full text-left">
+                <thead class="bg-slate-900/50 text-gray-400 text-xs uppercase">
+                    <tr>
+                        <th class="p-4">Student Name</th>
+                        <th class="p-4">Latest File</th>
+                        <th class="p-4">Timestamp</th>
+                        <th class="p-4 text-right">Preview</th>
+                    </tr>
+                </thead>
+                <tbody id="lecturer-feed" class="divide-y divide-slate-700 text-sm">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        async function fetchAllActivity() {
+            // We'll use the same endpoint but show everything for the lecturer
+            const response = await fetch('/get-docs');
+            const docs = await response.json();
+            const feed = document.getElementById('lecturer-feed');
+            const totalCount = document.getElementById('total-drafts');
+
+            if (docs.length === 0) {
+                feed.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-gray-500 italic">No student activity recorded yet.</td></tr>`;
+                return;
+            }
+
+            totalCount.innerText = docs.length;
+            feed.innerHTML = ''; 
+
+            docs.forEach(doc => {
+                const row = `
+                    <tr class="hover:bg-slate-700/50 transition">
+                        <td class="p-4 font-bold text-indigo-300">Active Student</td>
+                        <td class="p-4">${doc.filename}</td>
+                        <td class="p-4 text-gray-400">${doc.date}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="alert('Viewing: ' + '${doc.filename}')" class="bg-slate-700 px-3 py-1 rounded hover:bg-indigo-600 transition text-xs">View Draft</button>
+                        </td>
+                    </tr>
+                `;
+                feed.innerHTML += row;
+            });
+        }
+
+        window.onload = fetchAllActivity;
+    </script>
+</body>
+</html>
