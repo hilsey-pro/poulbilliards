@@ -1,49 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Hilsey Pro | Workstation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Pro | Workstation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
+        
+        /* Layout Structure */
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); }
-        #paper { background: white; color: #1e293b; width: 100%; max-width: 800px; min-height: 1000px; padding: 60px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; border-left: 4px solid transparent; transition: 0.2s; }
+        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left-color: var(--primary); }
+
+        /* The Infinite Editor Area */
+        #editor-container { 
+            flex: 1; 
+            padding: 60px 20px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background: #0f172a; 
+            scroll-behavior: smooth;
+        }
+
+        /* The Paper: Expanding Height Logic */
+        #paper { 
+            background: white; 
+            color: #1e293b; 
+            width: 100%; 
+            max-width: 850px; 
+            min-height: 1100px; /* A4 Ratio */
+            height: auto;       /* This allows the page to grow infinitely */
+            padding: 80px; 
+            border-radius: 4px; 
+            outline: none; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            font-family: 'Georgia', serif; 
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 200px; /* Space at bottom so you can keep typing */
+        }
+
+        /* Toolbar UI */
+        .toolbar { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; display: flex; gap: 10px; position: sticky; top: -60px; z-index: 10; width: 100%; max-width: 850px; border-radius: 8px 8px 0 0; margin-top: -40px; }
+        .tool-btn { padding: 5px 10px; color: #475569; font-weight: bold; border-radius: 4px; transition: 0.1s; }
+        .tool-btn:hover { background: #cbd5e1; color: black; }
+
+        .ai-drawer { width: 300px; background: #111a36; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
+        .ai-btn { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 8px; font-size: 11px; text-align: left; width: 100%; margin-bottom: 12px; color: white; }
     </style>
 </head>
 <body>
+
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav>
+        <div class="p-6">
+            <h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1>
+            <input type="text" id="global-search" placeholder="Search menu..." onkeyup="performSearch()" class="mt-4 w-full bg-[#0B132B] border border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-blue-500 text-white">
+        </div>
+        <nav class="flex-1">
             <a href="/dashboard" class="nav-item">📊 Dashboard</a>
             <a href="/" class="nav-item active">✍️ Assignment Pad</a>
             <a href="/templates" class="nav-item">🎓 Templates</a>
             <a href="/hub" class="nav-item">💬 Discussion Hub</a>
             <a href="/database" class="nav-item">☁️ Student Cloud</a>
         </nav>
+        <div class="p-4 border-t border-white/5">
+            <p class="text-xs font-bold text-blue-300">{{ user }}</p>
+            <a href="/logout" class="text-[10px] text-red-400 hover:underline">Logout</a>
+        </div>
     </div>
 
-    <div class="flex-1 p-10 overflow-y-auto flex flex-col items-center">
-        <div class="w-full max-w-[800px] flex justify-between items-center mb-6">
-            <input id="doc-title" type="text" placeholder="Untitled Draft" class="bg-transparent text-3xl font-bold outline-none text-white w-2/3">
-            <div class="flex gap-2">
-                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-4 py-2 rounded font-bold text-xs hover:bg-emerald-500 transition">📲 Share to WA</button>
-                <button onclick="saveWork()" class="bg-blue-600 px-4 py-2 rounded font-bold text-xs">Save Cloud</button>
+    <div id="editor-container">
+        <div class="w-full max-w-[850px] flex justify-between items-center mb-6">
+            <div class="flex-1">
+                <input id="doc-title" type="text" placeholder="Start Writing..." class="bg-transparent text-3xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-full text-white">
+                <p class="text-[11px] text-gray-500 mt-2 tracking-widest uppercase">
+                    Words: <span id="word-count" class="text-blue-400">0</span> | Infinite Page Mode
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-emerald-500 transition flex items-center gap-2">
+                   📲 Share to WA
+                </button>
+                <button onclick="saveWork()" class="bg-blue-600 px-6 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 shadow-xl">Save to Cloud</button>
             </div>
         </div>
-        <div id="paper" contenteditable="true">
-            <p>Ready to build your career...</p>
+
+        <div class="toolbar">
+            <button onclick="document.execCommand('bold')" class="tool-btn">B</button>
+            <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
+            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
+            <div class="w-px h-6 bg-gray-300 mx-2"></div>
+            <button onclick="document.execCommand('formatBlock', false, 'h1')" class="tool-btn">H1</button>
+            <button onclick="document.execCommand('formatBlock', false, 'h2')" class="tool-btn">H2</button>
+        </div>
+        
+        <div id="paper" contenteditable="true" oninput="updateStats()">
+            <p>Start your professional document here...</p>
+        </div>
+    </div>
+
+    <div class="ai-drawer">
+        <h3 class="text-[10px] font-bold text-blue-400 mb-6 uppercase tracking-[3px]">Career Intelligence</h3>
+        <button onclick="callAI('polish')" class="ai-btn">✨ <b>Academic Polish</b><br><span class="opacity-50">Refine grammar & tone</span></button>
+        <button onclick="callAI('achievement')" class="ai-btn">🚀 <b>Achievement Builder</b><br><span class="opacity-50">Turn tasks into results</span></button>
+        <button onclick="callAI('suggest')" class="ai-btn">🔍 <b>Recruiter Insights</b><br><span class="opacity-50">Keyword optimization</span></button>
+        
+        <div id="ai-response" class="mt-8 p-4 bg-slate-900/50 rounded-xl text-xs leading-relaxed border border-slate-800 text-gray-300 min-h-[200px] whitespace-pre-wrap italic">
+            AI suggestions will appear here as you write...
         </div>
     </div>
 
     <script>
+        // WHATSAPP SHARE
         function shareToWhatsApp() {
-            const title = document.getElementById('doc-title').value || "My Document";
+            const title = document.getElementById('doc-title').value || "Hilsey Document";
             const content = document.getElementById('paper').innerText;
-            const text = `*${title}*\n\n${content}`;
+            const text = `*${title}* \n\n${content}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
+
+        // STATS & SEARCH
+        function updateStats() {
+            const text = document.getElementById('paper').innerText;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('word-count').innerText = words.length;
+        }
+
+        function performSearch() {
+            let input = document.getElementById('global-search').value.toLowerCase();
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(input) ? "flex" : "none";
+            });
+        }
+
+        // TEMPLATE LOADER
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const templateKey = urlParams.get('template');
+            const paper = document.getElementById('paper');
+            const docTitle = document.getElementById('doc-title');
+
+            const templates = {
+                'cv': { title: "Professional CV", body: "<h1>CURRICULUM VITAE</h1><hr><p><b>Contact:</b> ...</p><h3>EDUCATION</h3><p>...</p>" },
+                'modern': { title: "Modern Sidebar CV", body: "<div style='display:flex;gap:30px;'><div style='flex:1;background:#f8fafc;padding:20px;'><h3>Skills</h3></div><div style='flex:2;'><h1>[NAME]</h1></div></div>" },
+                'resign': { title: "Resignation Letter", body: "<h1>RESIGNATION</h1><p>Dear Manager...</p>" }
+            };
+
+            if (templateKey && templates[templateKey]) {
+                paper.innerHTML = templates[templateKey].body;
+                docTitle.value = templates[templateKey].title;
+                updateStats();
+            }
+        };
+
+        // AI ENGINE
+        async function callAI(mode) {
+            const content = document.getElementById('paper').innerText;
+            const resBox = document.getElementById('ai-response');
+            resBox.innerText = "Analyzing your career text...";
+            const response = await fetch('/ai-assist', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({mode: mode, content: content})
+            });
+            const data = await response.json();
+            resBox.innerText = data.success ? data.result : "Connection to AI failed.";
+        }
+
+        // SAVE LOGIC
         async function saveWork() {
             const content = document.getElementById('paper').innerHTML;
             const title = document.getElementById('doc-title').value;
@@ -52,7 +182,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            alert("Saved!");
+            alert("Draft Synchronized to Cloud!");
         }
     </script>
 </body>
