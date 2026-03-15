@@ -3,138 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Master Workstation</title>
+    <title>Hilsey Pro | Permanent Navigation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --word-blue: #2b579a; --ribbon-grey: #f3f4f6; --sidebar-dark: #1c2541; }
-        body { background: #0f172a; color: #333; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        :root { --word-blue: #2b579a; --ribbon-grey: #f3f4f6; --hilsey-dark: #0b132b; }
         
-        /* SIDEBAR - Fixed & Scrollable */
-        .sidebar { width: 240px; background: var(--sidebar-dark); flex-shrink: 0; color: white; display: flex; flex-direction: column; overflow-y: auto; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 14px 20px; color: #94a3b8; transition: 0.2s; font-size: 14px; }
-        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid #3A86FF; }
+        body { background: #0f172a; color: #333; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 
-        /* RIBBON */
-        .ribbon-container { width: 100%; background: var(--ribbon-grey); border-bottom: 1px solid #ccc; z-index: 1000; overflow-x: auto; }
+        /* PERMANENT LEFT RAIL - Visible on PC and Phone */
+        .left-rail { 
+            width: 70px; 
+            background: var(--hilsey-dark); 
+            flex-shrink: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 15px 0;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            z-index: 5000;
+        }
+        
+        .rail-btn { 
+            width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center; 
+            color: #94a3b8; font-size: 20px; border-radius: 12px; 
+            margin-bottom: 15px; transition: 0.2s; cursor: pointer;
+            text-decoration: none;
+        }
+        .rail-btn:hover, .rail-btn.active { background: #3a86ff; color: white; }
+        .rail-label { font-size: 8px; color: white; text-align: center; margin-top: -12px; margin-bottom: 15px; opacity: 0.7; }
+
+        /* Main Content Area */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* WORD RIBBON (Scrolls sideways on phone) */
+        .ribbon-container { width: 100%; background: var(--ribbon-grey); border-bottom: 1px solid #ccc; overflow-x: auto; flex-shrink: 0; }
         .ribbon-tabs { background: var(--word-blue); display: flex; min-width: max-content; }
-        .tab { padding: 10px 18px; color: white; font-size: 12px; cursor: pointer; opacity: 0.8; }
-        .tab.active { background: var(--ribbon-grey); color: var(--word-blue); opacity: 1; font-weight: bold; }
+        .tab { padding: 8px 15px; color: white; font-size: 11px; cursor: pointer; }
+        .tab.active { background: var(--ribbon-grey); color: var(--word-blue); font-weight: bold; }
 
-        .ribbon-content { display: none; padding: 10px; gap: 15px; align-items: center; height: 95px; background: var(--ribbon-grey); min-width: max-content; }
+        .ribbon-content { display: none; padding: 10px; gap: 15px; align-items: center; height: 85px; background: var(--ribbon-grey); min-width: max-content; }
         .ribbon-content.active { display: flex; }
-        .tool-group { display: flex; flex-direction: column; align-items: center; border-right: 1px solid #d1d5db; padding: 0 10px; height: 100%; justify-content: center; }
 
-        /* PAPER VIEWPORT */
-        #viewport { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 20px; background: #e2e8f0; position: relative; }
+        /* THE PAPER */
+        #viewport { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 15px; background: #cbd5e1; }
         #paper { 
-            background: white; width: 100%; max-width: 850px; min-height: 1100px; 
-            padding: 60px; box-shadow: 0 0 20px rgba(0,0,0,0.1); outline: none; 
+            background: white; width: 100%; max-width: 800px; min-height: 1000px; 
+            padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); outline: none; border-radius: 2px;
         }
 
-        /* MOBILE BOTTOM ACTIONS - Fixed for Phone Users */
-        .mobile-actions { 
-            position: fixed; bottom: 20px; right: 20px; display: none; 
-            flex-direction: column; gap: 10px; z-index: 2000; 
-        }
-        .fab { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: none; cursor: pointer; }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; } /* Hide sidebar on small phones to save space */
-            .mobile-actions { display: flex; } /* Show quick buttons on phone */
-            #paper { padding: 30px; }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .left-rail { width: 60px; }
+            .rail-btn { width: 40px; height: 40px; font-size: 18px; }
+            #paper { padding: 20px; font-size: 14px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="p-6 text-2xl font-black italic border-b border-white/10">HILSEY PRO</div>
-        <nav class="mt-4 flex-1">
-            <a href="/dashboard" class="nav-link">📊 Dashboard</a>
-            <a href="/" class="nav-link active">✍️ Assignment Pad</a>
-            <a href="/templates" class="nav-link">🎓 Templates</a>
-            <a href="/hub" class="nav-link">💬 Discussion Hub</a>
-            <a href="/cloud" class="nav-link">☁️ Student Cloud</a>
-            <a href="/forms" class="nav-link">📝 Forms</a>
-        </nav>
-        <div class="p-4 text-[10px] text-gray-500 text-center uppercase">v2.0 Stable Build</div>
+    <div class="left-rail">
+        <div class="font-black italic text-blue-500 mb-6">H</div>
+        
+        <a href="/dashboard" class="rail-btn" title="Dashboard">📊</a>
+        <div class="rail-label">DASH</div>
+
+        <a href="/" class="rail-btn active" title="Editor">✍️</a>
+        <div class="rail-label">EDIT</div>
+
+        <a href="/templates" class="rail-btn" title="Templates">🎓</a>
+        <div class="rail-label">TEMP</div>
+
+        <a href="/hub" class="rail-btn" title="Discussion Hub">💬</a>
+        <div class="rail-label">HUB</div>
+
+        <a href="/cloud" class="rail-btn" title="Cloud Storage">☁️</a>
+        <div class="rail-label">CLOUD</div>
+
+        <div class="mt-auto"></div> <button onclick="savePDF()" class="rail-btn bg-red-600 text-white" title="Download PDF">PDF</button>
+        <button onclick="shareWA()" class="rail-btn bg-green-500 text-white" title="Share WhatsApp">WA</button>
     </div>
 
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="main-wrapper">
         <div class="ribbon-container">
             <div class="ribbon-tabs">
-                <div class="tab active" onclick="tab(event, 'home')">Home</div>
-                <div class="tab" onclick="tab(event, 'insert')">Insert</div>
-                <div class="tab" onclick="tab(event, 'review')">Review</div>
+                <div class="tab active" onclick="switchTab(event, 'home')">Home</div>
+                <div class="tab" onclick="switchTab(event, 'insert')">Insert</div>
+                <div class="tab" onclick="switchTab(event, 'layout')">Layout</div>
             </div>
             
             <div id="home" class="ribbon-content active">
-                <div class="tool-group">
-                    <select onchange="cmd('fontName', this.value)" class="text-xs border mb-1"><option>Arial</option><option>Times New Roman</option></select>
-                    <div class="flex gap-1">
-                        <button onclick="cmd('bold')" class="font-bold px-2 border bg-white">B</button>
-                        <button onclick="cmd('italic')" class="italic px-2 border bg-white">I</button>
-                        <input type="color" onchange="cmd('foreColor', this.value)" class="w-6 h-6 p-0">
+                <div class="flex flex-col border-r pr-4">
+                    <div class="flex gap-1 mb-1">
+                        <button onclick="cmd('bold')" class="border p-1 bg-white font-bold w-8">B</button>
+                        <button onclick="cmd('italic')" class="border p-1 bg-white italic w-8">I</button>
+                        <button onclick="cmd('underline')" class="border p-1 bg-white underline w-8">U</button>
                     </div>
+                    <select onchange="cmd('fontName', this.value)" class="text-[10px] border"><option>Arial</option><option>Georgia</option></select>
                 </div>
-                <div class="tool-group">
-                    <div class="flex gap-1">
-                        <button onclick="cmd('justifyLeft')" class="px-1 border bg-white">L</button>
-                        <button onclick="cmd('justifyCenter')" class="px-1 border bg-white">C</button>
-                    </div>
-                    <span class="text-[9px] mt-2 uppercase text-gray-400">Alignment</span>
+                <div class="flex flex-col border-r pr-4">
+                    <button onclick="cmd('justifyCenter')" class="border p-1 bg-white mb-1">Center</button>
+                    <button onclick="cmd('insertUnorderedList')" class="border p-1 bg-white text-[10px]">List</button>
+                </div>
+                <div class="flex flex-col items-center">
+                    <input type="color" onchange="cmd('foreColor', this.value)" class="w-8 h-8">
+                    <span class="text-[9px]">COLOR</span>
                 </div>
             </div>
 
             <div id="insert" class="ribbon-content">
-                <div class="tool-group">
-                    <button onclick="document.getElementById('picIn').click()" class="flex flex-col items-center">
-                        <span class="text-xl">🖼️</span>
-                        <span class="text-[10px] font-bold">PICTURES</span>
-                    </button>
-                    <input type="file" id="picIn" class="hidden" accept="image/*" onchange="addPic(this)">
-                </div>
-                <div class="tool-group">
-                    <button onclick="cmd('insertHorizontalRule')" class="text-xl">➖</button>
-                    <span class="text-[10px]">DIVIDER</span>
-                </div>
-            </div>
-
-            <div id="review" class="ribbon-content">
-                <div class="tool-group">
-                    <button onclick="savePDF()" class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold">SAVE PDF</button>
-                    <button onclick="shareWA()" class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold mt-1">WHATSAPP</button>
-                </div>
+                <button onclick="document.getElementById('fileIn').click()" class="flex flex-col items-center p-2 border bg-white rounded">
+                    <span>🖼️</span><span class="text-[9px]">PICTURE</span>
+                </button>
+                <input type="file" id="fileIn" class="hidden" accept="image/*" onchange="addImg(this)">
+                <button onclick="cmd('insertHorizontalRule')" class="p-2 border bg-white rounded">➖ Line</button>
             </div>
         </div>
 
         <div id="viewport">
             <div id="paper" contenteditable="true" spellcheck="false">
-                </div>
+                <h1 style="text-align:center;">[TITLE]</h1>
+                <p>Start typing or select a template...</p>
+            </div>
         </div>
-    </div>
-
-    <div class="mobile-actions">
-        <button onclick="savePDF()" class="fab bg-red-600" title="Download PDF">PDF</button>
-        <button onclick="shareWA()" class="fab bg-green-500" title="Share to WhatsApp">WA</button>
     </div>
 
     <script>
         function cmd(n, v=null) { document.execCommand(n, false, v); }
         
-        function tab(e, id) {
+        function switchTab(e, id) {
             document.querySelectorAll('.ribbon-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             e.currentTarget.classList.add('active');
         }
 
-        function addPic(input) {
+        function addImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    cmd('insertHTML', `<img src="${e.target.result}" style="max-width:100%; margin:10px 0;">`);
+                    cmd('insertHTML', `<img src="${e.target.result}" style="max-width:100%; margin:10px 0; border-radius:4px;">`);
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -150,15 +159,13 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // LOAD TEMPLATE
+        // AUTO-LOAD TEMPLATE TEXT
         window.onload = function() {
             const params = new URLSearchParams(window.location.search);
-            const t = params.get('template') || 'modern';
-            const lib = {
-                'modern': `<h1>[NAME]</h1><hr><p>Professional details here...</p>`,
-                'proposal': `<h1 style="color:#2b579a">PROJECT PROPOSAL</h1><p>Objectives...</p>`
-            };
-            document.getElementById('paper').innerHTML = lib[t] || lib['modern'];
+            const t = params.get('template');
+            if(t === 'modern') {
+                document.getElementById('paper').innerHTML = `<h1>[NAME]</h1><hr><p>Professional experience here...</p>`;
+            }
         };
     </script>
 </body>
