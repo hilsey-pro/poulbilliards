@@ -28,7 +28,12 @@ def save_db_data(data):
     with open(DB_FILE, 'w') as f:
         json.dump(data, f)
 
-# --- ROUTES ---
+# --- NAVIGATION ROUTES ---
+
+@app.route('/')
+def index():
+    if 'user' not in session: return redirect(url_for('login'))
+    return render_template('index.html', user=session['user'])
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -48,11 +53,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
-@app.route('/')
-def index():
-    if 'user' not in session: return redirect(url_for('login'))
-    return render_template('index.html', user=session['user'])
 
 @app.route('/dashboard')
 def dashboard():
@@ -77,27 +77,36 @@ def discussion_hub():
     if 'user' not in session: return redirect(url_for('login'))
     return render_template('hub.html', user=session['user'])
 
-# --- THE CAREER AI ENGINE ---
+# --- AI & CHAT LOGIC ---
 
 @app.route('/ai-assist', methods=['POST'])
 def ai_assist():
     try:
         req_data = request.json
         mode, content = req_data.get("mode"), req_data.get("content")
-        
-        # Specific prompts for Career Success
         prompts = {
-            "polish": f"Rewrite this for a professional CV. Use strong action verbs and remove 'I' or 'me': {content}",
-            "suggest": f"You are a recruitment expert. Analyze this CV text and suggest 3 high-impact keywords to add: {content}",
-            "achievement": f"Transform this boring task into a high-level achievement for a resume: {content}"
+            "polish": f"Rewrite professionally: {content}",
+            "achievement": f"Transform this into a career achievement: {content}",
+            "suggest": f"Suggest 3 career keywords for: {content}"
         }
-        
-        response = model.generate_content(prompts.get(mode, "Help with: " + content))
+        response = model.generate_content(prompts.get(mode, content))
         return jsonify({"success": True, "result": response.text})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# --- DATA SAVING & CHAT ---
+@app.route('/get-messages')
+def get_messages():
+    data = get_db_data()
+    return jsonify(data.get("messages", []))
+
+@app.route('/send-message', methods=['POST'])
+def send_message():
+    data = get_db_data()
+    if "messages" not in data: data["messages"] = []
+    msg = {"user": session.get('user', 'User'), "text": request.json.get('text'), "time": datetime.now().strftime("%H:%M")}
+    data["messages"].append(msg)
+    save_db_data(data)
+    return jsonify({"success": True})
 
 @app.route('/save', methods=['POST'])
 def save_draft():
@@ -113,20 +122,6 @@ def save_draft():
         "words": len(str(req_data.get('content', '')).split())
     })
     save_db_data(db_data)
-    return jsonify({"success": True})
-
-@app.route('/get-messages')
-def get_messages():
-    data = get_db_data()
-    return jsonify(data.get("messages", []))
-
-@app.route('/send-message', methods=['POST'])
-def send_message():
-    data = get_db_data()
-    if "messages" not in data: data["messages"] = []
-    msg = {"user": session.get('user', 'User'), "text": request.json.get('text'), "time": datetime.now().strftime("%H:%M")}
-    data["messages"].append(msg)
-    save_db_data(data)
     return jsonify({"success": True})
 
 if __name__ == "__main__":
