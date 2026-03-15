@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Hilsey Pro | Discussion Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; font-family: 'Inter', sans-serif; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
         .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
-        .chat-bubble { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); }
+        .status-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
+        .video-box { aspect-ratio: 16/9; background: #000; border-radius: 12px; display: flex; items-center: center; justify-content: center; position: relative; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -25,43 +25,52 @@
         </nav>
     </div>
 
-    <div class="flex-1 p-10 flex flex-col">
-        <header class="mb-10">
-            <h2 class="text-3xl font-bold">Discussion Hub</h2>
-            <p class="text-gray-400">Ask questions, share insights, and collaborate with peers.</p>
+    <div class="flex-1 p-8 overflow-y-auto">
+        <header class="mb-8">
+            <h2 class="text-3xl font-bold">Live Hub</h2>
+            <p class="text-gray-400">Join video consultations or browse the Q&A.</p>
         </header>
 
-        <div id="messages" class="flex-1 overflow-y-auto mb-6 pr-4">
-            <div class="chat-bubble">
-                <p class="text-blue-400 font-bold text-xs uppercase mb-1">System Announcement</p>
-                <p class="text-sm text-gray-300">Welcome to the Hilsey Pro Hub. Keep discussions academic and respectful!</p>
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="status-card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">🎥 Academic Video Call</h3>
+                        <span class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full animate-pulse">LIVE</span>
+                    </div>
+                    <div class="video-box border-2 border-blue-500/30">
+                        <p class="text-gray-500 text-sm">Waiting for Lecturer to start stream...</p>
+                        <div class="absolute bottom-4 left-4 flex gap-2">
+                            <button class="bg-gray-800 p-2 rounded-full hover:bg-gray-700">🎤</button>
+                            <button class="bg-gray-800 p-2 rounded-full hover:bg-gray-700">📷</button>
+                            <button class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold">Join Call</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-        <div class="flex gap-4">
-            <input id="chat-input" type="text" placeholder="Type a message or question..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-4 outline-none focus:border-blue-500 transition text-white">
-            <button onclick="sendMessage()" class="bg-blue-600 px-8 rounded-lg font-bold hover:bg-blue-500 transition shadow-lg">Send</button>
+            <div class="space-y-6">
+                <div class="status-card p-6 h-[600px] flex flex-col">
+                    <h3 class="font-bold mb-4">💬 Live Q&A</h3>
+                    <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 text-sm mb-4 pr-2">
+                        <div class="bg-blue-600/10 p-3 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-xs text-blue-400">Lecturer</p>
+                            <p>Welcome to the Hilsey Pro Hub. Keep discussions academic!</p>
+                        </div>
+                        <div class="bg-white/5 p-3 rounded-lg">
+                            <p class="font-bold text-xs text-gray-400">Student_92</p>
+                            <p>Is there a deadline for the Thesis draft?</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <input type="text" placeholder="Type a question..." class="w-full bg-[#0B132B] border border-slate-700 rounded-lg p-3 text-xs focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <script>
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            if (input.value.trim() === "") return;
-
-            const msgDiv = document.createElement('div');
-            msgDiv.className = "chat-bubble ml-auto bg-blue-600/20 border-blue-500/30 max-w-[80%]";
-            msgDiv.innerHTML = `
-                <p class="text-blue-300 font-bold text-xs uppercase mb-1">You</p>
-                <p class="text-sm text-white">${input.value}</p>
-            `;
-            document.getElementById('messages').appendChild(msgDiv);
-            input.value = "";
-            
-            // Auto-scroll to bottom
-            const container = document.getElementById('messages');
-            container.scrollTop = container.scrollHeight;
-        }
-    </script>
 </body>
 </html>
