@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hilsey Pro | Discussion Hub</title>
+    <title>Hilsey Pro | Live Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src='https://meet.jit.si/external_api.js'></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; overflow: hidden; }
         .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; items-center: center; gap: 12px; text-decoration: none; }
         .status-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        .video-box { aspect-ratio: 16/9; background: #000; border-radius: 12px; display: flex; items-center: center; justify-content: center; position: relative; overflow: hidden; }
+        #video-container { width: 100%; height: 500px; background: #000; border-radius: 12px; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -20,57 +20,82 @@
         <nav>
             <a href="/dashboard" class="nav-item">📊 Dashboard</a>
             <a href="/" class="nav-item">✍️ Assignment Pad</a>
-            <a href="/hub" class="nav-item active">💬 Discussion Hub</a>
+            <a href="/hub" class="nav-item active" style="color:white; background:rgba(58,134,255,0.1);">💬 Discussion Hub</a>
             <a href="/database" class="nav-item">☁️ Student Cloud</a>
         </nav>
     </div>
 
     <div class="flex-1 p-8 overflow-y-auto">
-        <header class="mb-8">
-            <h2 class="text-3xl font-bold">Live Hub</h2>
-            <p class="text-gray-400">Join video consultations or browse the Q&A.</p>
-        </header>
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2">
                 <div class="status-card p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">🎥 Academic Video Call</h3>
-                        <span class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full animate-pulse">LIVE</span>
+                        <h3 class="font-bold text-lg">🎥 Classroom Video Call</h3>
+                        <button onclick="startCall()" class="bg-blue-600 px-4 py-2 rounded font-bold text-xs hover:bg-blue-500">Start/Join Call</button>
                     </div>
-                    <div class="video-box border-2 border-blue-500/30">
-                        <p class="text-gray-500 text-sm">Waiting for Lecturer to start stream...</p>
-                        <div class="absolute bottom-4 left-4 flex gap-2">
-                            <button class="bg-gray-800 p-2 rounded-full hover:bg-gray-700">🎤</button>
-                            <button class="bg-gray-800 p-2 rounded-full hover:bg-gray-700">📷</button>
-                            <button class="bg-red-600 px-4 py-2 rounded-lg text-xs font-bold">Join Call</button>
-                        </div>
+                    <div id="video-container" class="flex items-center justify-center">
+                        <p class="text-gray-500">Click the button to enter the video room</p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="status-card p-6 h-[600px] flex flex-col">
-                    <h3 class="font-bold mb-4">💬 Live Q&A</h3>
-                    <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 text-sm mb-4 pr-2">
-                        <div class="bg-blue-600/10 p-3 rounded-lg border-l-4 border-blue-500">
-                            <p class="font-bold text-xs text-blue-400">Lecturer</p>
-                            <p>Welcome to the Hilsey Pro Hub. Keep discussions academic!</p>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-lg">
-                            <p class="font-bold text-xs text-gray-400">Student_92</p>
-                            <p>Is there a deadline for the Thesis draft?</p>
-                        </div>
+            <div class="status-card p-6 flex flex-col h-[600px]">
+                <h3 class="font-bold mb-4">💬 Live Class Chat</h3>
+                <div id="chat-box" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-2 text-sm text-gray-300">
                     </div>
-                    <div class="mt-auto">
-                        <input type="text" placeholder="Type a question..." class="w-full bg-[#0B132B] border border-slate-700 rounded-lg p-3 text-xs focus:border-blue-500 outline-none">
-                    </div>
+                <div class="flex gap-2">
+                    <input type="text" id="msg-input" placeholder="Ask a question..." class="flex-1 bg-[#0B132B] border border-slate-700 rounded p-2 text-xs outline-none focus:border-blue-500">
+                    <button onclick="sendMessage()" class="bg-blue-600 px-3 py-2 rounded font-bold text-xs">Send</button>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <script>
+        // VIDEO CALL LOGIC
+        function startCall() {
+            const domain = 'meet.jit.si';
+            const options = {
+                roomName: 'HilseyPro_Classroom_Session',
+                width: '100%',
+                height: 500,
+                parentNode: document.querySelector('#video-container'),
+                interfaceConfigOverwrite: { TOOLBAR_BUTTONS: ['microphone', 'camera', 'desktop', 'chat', 'raisehand'] }
+            };
+            document.getElementById('video-container').innerHTML = ""; // Clear placeholder
+            const api = new JitsiMeetExternalAPI(domain, options);
+        }
+
+        // CHAT LOGIC
+        async function loadMessages() {
+            const res = await fetch('/get-messages');
+            const messages = await res.json();
+            const box = document.getElementById('chat-box');
+            box.innerHTML = messages.map(m => `
+                <div class="bg-white/5 p-2 rounded">
+                    <p class="text-[10px] font-bold text-blue-400">${m.user} <span class="text-gray-500 font-normal">${m.time}</span></p>
+                    <p>${m.text}</p>
+                </div>
+            `).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('msg-input');
+            if(!input.value) return;
+            await fetch('/send-message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({text: input.value})
+            });
+            input.value = "";
+            loadMessages();
+        }
+
+        setInterval(loadMessages, 3000); // Auto-refresh chat every 3 seconds
+        loadMessages();
+    </script>
 </body>
 </html>
