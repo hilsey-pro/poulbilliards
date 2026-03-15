@@ -18,10 +18,7 @@ def get_db_data():
         with open(DB_FILE, 'r') as f:
             try:
                 data = json.load(f)
-                # Ensure the structure exists
                 if "users" not in data: data = {"users": data, "projects": [], "messages": []}
-                if "projects" not in data: data["projects"] = []
-                if "messages" not in data: data["messages"] = []
                 return data
             except:
                 return {"users": {}, "projects": [], "messages": []}
@@ -31,7 +28,7 @@ def save_db_data(data):
     with open(DB_FILE, 'w') as f:
         json.dump(data, f)
 
-# --- AUTH ROUTES ---
+# --- ROUTES ---
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -52,8 +49,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --- MAIN PAGE ROUTES ---
-
 @app.route('/')
 def index():
     if 'user' not in session: return redirect(url_for('login'))
@@ -64,10 +59,7 @@ def dashboard():
     if 'user' not in session: return redirect(url_for('login'))
     data = get_db_data()
     user_docs = data["users"].get(session['user'], [])
-    stats = {
-        "total_files": len(user_docs),
-        "total_words": sum(d.get('words', 0) for d in user_docs)
-    }
+    stats = {"total_files": len(user_docs), "total_words": sum(d.get('words', 0) for d in user_docs)}
     return render_template('dashboard.html', user=session['user'], role=session.get('role'), stats=stats)
 
 @app.route('/templates')
@@ -85,13 +77,27 @@ def discussion_hub():
     if 'user' not in session: return redirect(url_for('login'))
     return render_template('hub.html', user=session['user'])
 
-@app.route('/workspace')
-def workspace():
-    if 'user' not in session: return redirect(url_for('login'))
-    data = get_db_data()
-    return render_template('workspace.html', projects=data.get("projects", []))
+# --- THE CAREER AI ENGINE ---
 
-# --- API & AI ENGINE ---
+@app.route('/ai-assist', methods=['POST'])
+def ai_assist():
+    try:
+        req_data = request.json
+        mode, content = req_data.get("mode"), req_data.get("content")
+        
+        # Specific prompts for Career Success
+        prompts = {
+            "polish": f"Rewrite this for a professional CV. Use strong action verbs and remove 'I' or 'me': {content}",
+            "suggest": f"You are a recruitment expert. Analyze this CV text and suggest 3 high-impact keywords to add: {content}",
+            "achievement": f"Transform this boring task into a high-level achievement for a resume: {content}"
+        }
+        
+        response = model.generate_content(prompts.get(mode, "Help with: " + content))
+        return jsonify({"success": True, "result": response.text})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+# --- DATA SAVING & CHAT ---
 
 @app.route('/save', methods=['POST'])
 def save_draft():
@@ -99,54 +105,14 @@ def save_draft():
     req_data = request.json
     db_data = get_db_data()
     username = session['user']
-    
     if username not in db_data["users"]: db_data["users"][username] = []
-    
     db_data["users"][username].append({
-        "title": req_data.get('title') or "Untitled Draft",
+        "title": req_data.get('title') or "Untitled",
         "date": datetime.now().strftime("%b %d, %Y"),
         "content": req_data.get('content'),
         "words": len(str(req_data.get('content', '')).split())
     })
     save_db_data(db_data)
-    return jsonify({"success": True})
-
-@app.route('/get-docs')
-def get_docs():
-    if 'user' not in session: return jsonify([])
-    data = get_db_data()
-    if session.get('role') == "admin":
-        return jsonify([dict(d, student=u) for u, docs in data["users"].items() for d in docs])
-    return jsonify(data["users"].get(session['user'], []))
-
-@app.route('/ai-assist', methods=['POST'])
-def ai_assist():
-    try:
-        req_data = request.json
-        mode, content = req_data.get("mode"), req_data.get("content")
-        prompts = {
-            "polish": f"Improve academic tone and grammar of this text: {content}",
-            "summarize": f"Summarize this text: {content}",
-            "suggest": f"Suggest 3 research references for: {content}"
-        }
-        response = model.generate_content(prompts.get(mode, "Help with: " + content))
-        return jsonify({"success": True, "result": response.text})
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
-
-# --- GROUP & HUB LOGIC ---
-
-@app.route('/add-task', methods=['POST'])
-def add_task():
-    data = get_db_data()
-    new_task = request.json.get('task')
-    data["projects"].append({
-        "task": new_task, 
-        "user": session['user'], 
-        "status": "Pending",
-        "date": datetime.now().strftime("%H:%M")
-    })
-    save_db_data(data)
     return jsonify({"success": True})
 
 @app.route('/get-messages')
@@ -157,11 +123,8 @@ def get_messages():
 @app.route('/send-message', methods=['POST'])
 def send_message():
     data = get_db_data()
-    msg = {
-        "user": session.get('user', 'User'),
-        "text": request.json.get('text'),
-        "time": datetime.now().strftime("%H:%M")
-    }
+    if "messages" not in data: data["messages"] = []
+    msg = {"user": session.get('user', 'User'), "text": request.json.get('text'), "time": datetime.now().strftime("%H:%M")}
     data["messages"].append(msg)
     save_db_data(data)
     return jsonify({"success": True})
