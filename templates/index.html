@@ -1,78 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hilsey Pro | Student Suite</title>
+    <title>Hilsey Pro | Academic Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { background: #0f172a; color: white; display: flex; height: 100vh; margin: 0; font-family: sans-serif; }
-        .sidebar { width: 280px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; display: flex; flex-direction: column; }
-        .main { flex: 1; padding: 40px; overflow-y: auto; background: #0f172a; }
-        .btn-sidebar { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; color: white; }
-        .btn-sidebar:hover { background: #4f46e5; transform: translateX(5px); }
-        #notepad { background: white; color: black; padding: 40px; border-radius: 4px; min-height: 800px; width: 100%; max-width: 800px; margin: 0 auto; outline: none; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); font-family: 'Georgia', serif; line-height: 1.6; }
+        /* The "Pro" Palette Upgrade */
+        :root {
+            --bg-deep: #0B132B;
+            --sidebar: #1C2541;
+            --primary: #3A86FF;
+            --secondary: #5BC0BE;
+            --text: #EAEAEA;
+        }
+        body { background: var(--bg-deep); color: var(--text); display: flex; height: 100vh; font-family: 'Inter', sans-serif; }
+        
+        .sidebar { width: 260px; background: var(--sidebar); display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; items-center: center; gap: 12px; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
+        .active { background: rgba(58, 134, 255, 0.15); color: var(--primary); border-left: 4px solid var(--primary); font-weight: bold; }
+        
+        #editor-container { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        #paper { background: white; color: #1e293b; width: 100%; max-width: 850px; min-height: 1056px; padding: 60px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 2px; outline: none; }
+        
+        .toolbar { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 10px; display: flex; gap: 10px; position: sticky; top: 0; z-index: 10; width: 100%; max-width: 850px; border-radius: 4px 4px 0 0; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2 class="text-xl font-bold text-indigo-400 mb-8 text-center underline italic text-indigo-400">HILSEY PRO</h2>
-        
-        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Navigation</p>
-        <a href="/" class="btn-sidebar bg-indigo-900">✍️ Assignment Pad</a>
-        <a href="/hub" class="btn-sidebar">📞 Discussion Hub</a>
-        <a href="/database" class="btn-sidebar">📂 Student Cloud</a>
+    <div class="sidebar shadow-2xl">
+        <div class="p-6">
+            <h1 class="text-2xl font-black italic tracking-tighter text-white">HILSEY<span class="text-blue-500">PRO</span></h1>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Platform v2.0</p>
+        </div>
 
-        <hr class="border-gray-700 my-4">
+        <nav class="flex-1 overflow-y-auto">
+            <p class="px-6 text-[10px] uppercase text-gray-600 font-bold mb-2">Core Suite</p>
+            <a href="/" class="nav-item active">✍️ Assignment Pad</a>
+            <a href="/dashboard" class="nav-item">📊 Dashboard</a>
+            <a href="/hub" class="nav-item">💬 Discussion Hub</a>
+            <a href="/database" class="nav-item">☁️ Student Cloud</a>
+            
+            <p class="px-6 text-[10px] uppercase text-gray-600 font-bold mt-6 mb-2">Academic Tools</p>
+            <a href="#" class="nav-item">📚 Course Library</a>
+            <a href="#" class="nav-item">🤖 AI Study Assistant</a>
+            <a href="#" class="nav-item">🎓 Templates</a>
+            
+            <div id="admin-menu" class="hidden">
+                <p class="px-6 text-[10px] uppercase text-red-500/50 font-bold mt-6 mb-2">Control</p>
+                <a href="/lecturer-portal" class="nav-item">🛡️ Admin Console</a>
+            </div>
+        </nav>
 
-        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Cloud Tools</p>
-        <button onclick="saveToCloud()" class="btn-sidebar w-full text-left bg-blue-600 hover:bg-blue-500">
-            ☁️ Backup to Cloud
-        </button>
-        <button onclick="shareWhatsApp()" class="btn-sidebar w-full text-left">
-            📲 Share to WhatsApp
-        </button>
-
-        <button onclick="downloadPDF()" class="w-full mt-auto bg-green-600 hover:bg-green-500 p-3 rounded font-bold shadow-lg">
-            💾 Save as PDF
-        </button>
-        <a href="/logout" class="text-center text-xs text-red-400 mt-4 hover:underline">Logout</a>
+        <div class="p-4 border-t border-white/5">
+            <div class="flex items-center gap-3 p-2 bg-white/5 rounded-lg mb-4">
+                <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center font-bold">U</div>
+                <div>
+                    <p class="text-xs font-bold">{{ user }}</p>
+                    <p class="text-[9px] text-gray-400">Student Account</p>
+                </div>
+            </div>
+            <a href="/logout" class="block text-center text-xs text-red-400 hover:text-red-300 transition">Log Out</a>
+        </div>
     </div>
 
-    <div class="main">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-bold mb-2">Welcome, {{ user }}</h1>
-            <p class="text-sm text-gray-400 mb-8 italic">Drafting as: {{ user }}</p>
-            
-            <div id="notepad" contenteditable="true">
-                <h1 style="text-align: center;">Assignment Title</h1>
-                <p>Start typing...</p>
+    <div id="editor-container">
+        <div class="w-full max-w-[850px] flex justify-between items-end mb-4">
+            <div>
+                <input type="text" placeholder="Untitled Assignment" class="bg-transparent text-3xl font-bold border-none outline-none placeholder:text-gray-700 w-full mb-1">
+                <p class="text-xs text-gray-500">Words: <span id="word-count">0</span> | Draft saved to cloud</p>
             </div>
+            <div class="flex gap-2">
+                <button onclick="saveToCloud()" class="bg-blue-600 text-xs px-4 py-2 rounded font-bold hover:bg-blue-500 transition">Backup</button>
+                <button onclick="exportPDF()" class="bg-emerald-600 text-xs px-4 py-2 rounded font-bold hover:bg-emerald-500 transition">Export PDF</button>
+            </div>
+        </div>
+
+        <div class="toolbar shadow-sm">
+            <button onclick="document.execCommand('bold')" class="px-3 py-1 hover:bg-gray-200 rounded font-bold text-gray-700">B</button>
+            <button onclick="document.execCommand('italic')" class="px-3 py-1 hover:bg-gray-200 rounded italic text-gray-700">I</button>
+            <button onclick="document.execCommand('underline')" class="px-3 py-1 hover:bg-gray-200 rounded underline text-gray-700">U</button>
+            <div class="w-[1px] bg-gray-300 mx-2"></div>
+            <button onclick="document.execCommand('insertUnorderedList')" class="px-3 py-1 hover:bg-gray-200 rounded text-gray-700">List</button>
+        </div>
+        
+        <div id="paper" contenteditable="true" oninput="updateWordCount()">
+            <h2>Assignment Overview</h2>
+            <p>Start your research here...</p>
         </div>
     </div>
 
     <script>
-        function saveToCloud() {
-            const content = document.getElementById('notepad').innerText;
-            fetch('/save', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: content})
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) alert("✅ Draft backed up to Cloud!");
-            });
+        function updateWordCount() {
+            const text = document.getElementById('paper').innerText;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('word-count').innerText = words.length;
         }
 
-        function downloadPDF() {
-            const element = document.getElementById('notepad');
-            html2pdf().set({margin: 0.5, filename: 'Assignment.pdf'}).from(element).save();
-        }
-
-        function shareWhatsApp() {
-            const content = document.getElementById('notepad').innerText;
-            window.open(`https://wa.me/?text=${encodeURIComponent(content)}`, '_blank');
+        // Show Admin menu if role is admin (we'll pass this from Flask)
+        const userRole = "{{ session.get('role') }}";
+        if (userRole === 'admin') {
+            document.getElementById('admin-menu').classList.remove('hidden');
         }
     </script>
 </body>
