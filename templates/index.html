@@ -9,16 +9,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --gold: #FFD700; }
+        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; }
         
         body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
         
         /* Sidebar Navigation */
         .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; transition: 0.2s; }
         .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
 
-        /* The Main Workspace */
+        /* The Workplace Scroll Area */
         #editor-container { 
             flex: 1; 
             padding: 40px 20px;
@@ -30,14 +30,14 @@
             scroll-behavior: smooth;
         }
 
-        /* THE INFINITE PAPER: This grows as you type */
-        #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 300px; }
+        /* THE INFINITE PAPER: This grows as you type or paste */
+        #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 400px; }
         #paper { 
             background: white; 
             color: #1e293b; 
             width: 100%; 
-            min-height: 1100px; 
-            height: auto; 
+            min-height: 1100px; /* One A4 page start */
+            height: auto;       /* Rolls down infinitely */
             padding: 80px; 
             box-shadow: 0 10px 60px rgba(0,0,0,0.7); 
             font-family: 'Georgia', serif; 
@@ -47,7 +47,17 @@
             border-radius: 4px;
         }
 
-        /* STICKY TOOLBAR */
+        /* ACTION BAR & BUTTONS */
+        .action-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 850px; margin-bottom: 20px; }
+        .btn { font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; transition: 0.2s; color: white; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        
+        .btn-pdf { background: #e11d48; }
+        .btn-word { background: #2563eb; }
+        .btn-wa { background: #10b981; }
+        .btn-save { background: #6366f1; }
+
+        /* STICKY TEXT TOOLBAR */
         .toolbar { 
             background: white; 
             padding: 10px 20px; 
@@ -61,18 +71,7 @@
             border-bottom: 1px solid #ddd;
             border-radius: 8px 8px 0 0;
         }
-        .tool-btn { color: #333; font-weight: bold; cursor: pointer; font-size: 14px; }
-
-        /* PERMANENT DOWNLOAD BUTTONS (Fixed disappearing issue) */
-        .action-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 850px; margin-bottom: 20px; }
-        .download-group { display: flex; gap: 10px; }
-        
-        .btn-pdf { background: #e11d48; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
-        .btn-word { background: #2563eb; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
-        .btn-wa { background: #10b981; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
-        .btn-save { background: #6366f1; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
-        
-        button:hover { filter: brightness(1.2); transform: translateY(-1px); transition: 0.2s; }
+        .tool-btn { color: #333; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -94,13 +93,13 @@
             <input id="doc-title" type="text" placeholder="Proposal Title..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-6">
             
             <div class="action-bar">
-                <div class="download-group">
-                    <button onclick="downloadAsPDF()" class="btn-pdf">📄 PDF EXPORT</button>
-                    <button onclick="downloadAsWord()" class="btn-word">📝 WORD EXPORT</button>
+                <div class="flex gap-2">
+                    <button onclick="downloadPDF()" class="btn btn-pdf">📄 PDF EXPORT</button>
+                    <button onclick="downloadWord()" class="btn btn-word">📝 WORD EXPORT</button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="shareToWA()" class="btn-wa">📲 WHATSAPP</button>
-                    <button onclick="saveToCloud()" class="btn-save">💾 SAVE CLOUD</button>
+                    <button onclick="shareWA()" class="btn btn-wa">📲 WHATSAPP</button>
+                    <button onclick="saveCloud()" class="btn btn-save">💾 SAVE CLOUD</button>
                 </div>
             </div>
         </div>
@@ -110,47 +109,41 @@
             <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
             <button onclick="document.execCommand('underline')" class="tool-btn underline">U</button>
             <div class="w-px h-5 bg-gray-300 mx-2"></div>
-            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">Bullets</button>
+            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
         </div>
 
         <div id="paper-wrapper">
             <div id="paper" contenteditable="true" spellcheck="false">
-                <p>Start your professional document here. The white page will roll down as long as you need...</p>
+                <p>Start your professional document here...</p>
             </div>
         </div>
     </div>
 
     <script>
-        function downloadAsPDF() {
-            const paper = document.getElementById('paper');
-            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
-            const opt = {
-                margin: 0.5,
-                filename: `${title}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(paper).save();
+        // 1. PDF LOGIC
+        function downloadPDF() {
+            const element = document.getElementById('paper');
+            const title = document.getElementById('doc-title').value || 'Hilsey-Doc';
+            html2pdf().set({ margin: 0.5, filename: title+'.pdf', html2canvas: { scale: 2 } }).from(element).save();
         }
 
-        function downloadAsWord() {
+        // 2. WORD LOGIC
+        function downloadWord() {
             const content = document.getElementById('paper').innerHTML;
-            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
+            const title = document.getElementById('doc-title').value || 'Hilsey-Doc';
             const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${title}.doc`;
-            link.click();
+            const a = document.createElement('a');
+            a.href = url; a.download = title + '.doc'; a.click();
         }
 
-        function shareToWA() {
-            const content = document.getElementById('paper').innerText;
-            window.open(`https://wa.me/?text=${encodeURIComponent(content)}`, '_blank');
+        // 3. WHATSAPP & SAVE
+        function shareWA() {
+            const text = document.getElementById('paper').innerText;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        async function saveToCloud() {
+        async function saveCloud() {
             const content = document.getElementById('paper').innerHTML;
             const title = document.getElementById('doc-title').value;
             await fetch('/save', {
@@ -158,8 +151,48 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            alert("Saved to Cloud!");
+            alert("Success! Document saved to your Cloud.");
         }
+
+        // 4. TEMPLATE ENGINE (Connects to the Gallery)
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const type = params.get('template');
+            const paper = document.getElementById('paper');
+            const title = document.getElementById('doc-title');
+
+            const library = {
+                'modern': {
+                    t: "Modern Sidebar CV",
+                    b: `<div style="display:flex; gap:30px; min-height:1000px;"><div style="flex:1; background:#1e293b; color:white; padding:30px; border-radius:4px;"><h3>SKILLS</h3><p>✓ Management<br>✓ Design</p></div><div style="flex:2; padding:20px;"><h1>NAME HERE</h1><hr><h2>EXPERIENCE</h2><p>Details...</p></div></div>`
+                },
+                'proposal': {
+                    t: "Executive Proposal",
+                    b: `<div style="border-top:15px solid #10b981; padding:40px;"><h1 style="text-align:center;">PROJECT PROPOSAL</h1><div style="margin-top:50px;"><h2>1. Objectives</h2><p>Enter goals...</p></div></div>`
+                },
+                'cover_letter': {
+                    t: "Signature Cover Letter",
+                    b: `<div style="border-left:8px solid #3A86FF; padding-left:30px;"><p>Dear Hiring Manager,</p><p style="margin-top:40px;">I am writing to...</p></div>`
+                },
+                'academic': {
+                    t: "Research Paper",
+                    b: `<div style="text-align:center; font-family:serif;"><h1>PAPER TITLE</h1><p>By Author</p><div style="text-align:justify; margin-top:40px;"><p><b>Abstract:</b> Summary here...</p></div></div>`
+                },
+                'classic': {
+                    t: "Classic Professional Resume",
+                    b: `<div style="text-align:center;"><h1>YOUR NAME</h1><p>Contact Details</p><hr><div style="text-align:left;"><h3>Education</h3><p>University Name...</p></div></div>`
+                },
+                'milestone': {
+                    t: "Project Roadmap",
+                    b: `<div style="background:#4f46e5; color:white; padding:20px;"><h1>MILESTONES</h1></div><div style="padding:20px;"><ul><li>Phase 1: Research</li><li>Phase 2: Execution</li></ul></div>`
+                }
+            };
+
+            if (type && library[type]) {
+                paper.innerHTML = library[type].b;
+                title.value = library[type].t;
+            }
+        };
     </script>
 </body>
 </html>
