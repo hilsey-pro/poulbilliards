@@ -4,26 +4,32 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# 🔑 Here is the fix! Notice the quotation marks (" ") around your key.
+# 🔑 Your Gemini Key
 genai.configure(api_key="AIzaSyA5RkM41g8DQP1FLs6cyb7S8Q7fVMTX4Ko")
 model = genai.GenerativeModel('gemini-pro')
 
+# --- ROUTES ---
+
 @app.route('/')
 def index():
-    # This loads your new PDF Notepad layout
     return render_template('index.html')
+
+@app.route('/hub')
+def discussion_hub():
+    # This is the new Video/Audio call room
+    return render_template('hub.html')
+
+@app.route('/database')
+def student_data():
+    # This is where students see their saved work
+    return render_template('database.html')
 
 @app.route('/generate', methods=['POST'])
 def generate():
     try:
         data = request.json
-        doc_type = data.get("type", "Document")
-        user_input = data.get("message", "")
-
-        # This tells the AI what to do
-        prompt = f"You are Hilsey Pro. Create a professional {doc_type} based on: {user_input}"
+        prompt = f"Professional help with: {data.get('message', '')}"
         response = model.generate_content(prompt)
-        
         return jsonify({"success": True, "content": response.text})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
