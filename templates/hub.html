@@ -1,28 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hilsey Hub | Video Discussion</title>
+    <meta charset="UTF-8">
+    <title>Hilsey Pro | Discussion Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src='https://8x8.vc/vpaas-magic-cookie-32c0d4a9d7b44d3ba9b6d8b9e6e8e8e8/external_api.js'></script>
+    <style>
+        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
+        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; font-family: 'Inter', sans-serif; }
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
+        .chat-bubble { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+    </style>
 </head>
-<body class="bg-slate-900 text-white">
-    <div class="p-5 flex justify-between items-center border-b border-slate-700">
-        <h1 class="text-2xl font-bold text-indigo-400">Discussion Hub</h1>
-        <a href="/" class="bg-slate-700 px-4 py-2 rounded hover:bg-slate-600">⬅ Back to Drafts</a>
+<body>
+
+    <div class="sidebar">
+        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
+        <nav>
+            <a href="/dashboard" class="nav-item">📊 Dashboard</a>
+            <a href="/" class="nav-item">✍️ Assignment Pad</a>
+            <a href="/hub" class="nav-item active">💬 Discussion Hub</a>
+            <a href="/database" class="nav-item">☁️ Student Cloud</a>
+        </nav>
     </div>
-    
-    <div id="meet" style="height: 80vh; width: 100%;"></div>
+
+    <div class="flex-1 p-10 flex flex-col">
+        <header class="mb-10">
+            <h2 class="text-3xl font-bold">Discussion Hub</h2>
+            <p class="text-gray-400">Ask questions, share insights, and collaborate with peers.</p>
+        </header>
+
+        <div id="messages" class="flex-1 overflow-y-auto mb-6 pr-4">
+            <div class="chat-bubble">
+                <p class="text-blue-400 font-bold text-xs uppercase mb-1">System Announcement</p>
+                <p class="text-sm text-gray-300">Welcome to the Hilsey Pro Hub. Keep discussions academic and respectful!</p>
+            </div>
+            </div>
+
+        <div class="flex gap-4">
+            <input id="chat-input" type="text" placeholder="Type a message or question..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-4 outline-none focus:border-blue-500 transition text-white">
+            <button onclick="sendMessage()" class="bg-blue-600 px-8 rounded-lg font-bold hover:bg-blue-500 transition shadow-lg">Send</button>
+        </div>
+    </div>
 
     <script>
-        const domain = '8x8.vc';
-        const options = {
-            roomName: 'HilseyPro_Student_Discussion_Room',
-            width: '100%',
-            height: '100%',
-            parentNode: document.querySelector('#meet'),
-            lang: 'en'
-        };
-        const api = new JitsiMeetExternalAPI(domain, options);
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            if (input.value.trim() === "") return;
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "chat-bubble ml-auto bg-blue-600/20 border-blue-500/30 max-w-[80%]";
+            msgDiv.innerHTML = `
+                <p class="text-blue-300 font-bold text-xs uppercase mb-1">You</p>
+                <p class="text-sm text-white">${input.value}</p>
+            `;
+            document.getElementById('messages').appendChild(msgDiv);
+            input.value = "";
+            
+            // Auto-scroll to bottom
+            const container = document.getElementById('messages');
+            container.scrollTop = container.scrollHeight;
+        }
     </script>
 </body>
 </html>
