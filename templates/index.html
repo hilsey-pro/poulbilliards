@@ -1,44 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hilsey Pro | Workstation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; border-left: 4px solid transparent; }
+        
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; border-left: 4px solid transparent; transition: 0.2s; }
         .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left-color: var(--primary); }
         
-        #editor-container { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        #editor-container { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
         #paper { background: white; color: #1e293b; width: 100%; max-width: 800px; min-height: 1000px; padding: 60px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; line-height: 1.6; }
         
-        .ai-drawer { width: 300px; background: #111a36; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
-        .ai-btn { background: #1e293b; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 12px; text-align: left; width: 100%; margin-bottom: 10px; transition: 0.2s; }
+        .ai-drawer { width: 320px; background: #111a36; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
+        .ai-btn { background: #1e293b; border: 1px solid #334155; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; width: 100%; margin-bottom: 12px; transition: 0.2s; color: white; }
         .ai-btn:hover { border-color: var(--primary); background: rgba(58, 134, 255, 0.1); }
+        
+        .toolbar { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; display: flex; gap: 8px; position: sticky; top: 0; z-index: 10; width: 100%; max-width: 800px; border-radius: 4px 4px 0 0; }
+        .tool-btn { padding: 4px 8px; color: #475569; font-weight: bold; border-radius: 4px; transition: 0.2s; }
+        .tool-btn:hover { background: #e2e8f0; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav>
+        <div class="p-6">
+            <h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1>
+            <p class="text-[10px] text-blue-400 font-bold tracking-widest mt-1">PRO WORKSTATION</p>
+        </div>
+        <nav class="flex-1">
             <a href="/dashboard" class="nav-item">📊 Dashboard</a>
             <a href="/" class="nav-item active">✍️ Assignment Pad</a>
+            <a href="/templates" class="nav-item">🎓 Templates</a>
             <a href="/database" class="nav-item">☁️ Student Cloud</a>
+            <a href="/workspace" class="nav-item">👥 Group Workspace</a>
             <a href="/hub" class="nav-item">📞 Discussion Hub</a>
         </nav>
+        <div class="p-4 border-t border-white/5">
+            <p class="text-[10px] text-gray-500 mb-2">SIGNED IN AS</p>
+            <p class="text-sm font-bold text-blue-300 mb-4">{{ user }}</p>
+            <a href="/logout" class="text-xs text-red-400 hover:underline">Logout</a>
+        </div>
     </div>
 
     <div id="editor-container">
         <div class="w-full max-w-[800px] flex justify-between items-center mb-6">
-            <input id="doc-title" type="text" placeholder="Assignment Title..." class="bg-transparent text-2xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-2/3">
-            <div class="flex gap-2">
-                <button onclick="saveWork()" class="bg-blue-600 px-4 py-2 rounded font-bold text-xs hover:bg-blue-500 transition">Save to Cloud</button>
+            <div class="flex-1">
+                <input id="doc-title" type="text" placeholder="Untitled Assignment" class="bg-transparent text-3xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-full text-white">
+                <p class="text-[11px] text-gray-500 mt-1">Words: <span id="word-count" class="text-blue-400">0</span> | Draft Auto-Sync Active</p>
+            </div>
+            <div class="flex gap-3 ml-4">
+                <button onclick="saveWork()" class="bg-blue-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 transition shadow-lg">Save to Cloud</button>
             </div>
         </div>
-        <div id="paper" contenteditable="true">
-            <p>Start your academic journey here...</p>
+
+        <div class="toolbar">
+            <button onclick="document.execCommand('bold')" class="tool-btn">B</button>
+            <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
+            <button onclick="document.execCommand('underline')" class="tool-btn underline">U</button>
+            <div class="w-px h-4 bg-gray-300 mx-1"></div>
+            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
+        </div>
+        
+        <div id="paper" contenteditable="true" oninput="updateStats()">
+            <p>Start your research here...</p>
         </div>
     </div>
 
@@ -49,40 +78,78 @@
         <button onclick="callAI('summarize')" class="ai-btn">📝 <b>Summarize</b><br><span class="opacity-50 text-[10px]">Get a quick recap</span></button>
         <button onclick="callAI('suggest')" class="ai-btn">🔍 <b>Research Help</b><br><span class="opacity-50 text-[10px]">Suggest references</span></button>
 
-        <div id="ai-response" class="mt-6 p-4 bg-slate-900/50 rounded-lg text-xs leading-relaxed border border-slate-800 text-gray-300 min-h-[100px]">
-            AI suggestions will appear here...
+        <div id="ai-response" class="mt-6 p-4 bg-slate-900/50 rounded-lg text-xs leading-relaxed border border-slate-800 text-gray-300 min-h-[150px] whitespace-pre-wrap">
+            AI suggestions will appear here after you select a tool above...
         </div>
     </div>
 
     <script>
+        // 1. UPDATE WORD COUNT
+        function updateStats() {
+            const text = document.getElementById('paper').innerText;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('word-count').innerText = words.length;
+        }
+
+        // 2. TEMPLATE LOADER (The Glue)
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const template = urlParams.get('template');
+            const paper = document.getElementById('paper');
+            const docTitle = document.getElementById('doc-title');
+
+            const templates = {
+                'cv': {
+                    title: "Professional CV Draft",
+                    body: "<h1>CURRICULUM VITAE</h1><hr><p><b>Name:</b> [Enter Name]</p><h3>EDUCATION</h3><p>University Name - Degree Details</p><h3>EXPERIENCE</h3><p>Describe your roles here...</p>"
+                },
+                'research': {
+                    title: "Research Proposal",
+                    body: "<h1>RESEARCH PROPOSAL</h1><h3>1. Introduction</h3><p>Explain the problem...</p><h3>2. Methodology</h3><p>How will you conduct research?</p>"
+                },
+                'thesis': {
+                    title: "Thesis Blueprint",
+                    body: "<h1>THESIS TITLE</h1><h3>Abstract</h3><p>Summary of findings...</p><h3>Chapter 1: Introduction</h3><p>Background info...</p>"
+                }
+            };
+
+            if (template && templates[template]) {
+                paper.innerHTML = templates[template].body;
+                docTitle.value = templates[template].title;
+                updateStats();
+            }
+        };
+
+        // 3. AI ASSISTANT LOGIC
         async function callAI(mode) {
             const content = document.getElementById('paper').innerText;
             const resBox = document.getElementById('ai-response');
-            resBox.innerText = "Thinking...";
+            resBox.innerText = "Processing your request...";
             
-            const response = await fetch('/ai-assist', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({mode: mode, content: content})
-            });
-            
-            const data = await response.json();
-            if(data.success) {
-                resBox.innerText = data.result;
-            } else {
-                resBox.innerText = "Error: " + data.error;
+            try {
+                const response = await fetch('/ai-assist', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({mode: mode, content: content})
+                });
+                const data = await response.json();
+                resBox.innerText = data.success ? data.result : "AI Error: " + data.error;
+            } catch (e) {
+                resBox.innerText = "Connection failed.";
             }
         }
 
+        // 4. SAVE TO CLOUD LOGIC
         async function saveWork() {
-            const content = document.getElementById('paper').innerText;
+            const content = document.getElementById('paper').innerHTML; // Use innerHTML to keep formatting
             const title = document.getElementById('doc-title').value;
+            
             const res = await fetch('/save', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            if(res.ok) alert("Draft synced to Cloud!");
+            if(res.ok) alert("Assignment synced to Cloud!");
         }
     </script>
 </body>
