@@ -1,57 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hilsey Pro | Templates</title>
+    <title>Hilsey Pro | Template Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .template-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .template-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
+        .template-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; transition: 0.3s; }
+        .template-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(58, 134, 255, 0.2); }
+        .preview-img { height: 200px; background: #2D3748; display: flex; align-items: center; justify-content: center; position: relative; }
+        .preview-img::after { content: "📄"; font-size: 50px; opacity: 0.2; }
     </style>
 </head>
 <body>
+
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black text-white">HILSEY</h1></div>
-        <nav class="flex flex-col gap-2 p-4">
-            <a href="/dashboard" class="p-3 text-gray-400 hover:text-white">📊 Dashboard</a>
-            <a href="/templates" class="p-3 bg-blue-600/10 text-blue-400 rounded-lg font-bold">🎓 Templates</a>
-            <a href="/" class="p-3 text-gray-400 hover:text-white">✍️ Assignment Pad</a>
+        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
+        <nav class="p-4 space-y-2">
+            <a href="/dashboard" class="flex items-center gap-3 p-3 text-gray-400 hover:text-white">📊 Dashboard</a>
+            <a href="/" class="flex items-center gap-3 p-3 text-gray-400 hover:text-white">✍️ Assignment Pad</a>
+            <a href="/templates" class="flex items-center gap-3 p-3 bg-blue-600/10 text-blue-400 rounded-lg font-bold">🎓 Templates Gallery</a>
         </nav>
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-        <h2 class="text-3xl font-bold mb-2">Academic Templates</h2>
-        <p class="text-gray-400 mb-10">Select a structure to begin drafting immediately.</p>
+        <header class="mb-10">
+            <h2 class="text-3xl font-bold">Document Gallery</h2>
+            <p class="text-gray-400">Choose a professional blueprint to start your career journey.</p>
+        </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="template-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">📄</div>
-                    <h3 class="text-xl font-bold mb-2">Professional CV</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">A clean, academic-focused curriculum vitae for internship and job applications.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="template-card">
+                <div class="preview-img bg-slate-100">
+                    <div class="absolute inset-0 border-8 border-white m-4 shadow-sm"></div>
                 </div>
-                <button onclick="location.href='/?template=cv'" class="mt-6 bg-blue-600 py-2 rounded font-bold text-sm">Use Template</button>
+                <div class="p-6">
+                    <h3 class="font-bold text-lg mb-1">Classic Professional</h3>
+                    <p class="text-xs text-gray-400 mb-4">Standard black & white layout. Best for corporate and banking roles.</p>
+                    <button onclick="location.href='/?template=cv'" class="w-full bg-blue-600 py-2 rounded-lg font-bold text-sm hover:bg-blue-500 transition">Use Template</button>
+                </div>
             </div>
 
-            <div class="template-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">🔬</div>
-                    <h3 class="text-xl font-bold mb-2">Research Proposal</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">Includes Background, Methodology, and Literature Review sections.</p>
+            <div class="template-card">
+                <div class="preview-img bg-blue-50">
+                    <div class="absolute left-0 top-0 bottom-0 w-1/3 bg-blue-900"></div>
                 </div>
-                <button onclick="location.href='/?template=research'" class="mt-6 bg-blue-600 py-2 rounded font-bold text-sm">Use Template</button>
+                <div class="p-6">
+                    <h3 class="font-bold text-lg mb-1">Modern Sidebar</h3>
+                    <p class="text-xs text-gray-400 mb-4">Clean layout with a focused skill sidebar. Best for Tech & Marketing.</p>
+                    <button onclick="location.href='/?template=modern'" class="w-full bg-blue-600 py-2 rounded-lg font-bold text-sm hover:bg-blue-500 transition">Use Template</button>
+                </div>
             </div>
 
-            <div class="template-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">📜</div>
-                    <h3 class="text-xl font-bold mb-2">Thesis Blueprint</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">Advanced structure with Abstract, Introduction, and References.</p>
+            <div class="template-card">
+                <div class="preview-img bg-emerald-50 text-emerald-900 font-serif p-4 text-[8px]">
+                    <b>Resignation Letter</b><br>To whom it may concern...
                 </div>
-                <button onclick="location.href='/?template=thesis'" class="mt-6 bg-blue-600 py-2 rounded font-bold text-sm">Use Template</button>
+                <div class="p-6">
+                    <h3 class="font-bold text-lg mb-1 text-emerald-400">Resignation Letter</h3>
+                    <p class="text-xs text-gray-400 mb-4">A polite, professional template for leaving your current role on good terms.</p>
+                    <button onclick="location.href='/?template=resign'" class="w-full bg-emerald-600 py-2 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">Open Letterbox</button>
+                </div>
             </div>
+
         </div>
     </div>
 </body>
