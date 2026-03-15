@@ -18,7 +18,7 @@
         .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
 
-        /* The Main Scrollable Workspace */
+        /* The Main Workspace */
         #editor-container { 
             flex: 1; 
             padding: 40px 20px;
@@ -30,14 +30,14 @@
             scroll-behavior: smooth;
         }
 
-        /* THE INFINITE PAPER: Grows as you type */
+        /* THE INFINITE PAPER: This grows as you type */
         #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 300px; }
         #paper { 
             background: white; 
             color: #1e293b; 
             width: 100%; 
-            min-height: 1100px; /* One A4 page height */
-            height: auto;       /* This makes it grow rolling down */
+            min-height: 1100px; 
+            height: auto; 
             padding: 80px; 
             box-shadow: 0 10px 60px rgba(0,0,0,0.7); 
             font-family: 'Georgia', serif; 
@@ -63,10 +63,16 @@
         }
         .tool-btn { color: #333; font-weight: bold; cursor: pointer; font-size: 14px; }
 
-        /* DOWNLOAD BUTTONS UI */
-        .download-zone { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-download { background: var(--gold); color: black; font-weight: 800; padding: 10px 20px; border-radius: 8px; font-size: 12px; transition: 0.3s; }
-        .btn-download:hover { transform: scale(1.05); filter: brightness(1.1); }
+        /* PERMANENT DOWNLOAD BUTTONS (Fixed disappearing issue) */
+        .action-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 850px; margin-bottom: 20px; }
+        .download-group { display: flex; gap: 10px; }
+        
+        .btn-pdf { background: #e11d48; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
+        .btn-word { background: #2563eb; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
+        .btn-wa { background: #10b981; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
+        .btn-save { background: #6366f1; color: white; font-weight: 800; padding: 10px 18px; border-radius: 8px; font-size: 11px; }
+        
+        button:hover { filter: brightness(1.2); transform: translateY(-1px); transition: 0.2s; }
     </style>
 </head>
 <body>
@@ -85,16 +91,16 @@
     <div id="editor-container">
         
         <div class="w-full max-w-[850px] mb-6 px-4">
-            <input id="doc-title" type="text" placeholder="Title your document..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-4">
+            <input id="doc-title" type="text" placeholder="Proposal Title..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-6">
             
-            <div class="flex justify-between items-center">
-                <div class="download-zone">
-                    <button onclick="downloadAsPDF()" class="btn-download shadow-lg">📄 DOWNLOAD PDF</button>
-                    <button onclick="downloadAsWord()" class="btn-download shadow-lg" style="background: #EAEAEA;">📝 DOWNLOAD WORD</button>
+            <div class="action-bar">
+                <div class="download-group">
+                    <button onclick="downloadAsPDF()" class="btn-pdf">📄 PDF EXPORT</button>
+                    <button onclick="downloadAsWord()" class="btn-word">📝 WORD EXPORT</button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="shareToWA()" class="bg-emerald-600 px-4 py-2 rounded-lg font-bold text-xs text-white">📲 Share WA</button>
-                    <button onclick="saveToCloud()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs text-white">💾 Save Cloud</button>
+                    <button onclick="shareToWA()" class="btn-wa">📲 WHATSAPP</button>
+                    <button onclick="saveToCloud()" class="btn-save">💾 SAVE CLOUD</button>
                 </div>
             </div>
         </div>
@@ -104,35 +110,33 @@
             <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
             <button onclick="document.execCommand('underline')" class="tool-btn underline">U</button>
             <div class="w-px h-5 bg-gray-300 mx-2"></div>
-            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">Bullet Points</button>
+            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">Bullets</button>
         </div>
 
         <div id="paper-wrapper">
             <div id="paper" contenteditable="true" spellcheck="false">
-                <p>Start your professional document or proposal here. As you type, this white page will grow longer and longer automatically...</p>
+                <p>Start your professional document here. The white page will roll down as long as you need...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. PDF DOWNLOAD
         function downloadAsPDF() {
             const paper = document.getElementById('paper');
-            const title = document.getElementById('doc-title').value || 'My-Hilsey-Doc';
+            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
             const opt = {
                 margin: 0.5,
                 filename: `${title}.pdf`,
-                image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 3 },
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
             html2pdf().set(opt).from(paper).save();
         }
 
-        // 2. WORD DOWNLOAD
         function downloadAsWord() {
             const content = document.getElementById('paper').innerHTML;
-            const title = document.getElementById('doc-title').value || 'My-Hilsey-Doc';
+            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
             const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -141,7 +145,6 @@
             link.click();
         }
 
-        // 3. WHATSAPP & CLOUD
         function shareToWA() {
             const content = document.getElementById('paper').innerText;
             window.open(`https://wa.me/?text=${encodeURIComponent(content)}`, '_blank');
@@ -155,7 +158,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            alert("Document Synced Successfully!");
+            alert("Saved to Cloud!");
         }
     </script>
 </body>
