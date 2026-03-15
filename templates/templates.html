@@ -1,71 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hilsey Pro | Template Gallery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Pro | Template Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
-        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .template-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; transition: 0.3s; }
-        .template-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(58, 134, 255, 0.2); }
-        .preview-img { height: 200px; background: #2D3748; display: flex; align-items: center; justify-content: center; position: relative; }
-        .preview-img::after { content: "📄"; font-size: 50px; opacity: 0.2; }
+        :root { --bg: #0B132B; --card: #1C2541; --primary: #3A86FF; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .template-card {
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(58, 134, 255, 0.2);
+        }
+
+        /* Simulating the visual look of the templates in thumbnails */
+        .preview-box {
+            height: 350px;
+            width: 100%;
+            background: #f8fafc;
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Mock UI Elements for thumbnails */
+        .mock-sidebar { width: 30%; height: 100%; background: #1e293b; border-radius: 4px; }
+        .mock-header { width: 100%; height: 40px; background: #3A86FF; border-radius: 4px; }
+        .mock-line { width: 80%; height: 8px; background: #e2e8f0; border-radius: 2px; }
+        .mock-line.short { width: 40%; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav class="p-4 space-y-2">
-            <a href="/dashboard" class="flex items-center gap-3 p-3 text-gray-400 hover:text-white">📊 Dashboard</a>
-            <a href="/" class="flex items-center gap-3 p-3 text-gray-400 hover:text-white">✍️ Assignment Pad</a>
-            <a href="/templates" class="flex items-center gap-3 p-3 bg-blue-600/10 text-blue-400 rounded-lg font-bold">🎓 Templates Gallery</a>
-        </nav>
-    </div>
+    <div class="p-10">
+        <h1 class="text-4xl font-black italic mb-2">TEMPLATE STUDIO</h1>
+        <p class="text-gray-400 mb-10">Select a professional blueprint to begin your masterpiece.</p>
 
-    <div class="flex-1 p-10 overflow-y-auto">
-        <header class="mb-10">
-            <h2 class="text-3xl font-bold">Document Gallery</h2>
-            <p class="text-gray-400">Choose a professional blueprint to start your career journey.</p>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="gallery-grid">
             
-            <div class="template-card">
-                <div class="preview-img bg-slate-100">
-                    <div class="absolute inset-0 border-8 border-white m-4 shadow-sm"></div>
+            <div class="template-card" onclick="location.href='/?template=modern'">
+                <div class="preview-box">
+                    <div class="flex h-full gap-3">
+                        <div class="mock-sidebar"></div>
+                        <div class="flex-1 flex flex-col gap-3">
+                            <div class="h-10 w-20 bg-gray-300 rounded"></div>
+                            <div class="mock-line"></div>
+                            <div class="mock-line"></div>
+                            <div class="mock-line short"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-bold text-lg mb-1">Classic Professional</h3>
-                    <p class="text-xs text-gray-400 mb-4">Standard black & white layout. Best for corporate and banking roles.</p>
-                    <button onclick="location.href='/?template=cv'" class="w-full bg-blue-600 py-2 rounded-lg font-bold text-sm hover:bg-blue-500 transition">Use Template</button>
-                </div>
-            </div>
-
-            <div class="template-card">
-                <div class="preview-img bg-blue-50">
-                    <div class="absolute left-0 top-0 bottom-0 w-1/3 bg-blue-900"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-bold text-lg mb-1">Modern Sidebar</h3>
-                    <p class="text-xs text-gray-400 mb-4">Clean layout with a focused skill sidebar. Best for Tech & Marketing.</p>
-                    <button onclick="location.href='/?template=modern'" class="w-full bg-blue-600 py-2 rounded-lg font-bold text-sm hover:bg-blue-500 transition">Use Template</button>
+                <div class="p-5">
+                    <span class="text-[10px] bg-blue-600 px-2 py-1 rounded-full font-bold">BEST SELLER</span>
+                    <h3 class="text-xl font-bold mt-2">Modern Sidebar CV</h3>
+                    <p class="text-gray-400 text-xs mt-1">Clean, split-layout for tech and marketing roles.</p>
                 </div>
             </div>
 
-            <div class="template-card">
-                <div class="preview-img bg-emerald-50 text-emerald-900 font-serif p-4 text-[8px]">
-                    <b>Resignation Letter</b><br>To whom it may concern...
+            <div class="template-card" onclick="location.href='/?template=proposal'">
+                <div class="preview-box">
+                    <div class="mock-header"></div>
+                    <div class="mt-10 flex flex-col gap-4 items-center">
+                        <div class="h-16 w-16 rounded-full bg-gray-200"></div>
+                        <div class="mock-line"></div>
+                        <div class="mock-line"></div>
+                        <div class="mock-line"></div>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="font-bold text-lg mb-1 text-emerald-400">Resignation Letter</h3>
-                    <p class="text-xs text-gray-400 mb-4">A polite, professional template for leaving your current role on good terms.</p>
-                    <button onclick="location.href='/?template=resign'" class="w-full bg-emerald-600 py-2 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">Open Letterbox</button>
+                <div class="p-5">
+                    <span class="text-[10px] bg-emerald-600 px-2 py-1 rounded-full font-bold">BUSINESS</span>
+                    <h3 class="text-xl font-bold mt-2">Executive Proposal</h3>
+                    <p class="text-gray-400 text-xs mt-1">High-stakes business proposal layout with bold headers.</p>
+                </div>
+            </div>
+
+            <div class="template-card" onclick="location.href='/?template=cover_letter'">
+                <div class="preview-box">
+                    <div class="border-l-8 border-blue-500 h-full pl-4 flex flex-col gap-4">
+                        <div class="h-8 w-32 bg-gray-800 rounded"></div>
+                        <div class="mock-line"></div>
+                        <div class="mock-line"></div>
+                        <div class="mock-line"></div>
+                        <div class="mock-line"></div>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <span class="text-[10px] bg-purple-600 px-2 py-1 rounded-full font-bold">CREATIVE</span>
+                    <h3 class="text-xl font-bold mt-2">Minimalist Cover Letter</h3>
+                    <p class="text-gray-400 text-xs mt-1">Elegant, left-accented design for modern applications.</p>
                 </div>
             </div>
 
         </div>
     </div>
+
 </body>
 </html>
