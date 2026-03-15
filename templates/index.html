@@ -16,7 +16,7 @@
 <body>
 
     <div class="sidebar">
-        <h2 class="text-xl font-bold text-indigo-400 mb-8 text-center underline italic">HILSEY PRO</h2>
+        <h2 class="text-xl font-bold text-indigo-400 mb-8 text-center underline italic text-indigo-400">HILSEY PRO</h2>
         
         <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Navigation</p>
         <a href="/" class="btn-sidebar bg-indigo-900">✍️ Assignment Pad</a>
@@ -25,53 +25,55 @@
 
         <hr class="border-gray-700 my-4">
 
-        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Tools</p>
+        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Cloud Tools</p>
+        <button onclick="saveToCloud()" class="btn-sidebar w-full text-left bg-blue-600 hover:bg-blue-500">
+            ☁️ Backup to Cloud
+        </button>
         <button onclick="shareWhatsApp()" class="btn-sidebar w-full text-left">
             📲 Share to WhatsApp
         </button>
 
-        <button onclick="downloadPDF()" class="w-full mt-auto bg-green-600 hover:bg-green-500 p-3 rounded font-bold shadow-lg transition-all">
+        <button onclick="downloadPDF()" class="w-full mt-auto bg-green-600 hover:bg-green-500 p-3 rounded font-bold shadow-lg">
             💾 Save as PDF
         </button>
+        <a href="/logout" class="text-center text-xs text-red-400 mt-4 hover:underline">Logout</a>
     </div>
 
     <div class="main">
         <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-bold mb-2 text-white">Assignment Draft Pad</h1>
-            <p class="text-sm text-gray-400 mb-8 italic">Your work is private. Use the sidebar to save or share your draft.</p>
+            <h1 class="text-3xl font-bold mb-2">Welcome, {{ user }}</h1>
+            <p class="text-sm text-gray-400 mb-8 italic">Drafting as: {{ user }}</p>
             
             <div id="notepad" contenteditable="true">
                 <h1 style="text-align: center;">Assignment Title</h1>
-                <p><strong>Student Name:</strong> </p>
-                <p><strong>Date:</strong> </p>
-                <hr>
-                <p>Start typing your work here...</p>
+                <p>Start typing...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // PDF DOWNLOADER
+        function saveToCloud() {
+            const content = document.getElementById('notepad').innerText;
+            fetch('/save', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({content: content})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) alert("✅ Draft backed up to Cloud!");
+            });
+        }
+
         function downloadPDF() {
             const element = document.getElementById('notepad');
-            const opt = {
-                margin:       0.5,
-                filename:     'Hilsey_Pro_Assignment.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set({margin: 0.5, filename: 'Assignment.pdf'}).from(element).save();
         }
 
-        // WHATSAPP SHARE
         function shareWhatsApp() {
             const content = document.getElementById('notepad').innerText;
-            const message = "Check out my assignment draft on Hilsey Pro: \n\n" + content;
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent(content)}`, '_blank');
         }
     </script>
-
 </body>
 </html>
