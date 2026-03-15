@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hilsey Pro | Student Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white min-height-screen">
+    <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-800">
+        <h1 class="text-2xl font-bold text-indigo-400">📂 Student Cloud Storage</h1>
+        <a href="/" class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-500 transition shadow-lg">⬅ Back to Drafting</a>
+    </div>
 
+    <div class="max-w-5xl mx-auto mt-10 p-6">
+        <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl">
+            <h2 class="text-xl font-semibold mb-4">Your Saved Assignments</h2>
+            <p class="text-gray-400 mb-6">Below is a list of your drafts saved to the cloud. You can reopen them to continue working.</p>
+            
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-slate-700 text-indigo-300">
+                        <th class="py-3 px-4">Document Name</th>
+                        <th class="py-3 px-4">Date Saved</th>
+                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="student-docs">
+                    <tr class="border-b border-slate-700 hover:bg-slate-700/50 transition">
+                        <td class="py-4 px-4 font-medium">Sample_Assignment.pdf</td>
+                        <td class="py-4 px-4 text-gray-400">Mar 15, 2026</td>
+                        <td class="py-4 px-4"><span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">Saved</span></td>
+                        <td class="py-4 px-4"><button class="text-indigo-400 hover:underline">Open</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-10 text-center py-10 border-2 border-dashed border-slate-700 rounded-lg">
+                <p class="text-gray-500 italic">No other drafts found. Use the Assignment Pad to save your work!</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
