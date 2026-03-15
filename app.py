@@ -4,13 +4,13 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# 🔑 Your Key is active here
-genai.configure(api_key=AIzaSyA5RkM41g8DQP1FLs6cyb7S8Q7fVMTX4Ko)
+# 🔑 Here is the fix! Notice the quotation marks (" ") around your key.
+genai.configure(api_key="AIzaSyA5RkM41g8DQP1FLs6cyb7S8Q7fVMTX4Ko")
 model = genai.GenerativeModel('gemini-pro')
 
 @app.route('/')
 def index():
-    # This line is the "Switch" that turns on the Dark Layout
+    # This loads your new PDF Notepad layout
     return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
@@ -20,6 +20,7 @@ def generate():
         doc_type = data.get("type", "Document")
         user_input = data.get("message", "")
 
+        # This tells the AI what to do
         prompt = f"You are Hilsey Pro. Create a professional {doc_type} based on: {user_input}"
         response = model.generate_content(prompt)
         
