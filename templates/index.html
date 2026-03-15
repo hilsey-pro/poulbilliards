@@ -9,18 +9,18 @@
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
         
-        /* Sidebar Styles */
+        /* Sidebar */
         .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
         .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; border-left: 4px solid transparent; transition: 0.2s; }
         .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left-color: var(--primary); }
         
-        /* Editor Styles */
+        /* Editor */
         #editor-container { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
-        #paper { background: white; color: #1e293b; width: 100%; max-width: 850px; min-height: 1100px; padding: 60px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; line-height: 1.6; }
+        #paper { background: white; color: #1e293b; width: 100%; max-width: 850px; min-height: 1100px; padding: 80px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; line-height: 1.7; }
         
-        /* Toolbar & UI */
+        /* Toolbar */
         .toolbar { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; display: flex; gap: 8px; position: sticky; top: 0; z-index: 10; width: 100%; max-width: 850px; border-radius: 4px 4px 0 0; }
-        .tool-btn { padding: 4px 8px; color: #475569; font-weight: bold; border-radius: 4px; }
+        .tool-btn { padding: 4px 8px; color: #475569; font-weight: bold; border-radius: 4px; font-size: 13px; }
         .tool-btn:hover { background: #e2e8f0; }
 
         .ai-drawer { width: 320px; background: #111a36; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
@@ -33,7 +33,7 @@
         <div class="p-6">
             <h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1>
             <div class="mt-4">
-                <input type="text" id="global-search" placeholder="Search menu..." onkeyup="performSearch()" class="w-full bg-[#0B132B] border border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-blue-500">
+                <input type="text" id="global-search" placeholder="Search menu..." onkeyup="performSearch()" class="w-full bg-[#0B132B] border border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-blue-500 text-white">
             </div>
         </div>
         <nav class="flex-1">
@@ -41,7 +41,6 @@
             <a href="/" class="nav-item active">✍️ Assignment Pad</a>
             <a href="/templates" class="nav-item">🎓 Templates</a>
             <a href="/database" class="nav-item">☁️ Student Cloud</a>
-            <a href="/workspace" class="nav-item">👥 Group Workspace</a>
             <a href="/hub" class="nav-item">📞 Discussion Hub</a>
         </nav>
         <div class="p-4 border-t border-white/5">
@@ -53,36 +52,52 @@
     <div id="editor-container">
         <div class="w-full max-w-[850px] flex justify-between items-center mb-6">
             <div class="flex-1">
-                <input id="doc-title" type="text" placeholder="Untitled Document" class="bg-transparent text-3xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-full text-white">
-                <p class="text-[11px] text-gray-500 mt-1">Words: <span id="word-count" class="text-blue-400">0</span> | Career Stationery Pack v2.2</p>
+                <input id="doc-title" type="text" placeholder="Untitled Draft" class="bg-transparent text-3xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-full text-white">
+                <p class="text-[11px] text-gray-500 mt-1">Words: <span id="word-count" class="text-blue-400">0</span> | <span class="text-emerald-400 font-bold">WhatsApp Sync Ready</span></p>
             </div>
-            <button onclick="saveWork()" class="bg-blue-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 shadow-lg">Save to Cloud</button>
+            <div class="flex gap-2">
+                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-4 py-2 rounded-lg font-bold text-xs hover:bg-emerald-500 transition flex items-center gap-2">
+                   <span>📲</span> Share
+                </button>
+                <button onclick="saveWork()" class="bg-blue-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 shadow-lg">Save Cloud</button>
+            </div>
         </div>
 
         <div class="toolbar">
             <button onclick="document.execCommand('bold')" class="tool-btn">B</button>
             <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
             <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
+            <div class="w-px h-4 bg-gray-300 mx-2"></div>
             <button onclick="document.execCommand('formatBlock', false, 'h1')" class="tool-btn">H1</button>
             <button onclick="document.execCommand('formatBlock', false, 'h2')" class="tool-btn">H2</button>
         </div>
         
         <div id="paper" contenteditable="true" oninput="updateStats()">
-            <p>Select a template or start typing...</p>
+            <p>Ready for your career breakthrough...</p>
         </div>
     </div>
 
     <div class="ai-drawer">
-        <h3 class="text-xs font-bold text-blue-400 mb-4 uppercase tracking-widest">Achievement Builder</h3>
-        <button onclick="callAI('polish')" class="ai-btn">✨ <b>Academic Polish</b><br><span class="opacity-50">Fix grammar & tone</span></button>
-        <button onclick="callAI('suggest')" class="ai-btn">🔍 <b>Career Suggestions</b><br><span class="opacity-50">Optimize for recruiters</span></button>
+        <h3 class="text-xs font-bold text-blue-400 mb-4 uppercase tracking-widest">Career AI</h3>
+        <button onclick="callAI('polish')" class="ai-btn">✨ <b>Academic Polish</b></button>
+        <button onclick="callAI('achievement')" class="ai-btn">🚀 <b>Achievement Builder</b></button>
+        <button onclick="callAI('suggest')" class="ai-btn">🔍 <b>Recruiter Tips</b></button>
         
         <div id="ai-response" class="mt-6 p-4 bg-slate-900/50 rounded-lg text-xs border border-slate-800 text-gray-300 min-h-[150px] whitespace-pre-wrap">
-            AI tips appear here...
+            AI career advice will show here...
         </div>
     </div>
 
     <script>
+        // 1. WHATSAPP SHARE LOGIC
+        function shareToWhatsApp() {
+            const title = document.getElementById('doc-title').value || "My Document";
+            const content = document.getElementById('paper').innerText;
+            const text = `*${title}* \n\n${content}`;
+            const encodedText = encodeURIComponent(text);
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+        }
+
         function performSearch() {
             let input = document.getElementById('global-search').value.toLowerCase();
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -96,7 +111,6 @@
             document.getElementById('word-count').innerText = words.length;
         }
 
-        // --- TEMPLATE ENGINE ---
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const templateKey = urlParams.get('template');
@@ -104,35 +118,9 @@
             const docTitle = document.getElementById('doc-title');
 
             const templates = {
-                'cv': {
-                    title: "Classic Professional CV",
-                    body: "<h1>CURRICULUM VITAE</h1><hr><p><b>Name:</b> [Name]</p><h3>EDUCATION</h3><p>Details...</p><h3>EXPERIENCE</h3><p>Role details...</p>"
-                },
-                'modern': {
-                    title: "Modern Sidebar CV",
-                    body: `<div style="display:flex; gap:30px;">
-                            <div style="flex:1; background:#f8fafc; padding:20px; border-radius:8px;">
-                                <h3>Contact</h3><p>Email: ...</p>
-                                <h3>Skills</h3><ul><li>Accounting</li><li>Marketing</li></ul>
-                            </div>
-                            <div style="flex:2;">
-                                <h1>[YOUR NAME]</h1>
-                                <p><i>Professional Summary...</i></p>
-                                <hr>
-                                <h3>Professional Experience</h3>
-                                <p><b>Job Title</b> | Company Name</p>
-                                <p>Describe your achievements here...</p>
-                            </div>
-                           </div>`
-                },
-                'resign': {
-                    title: "Professional Resignation Letter",
-                    body: "<h1>RESIGNATION LETTER</h1><p>Dear [Manager Name],</p><p>Please accept this letter as formal notification that I am resigning from my position as [Job Title]. My last day will be [Date].</p><p>Thank you for the opportunity to work at [Company].</p><p>Sincerely,<br>[Your Name]</p>"
-                },
-                'thesis': {
-                    title: "Thesis Blueprint",
-                    body: "<h1>THESIS TITLE</h1><h3>Abstract</h3><p>...</p><h3>Chapter 1: Introduction</h3><p>...</p>"
-                }
+                'cv': { title: "Classic CV", body: "<h1>CV</h1><p>Name: ...</p>" },
+                'modern': { title: "Modern CV", body: "<div style='display:flex;gap:20px;'><div style='flex:1;background:#f8fafc;padding:15px;'>Skills</div><div style='flex:2;'>Experience</div></div>" },
+                'resign': { title: "Resignation", body: "<h1>Resignation</h1><p>Dear Manager...</p>" }
             };
 
             if (templateKey && templates[templateKey]) {
@@ -145,25 +133,25 @@
         async function callAI(mode) {
             const content = document.getElementById('paper').innerText;
             const resBox = document.getElementById('ai-response');
-            resBox.innerText = "Analyzing text...";
+            resBox.innerText = "Processing...";
             const response = await fetch('/ai-assist', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({mode: mode, content: content})
             });
             const data = await response.json();
-            resBox.innerText = data.success ? data.result : "Error connecting to AI.";
+            resBox.innerText = data.success ? data.result : "AI Error";
         }
 
         async function saveWork() {
             const content = document.getElementById('paper').innerHTML;
             const title = document.getElementById('doc-title').value;
-            const res = await fetch('/save', {
+            await fetch('/save', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            if(res.ok) alert("Document saved to your Student Cloud!");
+            alert("Saved to Student Cloud!");
         }
     </script>
 </body>
