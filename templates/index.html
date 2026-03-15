@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hilsey Pro | Workstation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    
     <style>
-        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
+        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --gold: #FFD700; }
         
-        /* Sidebar */
+        body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
+        
+        /* Sidebar Navigation */
         .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
         .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
 
-        /* Infinite Scroll Container */
+        /* The Main Scrollable Workspace */
         #editor-container { 
             flex: 1; 
-            padding-top: 40px;
+            padding: 40px 20px;
             overflow-y: auto; 
             display: flex; 
             flex-direction: column; 
@@ -30,25 +30,26 @@
             scroll-behavior: smooth;
         }
 
-        /* The Rolling Paper Fix */
-        #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 200px; }
+        /* THE INFINITE PAPER: Grows as you type */
+        #paper-wrapper { width: 100%; max-width: 850px; padding-bottom: 300px; }
         #paper { 
             background: white; 
             color: #1e293b; 
             width: 100%; 
-            min-height: 1100px; 
-            height: auto; 
+            min-height: 1100px; /* One A4 page height */
+            height: auto;       /* This makes it grow rolling down */
             padding: 80px; 
-            box-shadow: 0 10px 50px rgba(0,0,0,0.6); 
+            box-shadow: 0 10px 60px rgba(0,0,0,0.7); 
             font-family: 'Georgia', serif; 
             line-height: 1.8;
             outline: none;
             word-wrap: break-word;
+            border-radius: 4px;
         }
 
-        /* Sticky Toolbar */
+        /* STICKY TOOLBAR */
         .toolbar { 
-            background: #ffffff; 
+            background: white; 
             padding: 10px 20px; 
             display: flex; 
             gap: 15px; 
@@ -57,15 +58,15 @@
             z-index: 100; 
             width: 100%; 
             max-width: 850px; 
-            border-radius: 8px 8px 0 0;
             border-bottom: 1px solid #ddd;
+            border-radius: 8px 8px 0 0;
         }
-        .tool-btn { color: #444; font-weight: bold; cursor: pointer; }
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background: #1C2541; min-width: 140px; border-radius: 8px; z-index: 101; margin-top: 10px; border: 1px solid #334155; }
-        .dropdown:hover .dropdown-content { display: block; }
-        .drop-item { color: white; padding: 10px; text-decoration: none; display: block; font-size: 11px; font-weight: bold; }
-        .drop-item:hover { background: var(--primary); }
+        .tool-btn { color: #333; font-weight: bold; cursor: pointer; font-size: 14px; }
+
+        /* DOWNLOAD BUTTONS UI */
+        .download-zone { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-download { background: var(--gold); color: black; font-weight: 800; padding: 10px 20px; border-radius: 8px; font-size: 12px; transition: 0.3s; }
+        .btn-download:hover { transform: scale(1.05); filter: brightness(1.1); }
     </style>
 </head>
 <body>
@@ -82,25 +83,19 @@
     </div>
 
     <div id="editor-container">
-        <div class="w-full max-w-[850px] flex justify-between items-end mb-6 px-4">
-            <div>
-                <input id="doc-title" type="text" placeholder="Proposal Name..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500">
-                <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Infinite Page Mode Engaged</p>
-            </div>
+        
+        <div class="w-full max-w-[850px] mb-6 px-4">
+            <input id="doc-title" type="text" placeholder="Title your document..." class="bg-transparent text-4xl font-bold outline-none text-white w-full border-b-2 border-transparent focus:border-blue-500 mb-4">
             
-            <div class="flex gap-2">
-                <div class="dropdown">
-                    <button class="bg-slate-700 text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-2">
-                        📥 Download ▾
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="#" onclick="downloadPDF()" class="drop-item">📄 Export as PDF</a>
-                        <a href="#" onclick="downloadWord()" class="drop-item">📝 Export as Word</a>
-                    </div>
+            <div class="flex justify-between items-center">
+                <div class="download-zone">
+                    <button onclick="downloadAsPDF()" class="btn-download shadow-lg">📄 DOWNLOAD PDF</button>
+                    <button onclick="downloadAsWord()" class="btn-download shadow-lg" style="background: #EAEAEA;">📝 DOWNLOAD WORD</button>
                 </div>
-
-                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-4 py-2 rounded-lg font-bold text-xs">📲 Share</button>
-                <button onclick="saveWork()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs">💾 Save Cloud</button>
+                <div class="flex gap-2">
+                    <button onclick="shareToWA()" class="bg-emerald-600 px-4 py-2 rounded-lg font-bold text-xs text-white">📲 Share WA</button>
+                    <button onclick="saveToCloud()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs text-white">💾 Save Cloud</button>
+                </div>
             </div>
         </div>
 
@@ -109,55 +104,50 @@
             <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
             <button onclick="document.execCommand('underline')" class="tool-btn underline">U</button>
             <div class="w-px h-5 bg-gray-300 mx-2"></div>
-            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">Bullets</button>
+            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">Bullet Points</button>
         </div>
 
         <div id="paper-wrapper">
             <div id="paper" contenteditable="true" spellcheck="false">
-                <p>Start your professional document here...</p>
+                <p>Start your professional document or proposal here. As you type, this white page will grow longer and longer automatically...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. PDF DOWNLOAD LOGIC
-        function downloadPDF() {
-            const element = document.getElementById('paper');
-            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
+        // 1. PDF DOWNLOAD
+        function downloadAsPDF() {
+            const paper = document.getElementById('paper');
+            const title = document.getElementById('doc-title').value || 'My-Hilsey-Doc';
             const opt = {
-                margin: 0,
+                margin: 0.5,
                 filename: `${title}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 3 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(paper).save();
         }
 
-        // 2. WORD DOWNLOAD LOGIC
-        function downloadWord() {
+        // 2. WORD DOWNLOAD
+        function downloadAsWord() {
             const content = document.getElementById('paper').innerHTML;
-            const title = document.getElementById('doc-title').value || 'Hilsey-Document';
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
-            const footer = "</body></html>";
-            const sourceHTML = header + content + footer;
-            
-            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-            const fileDownload = document.createElement("a");
-            document.body.appendChild(fileDownload);
-            fileDownload.href = source;
-            fileDownload.download = `${title}.doc`;
-            fileDownload.click();
-            document.body.removeChild(fileDownload);
+            const title = document.getElementById('doc-title').value || 'My-Hilsey-Doc';
+            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${title}.doc`;
+            link.click();
         }
 
-        // 3. WHATSAPP & SAVE LOGIC
-        function shareToWhatsApp() {
+        // 3. WHATSAPP & CLOUD
+        function shareToWA() {
             const content = document.getElementById('paper').innerText;
             window.open(`https://wa.me/?text=${encodeURIComponent(content)}`, '_blank');
         }
 
-        async function saveWork() {
+        async function saveToCloud() {
             const content = document.getElementById('paper').innerHTML;
             const title = document.getElementById('doc-title').value;
             await fetch('/save', {
@@ -165,7 +155,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            alert("Draft Synchronized!");
+            alert("Document Synced Successfully!");
         }
     </script>
 </body>
