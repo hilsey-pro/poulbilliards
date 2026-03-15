@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Advanced Editor</title>
+    <title>Hilsey Pro | Advanced Word Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; }
-        body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Layout */
-        .sidebar { width: 240px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
-        #editor-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; position: relative; }
+        .sidebar { width: 240px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        #editor-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
 
-        /* Microsoft Word Style Ribbon */
+        /* MICROSOFT WORD STYLE RIBBON */
         .word-ribbon { 
             width: 100%; 
-            background: #ffffff; 
-            padding: 8px 20px; 
+            background: #f3f4f6; 
+            padding: 10px 25px; 
             display: flex; 
             flex-wrap: wrap;
-            gap: 12px; 
-            border-bottom: 2px solid #cbd5e1; 
+            gap: 15px; 
+            border-bottom: 2px solid #d1d5db; 
             position: sticky; 
             top: 0; 
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             align-items: center;
         }
 
-        .ribbon-group { display: flex; align-items: center; gap: 5px; border-right: 1px solid #e2e8f0; padding-right: 12px; height: 32px; }
-        .tool-btn { color: #334155; padding: 5px 8px; border-radius: 4px; transition: 0.2s; font-size: 14px; font-weight: 600; cursor: pointer; }
-        .tool-btn:hover { background: #e2e8f0; color: #000; }
+        .ribbon-section { display: flex; align-items: center; gap: 8px; border-right: 1.5px solid #d1d5db; padding-right: 15px; }
+        .tool-btn { color: #374151; padding: 6px; border-radius: 4px; transition: 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .tool-btn:hover { background: #e5e7eb; border: 1px solid #9ca3af; }
         
-        select.tool-select { background: #f1f5f9; color: #334155; border-radius: 4px; padding: 2px 5px; font-size: 12px; outline: none; border: 1px solid #cbd5e1; }
+        select.tool-select { background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 3px; padding: 3px; font-size: 13px; outline: none; }
 
-        /* The Infinite Page */
+        /* THE PAPER */
         #paper { 
             background: white; 
             color: #1e293b; 
@@ -44,75 +43,75 @@
             max-width: 850px; 
             min-height: 1100px; 
             height: auto; 
-            padding: 80px; 
-            margin-top: 30px;
-            margin-bottom: 200px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5); 
-            font-family: 'serif'; 
+            padding: 90px; 
+            margin-top: 40px;
+            margin-bottom: 300px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6); 
+            font-family: 'Arial'; 
             line-height: 1.6;
             outline: none;
             border-radius: 2px;
         }
 
-        /* Action Buttons at Top */
-        .top-nav { width: 100%; max-width: 850px; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
-        .btn-action { padding: 8px 16px; border-radius: 6px; font-size: 11px; font-weight: bold; transition: 0.3s; color: white; }
+        .action-bar { width: 100%; max-width: 850px; display: flex; justify-content: space-between; padding: 25px 0; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav class="mt-4">
+        <div class="p-6 text-center"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
+        <nav class="mt-6">
             <a href="/" class="block px-6 py-3 text-blue-400 bg-blue-500/10 border-l-4 border-blue-500">✍️ Assignment Pad</a>
             <a href="/templates" class="block px-6 py-3 text-gray-400 hover:text-white transition">🎓 Templates</a>
-            <a href="/hub" class="block px-6 py-3 text-gray-400 hover:text-white transition">💬 Discussion Hub</a>
         </nav>
     </div>
 
     <div id="editor-container">
         <div class="word-ribbon">
-            <div class="ribbon-group">
-                <select onchange="format('fontName', this.value)" class="tool-select">
+            <div class="ribbon-section">
+                <select onchange="exec('fontName', this.value)" class="tool-select w-32">
                     <option value="Arial">Arial</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Times New Roman">Times New Roman</option>
                     <option value="Georgia">Georgia</option>
-                    <option value="Courier New">Courier</option>
                 </select>
-                <select onchange="format('fontSize', this.value)" class="tool-select w-12">
-                    <option value="3">12</option>
-                    <option value="4">14</option>
-                    <option value="5">18</option>
-                    <option value="6">24</option>
+                <select onchange="exec('fontSize', this.value)" class="tool-select">
+                    <option value="3">12pt</option>
+                    <option value="4">14pt</option>
+                    <option value="5">18pt</option>
+                    <option value="6">24pt</option>
+                    <option value="7">36pt</option>
                 </select>
             </div>
 
-            <div class="ribbon-group">
-                <button onclick="format('bold')" class="tool-btn" title="Bold">B</button>
-                <button onclick="format('italic')" class="tool-btn italic" title="Italic">I</button>
-                <button onclick="format('underline')" class="tool-btn underline" title="Underline">U</button>
-                <input type="color" onchange="format('foreColor', this.value)" class="w-6 h-6 border-none cursor-pointer" title="Text Color">
+            <div class="ribbon-section">
+                <button onclick="exec('bold')" class="tool-btn font-bold">B</button>
+                <button onclick="exec('italic')" class="tool-btn italic">I</button>
+                <button onclick="exec('underline')" class="tool-btn underline">U</button>
+                <button onclick="exec('strikeThrough')" class="tool-btn line-through">abc</button>
+                <input type="color" onchange="exec('foreColor', this.value)" class="w-6 h-6 border-none cursor-pointer p-0" title="Text Color">
             </div>
 
-            <div class="ribbon-group">
-                <button onclick="format('justifyLeft')" class="tool-btn">⬅️</button>
-                <button onclick="format('justifyCenter')" class="tool-btn">⬅️➡️</button>
-                <button onclick="format('justifyRight')" class="tool-btn">➡️</button>
+            <div class="ribbon-section">
+                <button onclick="exec('justifyLeft')" class="tool-btn">Left</button>
+                <button onclick="exec('justifyCenter')" class="tool-btn">Center</button>
+                <button onclick="exec('justifyRight')" class="tool-btn">Right</button>
             </div>
 
-            <div class="ribbon-group" style="border:none;">
-                <button onclick="document.getElementById('img-input').click()" class="tool-btn" title="Insert Image">🖼️ Image</button>
-                <button onclick="format('insertUnorderedList')" class="tool-btn">• List</button>
-                <button onclick="format('insertHorizontalRule')" class="tool-btn">— Line</button>
+            <div class="ribbon-section" style="border:none;">
+                <button onclick="document.getElementById('imageLoader').click()" class="tool-btn">🖼️ Insert Image</button>
+                <button onclick="exec('insertUnorderedList')" class="tool-btn">Bullet List</button>
+                <button onclick="exec('insertHorizontalRule')" class="tool-btn">Divider</button>
             </div>
             
-            <input type="file" id="img-input" class="hidden" accept="image/*" onchange="insertImage(this)">
+            <input type="file" id="imageLoader" class="hidden" accept="image/*" onchange="handleImage(this)">
         </div>
 
-        <div class="top-nav">
-            <input id="doc-title" type="text" class="bg-transparent text-3xl font-bold outline-none text-white border-b border-transparent focus:border-blue-500" value="New Document">
-            <div class="flex gap-2">
-                <button onclick="downloadPDF()" class="btn-action bg-red-600 hover:bg-red-500">PDF</button>
-                <button onclick="saveWork()" class="btn-action bg-blue-600 hover:bg-blue-500">SAVE CLOUD</button>
+        <div class="action-bar">
+            <input id="doc-title" type="text" class="bg-transparent text-3xl font-bold outline-none text-white w-full border-b border-white/10 focus:border-blue-500 mr-10" value="Untitled Proposal">
+            <div class="flex gap-3">
+                <button onclick="downloadPDF()" class="bg-red-600 px-6 py-2 rounded font-bold text-xs text-white hover:bg-red-500">PDF EXPORT</button>
+                <button onclick="saveCloud()" class="bg-indigo-600 px-6 py-2 rounded font-bold text-xs text-white hover:bg-indigo-500">SAVE CLOUD</button>
             </div>
         </div>
 
@@ -121,56 +120,45 @@
     </div>
 
     <script>
-        // Formatting function
-        function format(cmd, value = null) {
-            document.execCommand(cmd, false, value);
-        }
+        function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
 
-        // Image Insertion Logic (Browsing files)
-        function insertImage(input) {
+        function handleImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = `<img src="${e.target.result}" style="max-width:300px; margin:10px auto; display:block; border-radius:8px;">`;
-                    document.execCommand('insertHTML', false, img);
+                reader.onload = (e) => {
+                    const img = `<img src="${e.target.result}" style="max-width:100%; border-radius:5px; margin: 15px 0;">`;
+                    exec('insertHTML', img);
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // Pre-filled Templates Database
-        const library = {
+        const templates = {
             'modern': {
-                t: "Resume: [Name]",
-                b: `<div style="display:flex; gap:30px;"><div style="flex:1; background:#f1f5f9; padding:20px;"><h3>CONTACT</h3><p>[Email]</p><p>[Phone]</p></div><div style="flex:2;"><h1>[YOUR NAME]</h1><hr><h3>EXPERIENCE</h3><p>Enter job details here...</p></div></div>`
+                title: "Professional CV - [Your Name]",
+                body: `<h1>[YOUR NAME]</h1><p style="color:gray;">[Your Professional Title]</p><hr><h3 style="color:#3A86FF">PROFESSIONAL SUMMARY</h3><p>Highly motivated professional with expertise in [Area]. Dedicated to delivering excellence and innovative solutions...</p><h3>WORK EXPERIENCE</h3><p><b>Senior Manager</b> | [Company Name]<br><i>[Date Range]</i></p><ul><li>Led team of 10 to achieve [Result]</li><li>Increased efficiency by 20%</li></ul>`
             },
             'proposal': {
-                t: "Project Proposal",
-                b: `<div style="border-top:10px solid #3A86FF; padding:40px;"><h1 style="text-align:center;">EXECUTIVE PROPOSAL</h1><p><b>Prepared for:</b> [Client Name]</p><p>Summary: [Explain the project scope here...]</p></div>`
-            },
-            'cover_letter': {
-                t: "Cover Letter",
-                b: `<p>[Date]</p><p>Dear Hiring Manager,</p><p>I am writing to apply for [Position]...</p>`
+                title: "Project Proposal: [Client Name]",
+                body: `<div style="text-align:center;"><h1 style="font-size:32px; color:#3A86FF;">PROJECT PROPOSAL</h1><p>Prepared for: [Client Name]</p></div><div style="margin-top:50px;"><h2>1. Project Overview</h2><p>This proposal outlines the strategy for implementing [Solution]. Our goal is to address the current challenges in [Sector]...</p><h2>2. Budget</h2><p>Total estimated investment: [Amount]</p></div>`
             }
         };
 
         window.onload = function() {
             const params = new URLSearchParams(window.location.search);
             const key = params.get('template') || 'modern';
-            if(library[key]) {
-                document.getElementById('paper').innerHTML = library[key].b;
-                document.getElementById('doc-title').value = library[key].t;
-            }
+            const doc = templates[key] || templates['modern'];
+            document.getElementById('paper').innerHTML = doc.body;
+            document.getElementById('doc-title').value = doc.title;
         };
 
         function downloadPDF() {
-            const element = document.getElementById('paper');
-            html2pdf().set({ margin: 0.5, filename: 'Document.pdf', html2canvas: { scale: 2 } }).from(element).save();
+            const el = document.getElementById('paper');
+            const name = document.getElementById('doc-title').value;
+            html2pdf().set({ margin: 0.5, filename: name+'.pdf', html2canvas: { scale: 2 } }).from(el).save();
         }
 
-        function saveWork() {
-            alert("Document Saved to Hilsey Cloud!");
-        }
+        function saveCloud() { alert("Synced to Hilsey Cloud!"); }
     </script>
 </body>
 </html>
