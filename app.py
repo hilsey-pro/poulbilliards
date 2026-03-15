@@ -19,15 +19,14 @@ def get_db_data():
             return json.load(f)
     return {}
 
-def save_to_db(username, content):
+def save_to_db(username, content, title):
     data = get_db_data()
     if username not in data:
         data[username] = []
     
-    # Calculate word count for stats
     word_count = len(content.split())
-    
     data[username].append({
+        "title": title or "Untitled Draft",
         "filename": f"Draft_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
         "date": datetime.now().strftime("%b %d, %Y"),
         "content": content,
@@ -43,16 +42,12 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
         if username.lower() == "admin" and password == "9999":
-            session['user'] = "Lecturer"
-            session['role'] = "admin"
+            session['user'], session['role'] = "Lecturer", "admin"
             return redirect(url_for('dashboard'))
         elif password == "1234": 
-            session['user'] = username
-            session['role'] = "student"
+            session['user'], session['role'] = username, "student"
             return redirect(url_for('dashboard'))
-            
         return "<h1>Access Denied</h1>"
     return render_template('login.html')
 
@@ -69,30 +64,23 @@ def index():
 @app.route('/dashboard')
 def dashboard():
     if 'user' not in session: return redirect(url_for('login'))
-    
     data = get_db_data()
-    stats = {"total_files": 0, "total_words": 0, "recent_activity": []}
-    
+    stats = {"total_files": 0, "total_words": 0}
     if session.get('role') == 'admin':
-        # Admin sees global stats
-        for user in data:
-            stats["total_files"] += len(data[user])
-            for doc in data[user]:
-                stats["total_words"] += doc.get('words', 0)
+        for u in data:
+            stats["total_files"] += len(data[u])
+            stats["total_words"] += sum(d.get('words', 0) for d in data[u])
     else:
-        # Student sees only their stats
         user_docs = data.get(session['user'], [])
         stats["total_files"] = len(user_docs)
-        for doc in user_docs:
-            stats["total_words"] += doc.get('words', 0)
-            
+        stats["total_words"] = sum(d.get('words', 0) for d in user_docs)
     return render_template('dashboard.html', user=session['user'], role=session.get('role'), stats=stats)
 
 @app.route('/save', methods=['POST'])
 def save_draft():
     if 'user' not in session: return jsonify({"success": False})
-    content = request.json.get('content')
-    save_to_db(session['user'], content)
+    data = request.json
+    save_to_db(session['user'], data.get('content'), data.get('title'))
     return jsonify({"success": True})
 
 @app.route('/get-docs')
@@ -100,20 +88,25 @@ def get_docs():
     if 'user' not in session: return jsonify([])
     data = get_db_data()
     if session.get('role') == "admin":
-        all_docs = []
-        for user, docs in data.items():
-            for d in docs:
-                d['student'] = user
-                all_docs.append(d)
-        return jsonify(all_docs)
+        return jsonify([dict(d, student=u) for u, docs in data.items() for d in docs])
     return jsonify(data.get(session['user'], []))
 
-@app.route('/generate', methods=['POST'])
-def generate():
+@app.route('/ai-assist', methods=['POST'])
+def ai_assist():
+    """Context-aware AI Study Assistant"""
     try:
         data = request.json
-        response = model.generate_content(f"Academic help: {data.get('message', '')}")
-        return jsonify({"success": True, "content": response.text})
+        mode = data.get("mode") # 'polish', 'summarize', or 'suggest'
+        content = data.get("content")
+        
+        prompts = {
+            "polish": f"Improve the academic tone and grammar of this text while keeping its meaning: {content}",
+            "summarize": f"Provide a brief academic summary of this draft: {content}",
+            "suggest": f"Suggest 3 research references or topics to expand on based on this text: {content}"
+        }
+        
+        response = model.generate_content(prompts.get(mode, "Help with: " + content))
+        return jsonify({"success": True, "result": response.text})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
