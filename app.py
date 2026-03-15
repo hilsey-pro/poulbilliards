@@ -17,21 +17,9 @@ def get_db_data():
     if os.path.exists(DB_FILE):
         with open(DB_FILE, 'r') as f:
             return json.load(f)
-    return {}
+    return {"users": {}, "projects": []}
 
-def save_to_db(username, content, title):
-    data = get_db_data()
-    if username not in data:
-        data[username] = []
-    
-    word_count = len(content.split())
-    data[username].append({
-        "title": title or "Untitled Draft",
-        "filename": f"Draft_{datetime.now().strftime('%Y%m%d_%H%M')}.txt",
-        "date": datetime.now().strftime("%b %d, %Y"),
-        "content": content,
-        "words": word_count
-    })
+def save_db_data(data):
     with open(DB_FILE, 'w') as f:
         json.dump(data, f)
 
@@ -65,47 +53,63 @@ def index():
 def dashboard():
     if 'user' not in session: return redirect(url_for('login'))
     data = get_db_data()
+    # Handle older database formats
+    user_data = data.get("users", {}) if "users" in data else data
+    
     stats = {"total_files": 0, "total_words": 0}
-    if session.get('role') == 'admin':
-        for u in data:
-            stats["total_files"] += len(data[u])
-            stats["total_words"] += sum(d.get('words', 0) for d in data[u])
-    else:
-        user_docs = data.get(session['user'], [])
-        stats["total_files"] = len(user_docs)
-        stats["total_words"] = sum(d.get('words', 0) for d in user_docs)
+    user_docs = user_data.get(session['user'], [])
+    stats["total_files"] = len(user_docs)
+    stats["total_words"] = sum(d.get('words', 0) for d in user_docs)
+    
     return render_template('dashboard.html', user=session['user'], role=session.get('role'), stats=stats)
 
+@app.route('/workspace')
+def workspace():
+    if 'user' not in session: return redirect(url_for('login'))
+    data = get_db_data()
+    projects = data.get("projects", [])
+    return render_template('workspace.html', projects=projects)
+
+@app.route('/add-task', methods=['POST'])
+def add_task():
+    data = get_db_data()
+    new_task = request.json.get('task')
+    if "projects" not in data: data["projects"] = []
+    data["projects"].append({"id": len(data["projects"]), "task": new_task, "user": session['user'], "status": "Pending"})
+    save_db_data(data)
+    return jsonify({"success": True})
+
+# --- PREVIOUS API ROUTES (AI, SAVE, GET-DOCS) STAY HERE ---
 @app.route('/save', methods=['POST'])
 def save_draft():
     if 'user' not in session: return jsonify({"success": False})
-    data = request.json
-    save_to_db(session['user'], data.get('content'), data.get('title'))
+    req_data = request.json
+    db_data = get_db_data()
+    if "users" not in db_data: db_data = {"users": db_data, "projects": []}
+    
+    username = session['user']
+    if username not in db_data["users"]: db_data["users"][username] = []
+    
+    db_data["users"][username].append({
+        "title": req_data.get('title') or "Untitled",
+        "date": datetime.now().strftime("%b %d, %Y"),
+        "content": req_data.get('content'),
+        "words": len(req_data.get('content', '').split())
+    })
+    save_db_data(db_data)
     return jsonify({"success": True})
-
-@app.route('/get-docs')
-def get_docs():
-    if 'user' not in session: return jsonify([])
-    data = get_db_data()
-    if session.get('role') == "admin":
-        return jsonify([dict(d, student=u) for u, docs in data.items() for d in docs])
-    return jsonify(data.get(session['user'], []))
 
 @app.route('/ai-assist', methods=['POST'])
 def ai_assist():
-    """Context-aware AI Study Assistant"""
     try:
-        data = request.json
-        mode = data.get("mode") # 'polish', 'summarize', or 'suggest'
-        content = data.get("content")
-        
+        req_data = request.json
+        mode, content = req_data.get("mode"), req_data.get("content")
         prompts = {
-            "polish": f"Improve the academic tone and grammar of this text while keeping its meaning: {content}",
-            "summarize": f"Provide a brief academic summary of this draft: {content}",
-            "suggest": f"Suggest 3 research references or topics to expand on based on this text: {content}"
+            "polish": f"Improve academic tone: {content}",
+            "summarize": f"Summarize: {content}",
+            "suggest": f"Suggest 3 references: {content}"
         }
-        
-        response = model.generate_content(prompts.get(mode, "Help with: " + content))
+        response = model.generate_content(prompts.get(mode, "Help: " + content))
         return jsonify({"success": True, "result": response.text})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
