@@ -1,148 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Workstation</title>
+    <meta charset="UTF-8"><title>Hilsey Pro | Workstation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-family: 'Inter', sans-serif; }
-        
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; border-left: 4px solid transparent; transition: 0.2s; }
-        .nav-item:hover, .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); border-left-color: var(--primary); }
-        
-        /* Editor */
-        #editor-container { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
-        #paper { background: white; color: #1e293b; width: 100%; max-width: 850px; min-height: 1100px; padding: 80px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; line-height: 1.7; }
-        
-        /* Toolbar */
-        .toolbar { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px; display: flex; gap: 8px; position: sticky; top: 0; z-index: 10; width: 100%; max-width: 850px; border-radius: 4px 4px 0 0; }
-        .tool-btn { padding: 4px 8px; color: #475569; font-weight: bold; border-radius: 4px; font-size: 13px; }
-        .tool-btn:hover { background: #e2e8f0; }
-
-        .ai-drawer { width: 320px; background: #111a36; border-left: 1px solid rgba(255,255,255,0.1); padding: 20px; overflow-y: auto; }
-        .ai-btn { background: #1e293b; border: 1px solid #334155; padding: 10px; border-radius: 8px; font-size: 11px; text-align: left; width: 100%; margin-bottom: 10px; color: white; }
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .active { background: rgba(58, 134, 255, 0.1); color: var(--primary); }
+        #paper { background: white; color: #1e293b; width: 100%; max-width: 800px; min-height: 1000px; padding: 60px; border-radius: 4px; outline: none; box-shadow: 0 20px 40px rgba(0,0,0,0.4); font-family: 'Georgia', serif; }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
-        <div class="p-6">
-            <h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1>
-            <div class="mt-4">
-                <input type="text" id="global-search" placeholder="Search menu..." onkeyup="performSearch()" class="w-full bg-[#0B132B] border border-slate-700 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-blue-500 text-white">
-            </div>
-        </div>
-        <nav class="flex-1">
+        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
+        <nav>
             <a href="/dashboard" class="nav-item">📊 Dashboard</a>
             <a href="/" class="nav-item active">✍️ Assignment Pad</a>
             <a href="/templates" class="nav-item">🎓 Templates</a>
+            <a href="/hub" class="nav-item">💬 Discussion Hub</a>
             <a href="/database" class="nav-item">☁️ Student Cloud</a>
-            <a href="/hub" class="nav-item">📞 Discussion Hub</a>
         </nav>
-        <div class="p-4 border-t border-white/5">
-            <p class="text-xs font-bold text-blue-300">{{ user }}</p>
-            <a href="/logout" class="text-[10px] text-red-400">Logout</a>
-        </div>
     </div>
 
-    <div id="editor-container">
-        <div class="w-full max-w-[850px] flex justify-between items-center mb-6">
-            <div class="flex-1">
-                <input id="doc-title" type="text" placeholder="Untitled Draft" class="bg-transparent text-3xl font-bold outline-none border-b border-transparent focus:border-blue-500 transition w-full text-white">
-                <p class="text-[11px] text-gray-500 mt-1">Words: <span id="word-count" class="text-blue-400">0</span> | <span class="text-emerald-400 font-bold">WhatsApp Sync Ready</span></p>
-            </div>
+    <div class="flex-1 p-10 overflow-y-auto flex flex-col items-center">
+        <div class="w-full max-w-[800px] flex justify-between items-center mb-6">
+            <input id="doc-title" type="text" placeholder="Untitled Draft" class="bg-transparent text-3xl font-bold outline-none text-white w-2/3">
             <div class="flex gap-2">
-                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-4 py-2 rounded-lg font-bold text-xs hover:bg-emerald-500 transition flex items-center gap-2">
-                   <span>📲</span> Share
-                </button>
-                <button onclick="saveWork()" class="bg-blue-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 shadow-lg">Save Cloud</button>
+                <button onclick="shareToWhatsApp()" class="bg-emerald-600 px-4 py-2 rounded font-bold text-xs hover:bg-emerald-500 transition">📲 Share to WA</button>
+                <button onclick="saveWork()" class="bg-blue-600 px-4 py-2 rounded font-bold text-xs">Save Cloud</button>
             </div>
         </div>
-
-        <div class="toolbar">
-            <button onclick="document.execCommand('bold')" class="tool-btn">B</button>
-            <button onclick="document.execCommand('italic')" class="tool-btn italic">I</button>
-            <button onclick="document.execCommand('insertUnorderedList')" class="tool-btn">List</button>
-            <div class="w-px h-4 bg-gray-300 mx-2"></div>
-            <button onclick="document.execCommand('formatBlock', false, 'h1')" class="tool-btn">H1</button>
-            <button onclick="document.execCommand('formatBlock', false, 'h2')" class="tool-btn">H2</button>
-        </div>
-        
-        <div id="paper" contenteditable="true" oninput="updateStats()">
-            <p>Ready for your career breakthrough...</p>
-        </div>
-    </div>
-
-    <div class="ai-drawer">
-        <h3 class="text-xs font-bold text-blue-400 mb-4 uppercase tracking-widest">Career AI</h3>
-        <button onclick="callAI('polish')" class="ai-btn">✨ <b>Academic Polish</b></button>
-        <button onclick="callAI('achievement')" class="ai-btn">🚀 <b>Achievement Builder</b></button>
-        <button onclick="callAI('suggest')" class="ai-btn">🔍 <b>Recruiter Tips</b></button>
-        
-        <div id="ai-response" class="mt-6 p-4 bg-slate-900/50 rounded-lg text-xs border border-slate-800 text-gray-300 min-h-[150px] whitespace-pre-wrap">
-            AI career advice will show here...
+        <div id="paper" contenteditable="true">
+            <p>Ready to build your career...</p>
         </div>
     </div>
 
     <script>
-        // 1. WHATSAPP SHARE LOGIC
         function shareToWhatsApp() {
             const title = document.getElementById('doc-title').value || "My Document";
             const content = document.getElementById('paper').innerText;
-            const text = `*${title}* \n\n${content}`;
-            const encodedText = encodeURIComponent(text);
-            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+            const text = `*${title}*\n\n${content}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
-
-        function performSearch() {
-            let input = document.getElementById('global-search').value.toLowerCase();
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(input) ? "flex" : "none";
-            });
-        }
-
-        function updateStats() {
-            const text = document.getElementById('paper').innerText;
-            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-            document.getElementById('word-count').innerText = words.length;
-        }
-
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const templateKey = urlParams.get('template');
-            const paper = document.getElementById('paper');
-            const docTitle = document.getElementById('doc-title');
-
-            const templates = {
-                'cv': { title: "Classic CV", body: "<h1>CV</h1><p>Name: ...</p>" },
-                'modern': { title: "Modern CV", body: "<div style='display:flex;gap:20px;'><div style='flex:1;background:#f8fafc;padding:15px;'>Skills</div><div style='flex:2;'>Experience</div></div>" },
-                'resign': { title: "Resignation", body: "<h1>Resignation</h1><p>Dear Manager...</p>" }
-            };
-
-            if (templateKey && templates[templateKey]) {
-                paper.innerHTML = templates[templateKey].body;
-                docTitle.value = templates[templateKey].title;
-                updateStats();
-            }
-        };
-
-        async function callAI(mode) {
-            const content = document.getElementById('paper').innerText;
-            const resBox = document.getElementById('ai-response');
-            resBox.innerText = "Processing...";
-            const response = await fetch('/ai-assist', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({mode: mode, content: content})
-            });
-            const data = await response.json();
-            resBox.innerText = data.success ? data.result : "AI Error";
-        }
-
         async function saveWork() {
             const content = document.getElementById('paper').innerHTML;
             const title = document.getElementById('doc-title').value;
@@ -151,7 +52,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({content: content, title: title})
             });
-            alert("Saved to Student Cloud!");
+            alert("Saved!");
         }
     </script>
 </body>
