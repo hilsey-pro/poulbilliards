@@ -5,58 +5,73 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { background: #0f172a; color: white; display: flex; height: 100vh; margin: 0; }
-        .sidebar { width: 260px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; }
-        .main { flex: 1; padding: 40px; overflow-y: auto; }
-        .btn-sidebar { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; width: 100%; text-align: left; }
-        .btn-sidebar:hover { background: #4f46e5; }
-        #notepad { background: white; color: black; padding: 30px; border-radius: 4px; min-height: 500px; width: 100%; outline: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
+        body { background: #0f172a; color: white; display: flex; height: 100vh; margin: 0; font-family: sans-serif; }
+        .sidebar { width: 280px; background: #1e293b; padding: 20px; border-right: 1px solid #334155; display: flex; flex-direction: column; }
+        .main { flex: 1; padding: 40px; overflow-y: auto; background: #0f172a; }
+        .btn-sidebar { background: #334155; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; color: white; }
+        .btn-sidebar:hover { background: #4f46e5; transform: translateX(5px); }
+        #notepad { background: white; color: black; padding: 40px; border-radius: 4px; min-height: 800px; width: 100%; max-width: 800px; margin: 0 auto; outline: none; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); font-family: 'Georgia', serif; line-height: 1.6; }
     </style>
 </head>
 <body>
+
     <div class="sidebar">
-        <h2 class="text-xl font-bold text-indigo-400 mb-8 text-center underline">HILSEY PRO</h2>
+        <h2 class="text-xl font-bold text-indigo-400 mb-8 text-center underline italic">HILSEY PRO</h2>
         
-<p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Navigation</p>
-<a href="/" class="btn-sidebar block bg-indigo-900 text-white p-2 mb-2 rounded hover:bg-indigo-700">✍️ Assignment Pad</a>
-<a href="/hub" class="btn-sidebar block text-white p-2 mb-2 rounded hover:bg-indigo-700">📞 Discussion Hub</a>
-<a href="/database" class="btn-sidebar block text-white p-2 mb-2 rounded hover:bg-indigo-700">📂 Student Cloud</a>
+        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Navigation</p>
+        <a href="/" class="btn-sidebar bg-indigo-900">✍️ Assignment Pad</a>
+        <a href="/hub" class="btn-sidebar">📞 Discussion Hub</a>
+        <a href="/database" class="btn-sidebar">📂 Student Cloud</a>
 
-<hr class="border-gray-700 my-4">
+        <hr class="border-gray-700 my-4">
 
-<p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Tools</p>
-<button onclick="shareWhatsApp()" class="btn-sidebar w-full text-left p-2 mb-2 rounded hover:bg-green-700">
-    📲 Share to WhatsApp
-</button>
+        <p class="text-xs text-gray-500 mb-2 uppercase tracking-widest">Tools</p>
+        <button onclick="shareWhatsApp()" class="btn-sidebar w-full text-left">
+            📲 Share to WhatsApp
+        </button>
 
-<button onclick="downloadPDF()" class="w-full mt-4 bg-green-600 hover:bg-green-500 p-3 rounded font-bold shadow-lg transition-all">
-    💾 Save as PDF
-</button>
+        <button onclick="downloadPDF()" class="w-full mt-auto bg-green-600 hover:bg-green-500 p-3 rounded font-bold shadow-lg transition-all">
+            💾 Save as PDF
+        </button>
+    </div>
 
     <div class="main">
-        <h1 class="text-2xl font-bold mb-4 text-gray-300">Assignment Draft Pad</h1>
-        <p class="text-sm text-gray-500 mb-4 italic">Type your work below. When finished, click "Save as PDF" on the left.</p>
-        
-        <div id="notepad" contenteditable="true">
-            <h2>Assignment Title: </h2>
-            <p>Start typing your work here...</p>
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-2 text-white">Assignment Draft Pad</h1>
+            <p class="text-sm text-gray-400 mb-8 italic">Your work is private. Use the sidebar to save or share your draft.</p>
+            
+            <div id="notepad" contenteditable="true">
+                <h1 style="text-align: center;">Assignment Title</h1>
+                <p><strong>Student Name:</strong> </p>
+                <p><strong>Date:</strong> </p>
+                <hr>
+                <p>Start typing your work here...</p>
+            </div>
         </div>
     </div>
 
     <script>
+        // PDF DOWNLOADER
         function downloadPDF() {
             const element = document.getElementById('notepad');
             const opt = {
-                margin:       1,
+                margin:       0.5,
                 filename:     'Hilsey_Pro_Assignment.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            // New Promise-based usage:
             html2pdf().set(opt).from(element).save();
         }
+
+        // WHATSAPP SHARE
+        function shareWhatsApp() {
+            const content = document.getElementById('notepad').innerText;
+            const message = "Check out my assignment draft on Hilsey Pro: \n\n" + content;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
     </script>
+
 </body>
 </html>
