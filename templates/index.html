@@ -3,115 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Advanced Word Editor</title>
+    <title>Hilsey Pro | Master Workstation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; }
-        body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg); color: #EAEAEA; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
         
-        .sidebar { width: 240px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        #editor-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; }
+        .sidebar { width: 220px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        #editor-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #0f172a; position: relative; }
 
-        /* MICROSOFT WORD STYLE RIBBON */
-        .word-ribbon { 
+        /* THE FULL MICROSOFT RIBBON */
+        .ribbon { 
             width: 100%; 
             background: #f3f4f6; 
-            padding: 10px 25px; 
-            display: flex; 
-            flex-wrap: wrap;
-            gap: 15px; 
-            border-bottom: 2px solid #d1d5db; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
+            border-bottom: 1px solid #c1c1c1; 
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; flex-direction: column;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            align-items: center;
         }
 
-        .ribbon-section { display: flex; align-items: center; gap: 8px; border-right: 1.5px solid #d1d5db; padding-right: 15px; }
-        .tool-btn { color: #374151; padding: 6px; border-radius: 4px; transition: 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .tool-btn:hover { background: #e5e7eb; border: 1px solid #9ca3af; }
+        .ribbon-tabs { display: flex; background: #2b579a; padding: 0 10px; }
+        .tab { padding: 6px 15px; cursor: pointer; font-size: 12px; color: white; border-radius: 2px 2px 0 0; opacity: 0.8; }
+        .tab.active { background: #f3f4f6; color: #2b579a; opacity: 1; font-weight: bold; }
+
+        .ribbon-content { display: flex; padding: 10px 20px; gap: 15px; align-items: center; background: #f3f4f6; color: #333; height: 95px; }
+        .tool-box { display: flex; flex-direction: column; align-items: center; border-right: 1px solid #d1d5db; padding-right: 12px; height: 100%; justify-content: center; }
+        .tool-row { display: flex; gap: 5px; margin-bottom: 4px; }
         
-        select.tool-select { background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 3px; padding: 3px; font-size: 13px; outline: none; }
+        .icon-btn { display: flex; flex-direction: column; align-items: center; padding: 4px; border-radius: 4px; cursor: pointer; min-width: 50px; }
+        .icon-btn:hover { background: #e2e8f0; }
+        .icon-btn span { font-size: 10px; font-weight: bold; margin-top: 2px; text-transform: uppercase; }
 
-        /* THE PAPER */
+        /* PAGE SETTINGS */
         #paper { 
-            background: white; 
-            color: #1e293b; 
-            width: 100%; 
-            max-width: 850px; 
-            min-height: 1100px; 
-            height: auto; 
-            padding: 90px; 
-            margin-top: 40px;
-            margin-bottom: 300px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.6); 
-            font-family: 'Arial'; 
-            line-height: 1.6;
-            outline: none;
-            border-radius: 2px;
+            background: white; color: #1e293b; width: 100%; max-width: 850px; 
+            min-height: 1100px; padding: 80px; margin: 40px 0 300px 0;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); outline: none; border: 1px solid #ddd;
         }
 
-        .action-bar { width: 100%; max-width: 850px; display: flex; justify-content: space-between; padding: 25px 0; }
+        .label { font-size: 9px; color: #717171; font-weight: bold; margin-top: auto; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="p-6 text-center"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav class="mt-6">
-            <a href="/" class="block px-6 py-3 text-blue-400 bg-blue-500/10 border-l-4 border-blue-500">✍️ Assignment Pad</a>
-            <a href="/templates" class="block px-6 py-3 text-gray-400 hover:text-white transition">🎓 Templates</a>
+        <div class="p-5 font-black text-xl italic border-b border-white/10">HILSEY PRO</div>
+        <nav class="mt-4">
+            <a href="/" class="block px-6 py-3 text-blue-400 bg-white/5">✍️ Assignment Pad</a>
+            <a href="/templates" class="block px-6 py-3 text-gray-400">🎓 Templates</a>
         </nav>
     </div>
 
     <div id="editor-container">
-        <div class="word-ribbon">
-            <div class="ribbon-section">
-                <select onchange="exec('fontName', this.value)" class="tool-select w-32">
-                    <option value="Arial">Arial</option>
-                    <option value="Calibri">Calibri</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Georgia">Georgia</option>
-                </select>
-                <select onchange="exec('fontSize', this.value)" class="tool-select">
-                    <option value="3">12pt</option>
-                    <option value="4">14pt</option>
-                    <option value="5">18pt</option>
-                    <option value="6">24pt</option>
-                    <option value="7">36pt</option>
-                </select>
-            </div>
-
-            <div class="ribbon-section">
-                <button onclick="exec('bold')" class="tool-btn font-bold">B</button>
-                <button onclick="exec('italic')" class="tool-btn italic">I</button>
-                <button onclick="exec('underline')" class="tool-btn underline">U</button>
-                <button onclick="exec('strikeThrough')" class="tool-btn line-through">abc</button>
-                <input type="color" onchange="exec('foreColor', this.value)" class="w-6 h-6 border-none cursor-pointer p-0" title="Text Color">
-            </div>
-
-            <div class="ribbon-section">
-                <button onclick="exec('justifyLeft')" class="tool-btn">Left</button>
-                <button onclick="exec('justifyCenter')" class="tool-btn">Center</button>
-                <button onclick="exec('justifyRight')" class="tool-btn">Right</button>
-            </div>
-
-            <div class="ribbon-section" style="border:none;">
-                <button onclick="document.getElementById('imageLoader').click()" class="tool-btn">🖼️ Insert Image</button>
-                <button onclick="exec('insertUnorderedList')" class="tool-btn">Bullet List</button>
-                <button onclick="exec('insertHorizontalRule')" class="tool-btn">Divider</button>
+        <div class="ribbon">
+            <div class="ribbon-tabs">
+                <div class="tab active" onclick="showTab('home')">Home</div>
+                <div class="tab" onclick="showTab('insert')">Insert</div>
+                <div class="tab" onclick="showTab('layout')">Layout</div>
             </div>
             
-            <input type="file" id="imageLoader" class="hidden" accept="image/*" onchange="handleImage(this)">
-        </div>
+            <div class="ribbon-content" id="home-tools">
+                <div class="tool-box">
+                    <div class="tool-row">
+                        <select onchange="exec('fontName', this.value)" class="text-xs border">
+                            <option value="Arial">Arial</option>
+                            <option value="Calibri">Calibri</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </select>
+                        <select onchange="exec('fontSize', this.value)" class="text-xs border">
+                            <option value="3">12</option><option value="4">14</option><option value="5">18</option>
+                        </select>
+                    </div>
+                    <div class="tool-row">
+                        <button onclick="exec('bold')" class="font-bold px-2 border hover:bg-gray-200">B</button>
+                        <button onclick="exec('italic')" class="italic px-2 border hover:bg-gray-200">I</button>
+                        <button onclick="exec('underline')" class="underline px-2 border hover:bg-gray-200">U</button>
+                        <input type="color" onchange="exec('foreColor', this.value)" class="w-5 h-5">
+                    </div>
+                    <div class="label">Font</div>
+                </div>
 
-        <div class="action-bar">
-            <input id="doc-title" type="text" class="bg-transparent text-3xl font-bold outline-none text-white w-full border-b border-white/10 focus:border-blue-500 mr-10" value="Untitled Proposal">
-            <div class="flex gap-3">
-                <button onclick="downloadPDF()" class="bg-red-600 px-6 py-2 rounded font-bold text-xs text-white hover:bg-red-500">PDF EXPORT</button>
-                <button onclick="saveCloud()" class="bg-indigo-600 px-6 py-2 rounded font-bold text-xs text-white hover:bg-indigo-500">SAVE CLOUD</button>
+                <div class="tool-box">
+                    <div class="tool-row">
+                        <button onclick="exec('justifyLeft')" class="px-1 border">L</button>
+                        <button onclick="exec('justifyCenter')" class="px-1 border">C</button>
+                        <button onclick="exec('justifyRight')" class="px-1 border">R</button>
+                    </div>
+                    <div class="tool-row">
+                        <button onclick="exec('insertUnorderedList')" class="text-xs">List</button>
+                    </div>
+                    <div class="label">Paragraph</div>
+                </div>
+
+                <div class="tool-box" style="border:none;">
+                    <button onclick="downloadPDF()" class="icon-btn bg-red-100 text-red-700">
+                        <div class="text-lg">📄</div>
+                        <span>Save PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ribbon-content hidden" id="insert-tools">
+                <div class="tool-box">
+                    <button onclick="document.getElementById('imgInp').click()" class="icon-btn">
+                        <div class="text-2xl">🖼️</div>
+                        <span>Pictures</span>
+                    </button>
+                    <input type="file" id="imgInp" class="hidden" accept="image/*" onchange="addImg(this)">
+                </div>
+                <div class="tool-box">
+                    <button onclick="exec('insertHorizontalRule')" class="icon-btn">
+                        <div class="text-2xl">➖</div>
+                        <span>Divider</span>
+                    </button>
+                </div>
+                <div class="label">Illustrations</div>
+            </div>
+
+            <div class="ribbon-content hidden" id="layout-tools">
+                <div class="tool-box">
+                    <button onclick="alert('Orientation set to Portrait')" class="icon-btn">
+                        <div class="text-2xl">📐</div>
+                        <span>Orientation</span>
+                    </button>
+                </div>
+                <div class="tool-box">
+                    <button onclick="alert('Margins set to Normal')" class="icon-btn">
+                        <div class="text-2xl">⬜</div>
+                        <span>Margins</span>
+                    </button>
+                </div>
+                <div class="label">Page Setup</div>
             </div>
         </div>
 
@@ -122,43 +145,49 @@
     <script>
         function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
 
-        function handleImage(input) {
+        function showTab(tabName) {
+            document.querySelectorAll('.ribbon-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName + '-tools').classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        function addImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const img = `<img src="${e.target.result}" style="max-width:100%; border-radius:5px; margin: 15px 0;">`;
-                    exec('insertHTML', img);
+                    exec('insertHTML', `<img src="${e.target.result}" style="max-width:250px; margin:15px 0;">`);
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        const templates = {
+        const library = {
             'modern': {
-                title: "Professional CV - [Your Name]",
-                body: `<h1>[YOUR NAME]</h1><p style="color:gray;">[Your Professional Title]</p><hr><h3 style="color:#3A86FF">PROFESSIONAL SUMMARY</h3><p>Highly motivated professional with expertise in [Area]. Dedicated to delivering excellence and innovative solutions...</p><h3>WORK EXPERIENCE</h3><p><b>Senior Manager</b> | [Company Name]<br><i>[Date Range]</i></p><ul><li>Led team of 10 to achieve [Result]</li><li>Increased efficiency by 20%</li></ul>`
+                title: "Professional Resume",
+                body: `<h1 style="text-align:center;">[YOUR FULL NAME]</h1><p style="text-align:center;">[Phone] | [Email] | [Address]</p><hr><h3>Professional Summary</h3><p>Highly skilled professional with experience in [Industry]...</p><h3>Work History</h3><p><b>[Job Title]</b> - [Company Name] (2024)</p><ul><li>Achieved [Result]</li></ul>`
             },
             'proposal': {
-                title: "Project Proposal: [Client Name]",
-                body: `<div style="text-align:center;"><h1 style="font-size:32px; color:#3A86FF;">PROJECT PROPOSAL</h1><p>Prepared for: [Client Name]</p></div><div style="margin-top:50px;"><h2>1. Project Overview</h2><p>This proposal outlines the strategy for implementing [Solution]. Our goal is to address the current challenges in [Sector]...</p><h2>2. Budget</h2><p>Total estimated investment: [Amount]</p></div>`
+                title: "Executive Proposal",
+                body: `<div style="border-top:8px solid #2b579a; padding-top:20px;"><h1 style="color:#2b579a;">PROJECT PROPOSAL</h1><p><b>Prepared For:</b> [Client Name]</p><h2>1. Overview</h2><p>This proposal outlines the strategy for...</p><h2>2. Goals</h2><p>Our main objectives are [Goal 1] and [Goal 2]...</p></div>`
+            },
+            'cover_letter': {
+                title: "Cover Letter",
+                body: `<p>[Date]</p><p>Dear Hiring Manager,</p><p>I am writing to express my interest in the <b>[Job Title]</b> position at <b>[Company Name]</b>...</p><p>Sincerely,<br><br>[Your Name]</p>`
             }
         };
 
         window.onload = function() {
             const params = new URLSearchParams(window.location.search);
             const key = params.get('template') || 'modern';
-            const doc = templates[key] || templates['modern'];
+            const doc = library[key] || library['modern'];
             document.getElementById('paper').innerHTML = doc.body;
-            document.getElementById('doc-title').value = doc.title;
         };
 
         function downloadPDF() {
             const el = document.getElementById('paper');
-            const name = document.getElementById('doc-title').value;
-            html2pdf().set({ margin: 0.5, filename: name+'.pdf', html2canvas: { scale: 2 } }).from(el).save();
+            html2pdf().set({ margin: 0.5, filename: 'Hilsey_Doc.pdf', html2canvas: { scale: 2 } }).from(el).save();
         }
-
-        function saveCloud() { alert("Synced to Hilsey Cloud!"); }
     </script>
 </body>
 </html>
