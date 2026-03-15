@@ -3,142 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Permanent Navigation</title>
+    <title>Hilsey Pro | Professional Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --word-blue: #2b579a; --ribbon-grey: #f3f4f6; --hilsey-dark: #0b132b; }
-        
-        body { background: #0f172a; color: #333; display: flex; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        :root { --nav-bg: #1c2541; --ribbon-bg: #f3f4f6; --word-blue: #2b579a; }
+        body { background: #0f172a; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 
-        /* PERMANENT LEFT RAIL - Visible on PC and Phone */
-        .left-rail { 
-            width: 70px; 
-            background: var(--hilsey-dark); 
-            flex-shrink: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 15px 0;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            z-index: 5000;
+        /* MOBILE TOP BAR (Only visible on phones) */
+        .mobile-header { display: none; background: var(--nav-bg); color: white; padding: 15px 20px; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 2000; }
+        .menu-btn { font-size: 24px; background: none; border: none; color: white; cursor: pointer; }
+
+        /* THE MAIN LAYOUT */
+        .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+        /* PROFESSIONAL SIDEBAR (Hidden on mobile until menu is clicked) */
+        .sidebar { 
+            width: 260px; background: var(--nav-bg); display: flex; flex-direction: column; 
+            border-right: 1px solid rgba(255,255,255,0.1); z-index: 1500; transition: transform 0.3s ease;
         }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 15px 25px; color: #cbd5e1; text-decoration: none; font-size: 15px; border-left: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: #3A86FF; }
         
-        .rail-btn { 
-            width: 50px; height: 50px; 
-            display: flex; align-items: center; justify-content: center; 
-            color: #94a3b8; font-size: 20px; border-radius: 12px; 
-            margin-bottom: 15px; transition: 0.2s; cursor: pointer;
-            text-decoration: none;
-        }
-        .rail-btn:hover, .rail-btn.active { background: #3a86ff; color: white; }
-        .rail-label { font-size: 8px; color: white; text-align: center; margin-top: -12px; margin-bottom: 15px; opacity: 0.7; }
-
-        /* Main Content Area */
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* WORD RIBBON (Scrolls sideways on phone) */
-        .ribbon-container { width: 100%; background: var(--ribbon-grey); border-bottom: 1px solid #ccc; overflow-x: auto; flex-shrink: 0; }
-        .ribbon-tabs { background: var(--word-blue); display: flex; min-width: max-content; }
-        .tab { padding: 8px 15px; color: white; font-size: 11px; cursor: pointer; }
-        .tab.active { background: var(--ribbon-grey); color: var(--word-blue); font-weight: bold; }
-
-        .ribbon-content { display: none; padding: 10px; gap: 15px; align-items: center; height: 85px; background: var(--ribbon-grey); min-width: max-content; }
-        .ribbon-content.active { display: flex; }
+        /* RIBBON */
+        .editor-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #e2e8f0; }
+        .ribbon { background: var(--ribbon-bg); border-bottom: 1px solid #ccc; overflow-x: auto; flex-shrink: 0; white-space: nowrap; }
+        .ribbon-tabs { display: flex; background: var(--word-blue); padding-left: 10px; }
+        .tab { padding: 8px 20px; color: white; font-size: 13px; cursor: pointer; opacity: 0.8; }
+        .tab.active { background: var(--ribbon-bg); color: var(--word-blue); opacity: 1; font-weight: bold; }
+        
+        .ribbon-tools { display: none; padding: 10px; gap: 15px; align-items: center; height: 80px; }
+        .ribbon-tools.active { display: flex; }
+        .tool-group { display: flex; flex-direction: column; align-items: center; border-right: 1px solid #d1d5db; padding: 0 15px; justify-content: center; }
 
         /* THE PAPER */
-        #viewport { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 15px; background: #cbd5e1; }
-        #paper { 
-            background: white; width: 100%; max-width: 800px; min-height: 1000px; 
-            padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); outline: none; border-radius: 2px;
-        }
+        .scroll-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 30px 15px; }
+        #paper { background: white; width: 100%; max-width: 850px; min-height: 1100px; padding: 60px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); outline: none; }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .left-rail { width: 60px; }
-            .rail-btn { width: 40px; height: 40px; font-size: 18px; }
-            #paper { padding: 20px; font-size: 14px; }
+        /* RESPONSIVE LOGIC FOR PHONES */
+        @media (max-width: 768px) {
+            .mobile-header { display: flex; } /* Show the top bar with the ☰ button */
+            .app-container { flex-direction: column; }
+            
+            /* Hide sidebar off-screen by default on mobile */
+            .sidebar { position: absolute; top: 0; left: -100%; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+            /* When menu is open, slide it in */
+            .sidebar.open { left: 0; }
+            
+            /* Mobile Overlay to close menu when clicking outside */
+            .overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+            .overlay.open { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <div class="left-rail">
-        <div class="font-black italic text-blue-500 mb-6">H</div>
-        
-        <a href="/dashboard" class="rail-btn" title="Dashboard">📊</a>
-        <div class="rail-label">DASH</div>
-
-        <a href="/" class="rail-btn active" title="Editor">✍️</a>
-        <div class="rail-label">EDIT</div>
-
-        <a href="/templates" class="rail-btn" title="Templates">🎓</a>
-        <div class="rail-label">TEMP</div>
-
-        <a href="/hub" class="rail-btn" title="Discussion Hub">💬</a>
-        <div class="rail-label">HUB</div>
-
-        <a href="/cloud" class="rail-btn" title="Cloud Storage">☁️</a>
-        <div class="rail-label">CLOUD</div>
-
-        <div class="mt-auto"></div> <button onclick="savePDF()" class="rail-btn bg-red-600 text-white" title="Download PDF">PDF</button>
-        <button onclick="shareWA()" class="rail-btn bg-green-500 text-white" title="Share WhatsApp">WA</button>
+    <div class="mobile-header">
+        <div class="font-black italic text-xl tracking-wide">HILSEY PRO</div>
+        <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
     </div>
 
-    <div class="main-wrapper">
-        <div class="ribbon-container">
-            <div class="ribbon-tabs">
-                <div class="tab active" onclick="switchTab(event, 'home')">Home</div>
-                <div class="tab" onclick="switchTab(event, 'insert')">Insert</div>
-                <div class="tab" onclick="switchTab(event, 'layout')">Layout</div>
+    <div class="app-container">
+        <div class="overlay" onclick="toggleMenu()"></div>
+
+        <div class="sidebar" id="mainSidebar">
+            <div class="p-6 text-2xl font-black italic border-b border-white/10 hidden md:block text-white">HILSEY PRO</div>
+            
+            <div class="flex-1 overflow-y-auto mt-2">
+                <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider">Main Menu</div>
+                <a href="/dashboard" class="nav-item">📊 Dashboard</a>
+                <a href="/" class="nav-item active">✍️ Assignment Pad</a>
+                <a href="/templates" class="nav-item">🎓 Templates</a>
+                <a href="/hub" class="nav-item">💬 Discussion Hub</a>
+                <a href="/forms" class="nav-item">📝 Forms</a>
+                <a href="/cloud" class="nav-item">☁️ Student Cloud</a>
+
+                <div class="px-6 py-2 mt-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</div>
+                <a href="#" onclick="savePDF()" class="nav-item text-red-400">📄 Download PDF</a>
+                <a href="#" onclick="shareWA()" class="nav-item text-green-400">📱 Share to WhatsApp</a>
             </div>
             
-            <div id="home" class="ribbon-content active">
-                <div class="flex flex-col border-r pr-4">
-                    <div class="flex gap-1 mb-1">
-                        <button onclick="cmd('bold')" class="border p-1 bg-white font-bold w-8">B</button>
-                        <button onclick="cmd('italic')" class="border p-1 bg-white italic w-8">I</button>
-                        <button onclick="cmd('underline')" class="border p-1 bg-white underline w-8">U</button>
-                    </div>
-                    <select onchange="cmd('fontName', this.value)" class="text-[10px] border"><option>Arial</option><option>Georgia</option></select>
-                </div>
-                <div class="flex flex-col border-r pr-4">
-                    <button onclick="cmd('justifyCenter')" class="border p-1 bg-white mb-1">Center</button>
-                    <button onclick="cmd('insertUnorderedList')" class="border p-1 bg-white text-[10px]">List</button>
-                </div>
-                <div class="flex flex-col items-center">
-                    <input type="color" onchange="cmd('foreColor', this.value)" class="w-8 h-8">
-                    <span class="text-[9px]">COLOR</span>
-                </div>
-            </div>
-
-            <div id="insert" class="ribbon-content">
-                <button onclick="document.getElementById('fileIn').click()" class="flex flex-col items-center p-2 border bg-white rounded">
-                    <span>🖼️</span><span class="text-[9px]">PICTURE</span>
-                </button>
-                <input type="file" id="fileIn" class="hidden" accept="image/*" onchange="addImg(this)">
-                <button onclick="cmd('insertHorizontalRule')" class="p-2 border bg-white rounded">➖ Line</button>
-            </div>
+            <button class="md:hidden p-4 bg-red-600 text-white font-bold" onclick="toggleMenu()">✖ Close Menu</button>
         </div>
 
-        <div id="viewport">
-            <div id="paper" contenteditable="true" spellcheck="false">
-                <h1 style="text-align:center;">[TITLE]</h1>
-                <p>Start typing or select a template...</p>
+        <div class="editor-area">
+            <div class="ribbon">
+                <div class="ribbon-tabs">
+                    <div class="tab active" onclick="showTab(event, 'home')">Home</div>
+                    <div class="tab" onclick="showTab(event, 'insert')">Insert</div>
+                </div>
+                
+                <div id="home" class="ribbon-tools active">
+                    <div class="tool-group">
+                        <div class="flex gap-1">
+                            <button onclick="cmd('bold')" class="border p-1 bg-white font-bold px-3">B</button>
+                            <button onclick="cmd('italic')" class="border p-1 bg-white italic px-3">I</button>
+                            <button onclick="cmd('underline')" class="border p-1 bg-white underline px-3">U</button>
+                        </div>
+                    </div>
+                    <div class="tool-group">
+                        <select onchange="cmd('fontName', this.value)" class="p-1 border text-sm"><option>Arial</option><option>Times New Roman</option></select>
+                        <select onchange="cmd('fontSize', this.value)" class="p-1 border text-sm mt-1"><option value="3">Size 12</option><option value="5">Size 18</option></select>
+                    </div>
+                    <div class="tool-group flex-row">
+                        <span class="text-xs mr-2">Color:</span>
+                        <input type="color" onchange="cmd('foreColor', this.value)">
+                    </div>
+                </div>
+
+                <div id="insert" class="ribbon-tools">
+                    <div class="tool-group">
+                        <button onclick="document.getElementById('imgInp').click()" class="bg-white border p-2 rounded flex flex-col items-center">
+                            <span class="text-lg">🖼️</span><span class="text-[10px] font-bold">PICTURE</span>
+                        </button>
+                        <input type="file" id="imgInp" class="hidden" accept="image/*" onchange="addImg(this)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="scroll-area">
+                <div id="paper" contenteditable="true" spellcheck="false">
+                    <h1 style="text-align:center;">[DOCUMENT TITLE]</h1>
+                    <p>Start editing your assignment or select a template...</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // TOGGLE MOBILE MENU
+        function toggleMenu() {
+            document.getElementById('mainSidebar').classList.toggle('open');
+            document.querySelector('.overlay').classList.toggle('open');
+        }
+
+        // TEXT EDITOR COMMANDS
         function cmd(n, v=null) { document.execCommand(n, false, v); }
         
-        function switchTab(e, id) {
-            document.querySelectorAll('.ribbon-content').forEach(c => c.classList.remove('active'));
+        function showTab(e, id) {
+            document.querySelectorAll('.ribbon-tools').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             e.currentTarget.classList.add('active');
         }
 
+        // ADD IMAGE
         function addImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -149,24 +158,18 @@
             }
         }
 
+        // PDF & WHATSAPP
         function savePDF() {
+            toggleMenu(); // Close menu first if on mobile
             const el = document.getElementById('paper');
-            html2pdf().from(el).save('Hilsey_Doc.pdf');
+            html2pdf().from(el).save('Hilsey_Professional_Doc.pdf');
         }
 
         function shareWA() {
+            toggleMenu(); // Close menu first if on mobile
             const text = document.getElementById('paper').innerText;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
-
-        // AUTO-LOAD TEMPLATE TEXT
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const t = params.get('template');
-            if(t === 'modern') {
-                document.getElementById('paper').innerHTML = `<h1>[NAME]</h1><hr><p>Professional experience here...</p>`;
-            }
-        };
     </script>
 </body>
 </html>
