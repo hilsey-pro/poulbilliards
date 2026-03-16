@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Pro | Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
+        .sidebar { width: 220px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .nav-item { padding: 15px 20px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; border-left: 4px solid transparent; }
+        .active-link { background: rgba(58, 134, 255, 0.1); color: white; border-left-color: #3a86ff; }
+        .editor-area { flex: 1; background: #e2e8f0; display: flex; flex-direction: column; }
+        .paper { background: white; width: 100%; max-width: 800px; margin: 40px auto; min-height: 90vh; padding: 60px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); outline: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 25px; font-weight: bold; color: #3a86ff; text-align: center;">HILSEY PRO</div>
+        <a href="dashboard.html" class="nav-item"><span>📊 Dashboard</span></a>
+        <a href="workspace.html" class="nav-item active-link"><span>✍️ Workspace</span></a>
+        <a href="hub.html" class="nav-item"><span>💬 Discussion Hub</span></a>
+        <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
+        <button onclick="savePDF()" class="nav-item mt-auto bg-blue-600 text-white border-none cursor-pointer"><span>💾 Export PDF</span></button>
+    </div>
+    <div class="editor-area overflow-y-auto">
+        <div id="capture" class="paper" contenteditable="true">
+            <h1 style="text-align:center">Student Report</h1>
+            <p>Type your assignment content here...</p>
+        </div>
+    </div>
+    <script>
+        function savePDF() {
+            const element = document.getElementById('capture');
+            html2pdf().from(element).save('Hilsey_Assignment.pdf');
+        }
+    </script>
+</body>
+</html>
