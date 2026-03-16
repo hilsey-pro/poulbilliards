@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hilsey Biz | Stationery Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .filter-btn:hover { background: #3b82f6; color: white; }
+        .product-card { transition: 0.3s; border: 1px solid #e2e8f0; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden">
+
+    <div class="w-64 bg-slate-900 text-white p-8 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-10">HILSEY BIZ</h1>
+        <nav class="space-y-4 flex-1">
+            <a href="dashboard.html" class="block text-slate-400 hover:text-white">📊 Dashboard</a>
+            <a href="shop.html" class="block text-blue-400 font-bold">🛒 Stationery Shop</a>
+            <a href="workspace.html" class="block text-slate-400 hover:text-white">✍️ EDU Workspace</a>
+        </nav>
+        <div class="p-4 bg-slate-800 rounded-xl">
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Your Cart</p>
+            <p id="cart-total" class="text-lg font-black text-green-400">0 Tsh</p>
+        </div>
+    </div>
+
+    <div class="flex-1 p-10 overflow-y-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 uppercase">Stationery Market</h1>
+                <p class="text-slate-500">Find the best tools for your business studies.</p>
+            </div>
+        </header>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm mb-10 flex gap-4">
+            <input type="text" id="productSearch" onkeyup="searchItems()" placeholder="Search pens, books, staplers..." class="flex-1 bg-slate-100 border-none p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="catFilter" onchange="searchItems()" class="bg-slate-100 p-4 rounded-xl font-bold text-slate-600 outline-none">
+                <option value="all">All Items</option>
+                <option value="writing">Writing</option>
+                <option value="paper">Paper</option>
+            </select>
+        </div>
+
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="product-card bg-white p-6 rounded-2xl" data-name="executive notebook" data-cat="paper">
+                <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-4xl">📔</div>
+                <h3 class="font-bold text-slate-800 uppercase">Executive Notebook</h3>
+                <p class="text-2xl font-black text-blue-600 mt-2">15,000 <span class="text-sm">Tsh</span></p>
+                <button onclick="updateCart(15000)" class="w-full mt-4 bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition">Order Now</button>
+            </div>
+
+            <div class="product-card bg-white p-6 rounded-2xl" data-name="premium blue pen" data-cat="writing">
+                <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-4xl">🖋️</div>
+                <h3 class="font-bold text-slate-800 uppercase">Premium Blue Pen</h3>
+                <p class="text-2xl font-black text-blue-600 mt-2">2,500 <span class="text-sm">Tsh</span></p>
+                <button onclick="updateCart(2500)" class="w-full mt-4 bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-blue-600 transition">Order Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let total = 0;
+        function updateCart(price) {
+            total += price;
+            document.getElementById('cart-total').innerText = total.toLocaleString() + " Tsh";
+        }
+
+        function searchItems() {
+            let input = document.getElementById('productSearch').value.toLowerCase();
+            let cat = document.getElementById('catFilter').value;
+            let cards = document.querySelectorAll('.product-card');
+
+            cards.forEach(card => {
+                let name = card.getAttribute('data-name');
+                let category = card.getAttribute('data-cat');
+                let matchesSearch = name.includes(input);
+                let matchesCat = (cat === 'all' || category === cat);
+
+                if (matchesSearch && matchesCat) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
