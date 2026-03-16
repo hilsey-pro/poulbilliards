@@ -2,93 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hilsey Stationery | Business Suite</title>
+    <title>Hilsey Biz | Executive Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
-        .sidebar { width: 250px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
-        .nav-item { padding: 15px 25px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 14px; transition: 0.3s; border-left: 4px solid transparent; }
-        .nav-item:hover { background: #1e293b; color: white; border-left-color: #3a86ff; }
-        .active { background: rgba(58, 134, 255, 0.1); color: #3a86ff; border-left-color: #3a86ff; font-weight: bold; }
-        .content { flex: 1; padding: 40px; background: #f8fafc; overflow-y: auto; }
-        .stat-card { background: white; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .biz-card { transition: 0.3s; border: 1px solid #e2e8f0; background: white; border-radius: 30px; padding: 30px; }
+        .biz-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: #3b82f6; }
+        .sidebar-link { transition: 0.2s; display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; color: #94a3b8; }
+        .sidebar-link:hover { background: #1e293b; color: white; }
+        .active-link { background: #3b82f6; color: white; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 flex h-screen overflow-hidden font-sans text-slate-900">
 
-    <div class="sidebar">
-        <div class="p-8 text-2xl font-black text-blue-500 italic">HILSEY BIZ</div>
-        <nav class="flex-1">
-            <a href="dashboard.html" class="nav-item active"><span>📊 Sales Overview</span></a>
-            <a href="shop.html" class="nav-item"><span>🛍️ Product Catalogue</span></a>
-            <a href="workspace.html" class="nav-item"><span>✍️ Business Reports</span></a>
-            <a href="templates.html" class="nav-item"><span>🎓 BIZ Templates</span></a>
-            <a href="lecture.html" class="nav-item"><span>⚙️ Admin Panel</span></a>
+    <div class="w-72 bg-slate-900 text-white p-8 flex flex-col shrink-0">
+        <div class="mb-12">
+            <h1 class="text-2xl font-black text-blue-500 italic tracking-tighter">HILSEY BIZ</h1>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Enterprise Edition</p>
+        </div>
+        
+        <nav class="space-y-2 flex-1">
+            <a href="dashboard.html" class="sidebar-link active-link"><span>📊</span> Dashboard</a>
+            <a href="shop.html" class="sidebar-link"><span>🛒</span> Stationery Shop</a>
+            <a href="ai-assistant.html" class="sidebar-link"><span>🤖</span> AI Assistant</a>
+            <a href="profile.html" class="sidebar-link"><span>👤</span> My Wallet</a>
+            <a href="workspace.html" class="sidebar-link"><span>✍️</span> Business Hub</a>
         </nav>
-        <div class="p-6 border-t border-slate-800 text-[10px] text-slate-500 uppercase tracking-widest text-center">Stationery ERP v3.0</div>
+
+        <div class="mt-auto p-4 bg-slate-800 rounded-2xl border border-slate-700">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Your Balance</p>
+            <p id="dash-balance" class="text-xl font-black text-green-400">0 Tsh</p>
+        </div>
     </div>
 
-    <div class="content">
-        <header class="flex justify-between items-center mb-10">
+    <div class="flex-1 p-12 overflow-y-auto">
+        <header class="flex justify-between items-start mb-12">
             <div>
-                <h1 class="text-3xl font-extrabold text-slate-900">Enterprise Dashboard</h1>
-                <p class="text-slate-500">Real-time Stationery Sales & Inventory Tracking</p>
+                <h2 class="text-4xl font-black tracking-tight italic uppercase">Business Overview</h2>
+                <p class="text-slate-500 font-medium mt-1">Welcome back, Director. Here is your stationery & AI activity.</p>
             </div>
-            <div class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-lg">Live Session: Active</div>
+            <div class="flex gap-4">
+                <div class="bg-white p-3 px-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Status</p>
+                    <p class="text-xs font-black text-blue-600 uppercase">Verified Business</p>
+                </div>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-            <div class="stat-card">
-                <p class="text-slate-500 text-xs font-bold uppercase mb-2">Total Revenue</p>
-                <h2 class="text-3xl font-black text-slate-800">$4,250.00</h2>
-                <p class="text-green-500 text-xs mt-2 font-bold">↑ 12% from last week</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            
+            <div class="biz-card">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-blue-50 p-3 rounded-2xl text-blue-600 text-xl">📈</div>
+                    <span class="text-[10px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full">REAL-TIME</span>
+                </div>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Total Expenses</h3>
+                <p class="text-3xl font-black text-slate-900"><span id="total-spent">0</span> <span class="text-sm font-bold">Tsh</span></p>
+                <p class="text-slate-400 text-[10px] mt-4">Total spent on Stationery this month.</p>
             </div>
-            <div class="stat-card">
-                <p class="text-slate-500 text-xs font-bold uppercase mb-2">Pending Orders</p>
-                <h2 class="text-3xl font-black text-slate-800">18</h2>
-                <p class="text-blue-500 text-xs mt-2 font-bold italic">Processing in Warehouse</p>
+
+            <div class="biz-card">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-purple-50 p-3 rounded-2xl text-purple-600 text-xl">📦</div>
+                </div>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Pending Orders</h3>
+                <p class="text-3xl font-black text-slate-900">0 <span class="text-sm font-bold uppercase">Items</span></p>
+                <p class="text-slate-400 text-[10px] mt-4 italic underline uppercase tracking-tighter">Ready for pickup at Admin Hub</p>
             </div>
-            <div class="stat-card">
-                <p class="text-slate-500 text-xs font-bold uppercase mb-2">Inventory Alert</p>
-                <h2 class="text-3xl font-black text-red-500">4 Items</h2>
-                <p class="text-slate-400 text-xs mt-2 font-bold uppercase underline">Low Stock: Blue Pens</p>
+
+            <div class="biz-card bg-slate-900 border-none">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="bg-blue-600 p-3 rounded-2xl text-white text-xl">🤖</div>
+                    <div id="ai-badge" class="text-[10px] font-black text-white bg-red-600 px-3 py-1 rounded-full uppercase">Locked</div>
+                </div>
+                <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">AI Assistant Pro</h3>
+                <p class="text-3xl font-black text-white" id="ai-text">Inactive</p>
+                <p class="text-slate-500 text-[10px] mt-4">Subscription: 10,000 Tsh / Month</p>
             </div>
+
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 uppercase text-xs tracking-widest">Recent Sales Activity</h3>
-                <button class="text-blue-600 font-bold text-xs">View All Reports →</button>
+        <div class="bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="font-black text-slate-900 uppercase italic">Admin Broadcasts</h3>
+                <span class="text-blue-600 text-xs font-bold underline cursor-pointer">Archive</span>
             </div>
-            <table class="w-full text-left">
-                <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase font-bold">
-                    <tr>
-                        <th class="p-4 px-6">Order ID</th>
-                        <th class="p-4">Customer Name</th>
-                        <th class="p-4">Product</th>
-                        <th class="p-4">Status</th>
-                        <th class="p-4 px-6 text-right">Amount</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm text-slate-600">
-                    <tr class="border-t border-slate-50 hover:bg-slate-50">
-                        <td class="p-4 px-6 font-mono text-xs">#HS-9021</td>
-                        <td class="p-4">John Doe Offices</td>
-                        <td class="p-4">Executive Notebooks (x50)</td>
-                        <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold">SHIPPED</span></td>
-                        <td class="p-4 px-6 text-right font-bold">$600.00</td>
-                    </tr>
-                    <tr class="border-t border-slate-50 hover:bg-slate-50">
-                        <td class="p-4 px-6 font-mono text-xs">#HS-9022</td>
-                        <td class="p-4">City Library</td>
-                        <td class="p-4">Premium Blue Pens (x200)</td>
-                        <td class="p-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-[10px] font-bold">PROCESSING</span></td>
-                        <td class="p-4 px-6 text-right font-bold">$300.00</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="broadcast-list" class="space-y-4">
+                <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">Notice #102</p>
+                    <p class="font-bold text-slate-800">Welcome to Hilsey Biz! Deposit funds in your wallet to start shopping for stationery and unlock AI Pro tools.</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function() {
+            // Load the real balance from local storage
+            const balance = parseInt(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('dash-balance').innerText = balance.toLocaleString() + " Tsh";
+
+            // Update AI Status based on balance
+            if (balance >= 10000) {
+                document.getElementById('ai-badge').innerText = "Active";
+                document.getElementById('ai-badge').className = "text-[10px] font-black text-white bg-green-600 px-3 py-1 rounded-full uppercase";
+                document.getElementById('ai-text').innerText = "Unlocked";
+            }
+
+            // Sync Broadcasts from the Admin Panel
+            const title = localStorage.getItem('broadcastTitle');
+            if(title) {
+                const list = document.getElementById('broadcast-list');
+                list.innerHTML = `
+                    <div class="p-6 bg-blue-50 rounded-3xl border border-blue-100">
+                        <p class="text-blue-400 text-[10px] font-bold uppercase mb-2">New Announcement</p>
+                        <p class="font-bold text-slate-800">${title}</p>
+                    </div>
+                ` + list.innerHTML;
+            }
+        }
+    </script>
 </body>
 </html>
