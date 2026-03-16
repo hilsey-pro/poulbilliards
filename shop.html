@@ -1,134 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hilsey Biz | Stationery Market</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .product-card { transition: 0.3s; border: 1px solid #e2e8f0; overflow: hidden; }
-        .product-card:hover { border-color: #3b82f6; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .product-img { height: 180px; width: 100%; object-fit: cover; background: #f8fafc; }
-        #cart-modal { display: none; }
-    </style>
-</head>
-<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-900">
+<script>
+    let cartItems = [];
+    let total = 0;
 
-    <div class="w-64 bg-slate-900 text-white p-8 flex flex-col shrink-0">
-        <h1 class="text-2xl font-black text-blue-500 italic mb-10">HILSEY BIZ</h1>
-        <nav class="space-y-4 flex-1">
-            <a href="dashboard.html" class="block text-slate-400 hover:text-white">📊 Dashboard</a>
-            <a href="shop.html" class="block text-blue-400 font-bold">🛒 Marketplace</a>
-            <a href="workspace.html" class="block text-slate-400 hover:text-white">✍️ EDU Hub</a>
-        </nav>
+    // 1. PULL THE REAL BALANCE FROM THE WALLET
+    let currentBalance = parseInt(localStorage.getItem('userBalance')) || 0;
+
+    function addToCart(name, price) {
+        cartItems.push({name, price});
+        total += price;
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('cart-total').innerText = total.toLocaleString() + " Tsh";
+        document.getElementById('modal-total').innerText = total.toLocaleString();
         
-        <div onclick="toggleCart()" class="p-4 bg-slate-800 rounded-xl cursor-pointer border border-slate-700 hover:border-blue-500 transition">
-            <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Shopping Cart</p>
-            <p id="cart-total" class="text-xl font-black text-green-400">0 Tsh</p>
-            <p class="text-[10px] text-blue-400 animate-pulse mt-1">View Order →</p>
-        </div>
-    </div>
+        const list = document.getElementById('cart-items-list');
+        list.innerHTML = "";
+        cartItems.forEach((item, index) => {
+            list.innerHTML += `
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm">${item.name}</p>
+                        <p class="text-[10px] text-blue-600 font-bold">${item.price.toLocaleString()} Tsh</p>
+                    </div>
+                    <button onclick="removeItem(${index})" class="text-red-400 text-lg hover:text-red-600">✕</button>
+                </div>`;
+        });
+    }
 
-    <div class="flex-1 p-10 overflow-y-auto">
-        <header class="mb-10">
-            <h1 class="text-4xl font-black text-slate-900 italic">STATIONERY MARKET</h1>
-            <p class="text-slate-500">Quality business tools at real Tanzanian prices.</p>
-        </header>
+    // 2. THE BUSINESS CHECKOUT LOGIC
+    function processCheckout() {
+        if (total === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        if (currentBalance >= total) {
+            // SUCCESS: Subtract money
+            currentBalance -= total;
+            localStorage.setItem('userBalance', currentBalance); // Save new balance
             
-            <div class="product-card bg-white rounded-3xl">
-                <img src="https://images.unsplash.com/photo-1585336261022-69c66d160f8c?auto=format&fit=crop&q=80&w=400" alt="Blue Pen" class="product-img">
-                <div class="p-6">
-                    <h3 class="font-bold text-lg uppercase tracking-tight">Blue Ballpoint Pen</h3>
-                    <p class="text-slate-400 text-xs mb-4 italic">Reliable daily writing</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black text-blue-600">200 Tsh</span>
-                        <button onclick="addToCart('Blue Pen', 200)" class="bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-black shadow-lg hover:bg-slate-900 transition">ORDER</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card bg-white rounded-3xl">
-                <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=400" alt="Notebook" class="product-img">
-                <div class="p-6">
-                    <h3 class="font-bold text-lg uppercase tracking-tight">A4 Counter Book</h3>
-                    <p class="text-slate-400 text-xs mb-4 italic">2-Quire Ruled</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black text-blue-600">3,500 Tsh</span>
-                        <button onclick="addToCart('A4 Book', 3500)" class="bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-black shadow-lg hover:bg-slate-900 transition">ORDER</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card bg-white rounded-3xl">
-                <img src="https://images.unsplash.com/photo-1574607383476-f517f220d398?auto=format&fit=crop&q=80&w=400" alt="Calculator" class="product-img">
-                <div class="p-6">
-                    <h3 class="font-bold text-lg uppercase tracking-tight">Scientific Calculator</h3>
-                    <p class="text-slate-400 text-xs mb-4 italic">For Business Math</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black text-blue-600">25,000 Tsh</span>
-                        <button onclick="addToCart('Calculator', 25000)" class="bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-black shadow-lg hover:bg-slate-900 transition">ORDER</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="cart-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl">
-            <h2 class="text-3xl font-black mb-6 italic uppercase">Order Review</h2>
-            <div id="cart-items-list" class="space-y-4 mb-8 max-h-64 overflow-y-auto pr-2">
-                </div>
-            <div class="border-t-2 border-slate-100 pt-6 flex justify-between items-center mb-8">
-                <span class="font-bold text-slate-400 uppercase text-xs">Total Amount:</span>
-                <span class="text-2xl font-black text-blue-600"><span id="modal-total">0</span> Tsh</span>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="toggleCart()" class="py-4 rounded-2xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">BACK</button>
-                <button onclick="alert('Proceeding to M-Pesa Checkout...')" class="py-4 rounded-2xl font-bold bg-green-500 text-white shadow-lg hover:bg-green-600 transition tracking-widest">PAY NOW</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let cartItems = [];
-        let total = 0;
-
-        function addToCart(name, price) {
-            cartItems.push({name, price});
-            total += price;
-            updateUI();
-        }
-
-        function updateUI() {
-            document.getElementById('cart-total').innerText = total.toLocaleString() + " Tsh";
-            document.getElementById('modal-total').innerText = total.toLocaleString();
+            alert("ORDER SUCCESSFUL!\n" + total.toLocaleString() + " Tsh has been deducted from your wallet.\nYour stationery is being prepared.");
             
-            const list = document.getElementById('cart-items-list');
-            list.innerHTML = "";
-            cartItems.forEach((item, index) => {
-                list.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
-                        <div>
-                            <p class="font-bold text-slate-800 text-sm">${item.name}</p>
-                            <p class="text-[10px] text-blue-600 font-bold">${item.price.toLocaleString()} Tsh</p>
-                        </div>
-                        <button onclick="removeItem(${index})" class="text-red-400 text-lg hover:text-red-600">✕</button>
-                    </div>`;
-            });
-        }
-
-        function removeItem(index) {
-            total -= cartItems[index].price;
-            cartItems.splice(index, 1);
+            // Reset Cart
+            cartItems = [];
+            total = 0;
             updateUI();
+            toggleCart();
+            
+            // Redirect to profile to see the new balance
+            window.location.href = "profile.html";
+        } else {
+            // FAILURE: Not enough money
+            alert("INSUFFICIENT BALANCE!\n\nYour Total: " + total.toLocaleString() + " Tsh\nYour Wallet: " + currentBalance.toLocaleString() + " Tsh\n\nPlease go to 'My Wallet' to top up.");
+            window.location.href = "profile.html";
         }
+    }
 
-        function toggleCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-        }
-    </script>
-</body>
-</html>
+    function toggleCart() {
+        const modal = document.getElementById('cart-modal');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+</script>
