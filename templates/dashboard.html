@@ -1,67 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hilsey Pro | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; items-center: center; gap: 12px; text-decoration: none; }
-        .nav-item:hover { color: var(--primary); background: rgba(58, 134, 255, 0.1); }
+        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
+        .sidebar { width: 220px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .nav-item { padding: 15px 20px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; border-left: 4px solid transparent; }
+        .active-link { background: rgba(58, 134, 255, 0.1); color: white; border-left-color: #3a86ff; }
+        .main-view { flex: 1; padding: 30px; background: #f1f5f9; overflow-y: auto; }
+        @media (max-width: 600px) { .sidebar { width: 70px; } .nav-item span { display: none; } }
     </style>
 </head>
 <body>
-
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white">HILSEY<span class="text-blue-500">PRO</span></h1></div>
-        <nav>
-            <a href="/dashboard" class="nav-item" style="color:white; border-left: 4px solid #3A86FF; background: rgba(58,134,255,0.1);">📊 Dashboard</a>
-            <a href="/" class="nav-item">✍️ Assignment Pad</a>
-            <a href="/database" class="nav-item">☁️ Student Cloud</a>
-            <a href="/logout" class="nav-item text-red-400 mt-20">🚪 Logout</a>
-        </nav>
+        <div style="padding: 25px; font-weight: bold; color: #3a86ff; text-align: center;">HILSEY PRO</div>
+        <a href="dashboard.html" class="nav-item active-link"><span>📊 Dashboard</span></a>
+        <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
+        <a href="templates.html" class="nav-item"><span>🎓 Templates</span></a>
+        <a href="hub.html" class="nav-item"><span>💬 Discussion Hub</span></a>
+        <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
     </div>
-
-    <div class="flex-1 p-10 overflow-y-auto">
-        <header class="mb-10 flex justify-between items-center">
-            <div>
-                <h2 class="text-3xl font-bold">Welcome back, {{ user }}</h2>
-                <p class="text-gray-400">Here is your academic overview ({{ role.upper() }} ACCESS)</p>
-            </div>
-            <div class="text-right">
-                <p class="text-xs text-gray-500 uppercase">System Status</p>
-                <p class="text-green-400 font-bold">● Online</p>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="card">
-                <p class="text-gray-400 text-xs uppercase mb-1">Total Cloud Files</p>
-                <h3 class="text-4xl font-bold text-blue-400">{{ stats.total_files }}</h3>
-            </div>
-            <div class="card">
-                <p class="text-gray-400 text-xs uppercase mb-1">Lifetime Word Count</p>
-                <h3 class="text-4xl font-bold text-emerald-400">{{ stats.total_words }}</h3>
-            </div>
-            <div class="card">
-                <p class="text-gray-400 text-xs uppercase mb-1">Role Security</p>
-                <h3 class="text-2xl font-bold text-purple-400 capitalize">{{ role }}</h3>
-            </div>
+    <div class="main-view">
+        <h1 class="text-2xl font-bold mb-6">Student Dashboard</h1>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="font-bold text-red-700">New TIA Assignment</p>
+            <p class="text-sm text-red-600">Lecturer posted a new task. Check the Student Cloud.</p>
         </div>
-
-        <div class="card">
-            <h3 class="text-xl font-bold mb-4">Quick Actions</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onclick="location.href='/'" class="bg-blue-600 p-4 rounded-lg font-bold hover:bg-blue-500 transition">Create New Draft</button>
-                <button onclick="location.href='/database'" class="bg-slate-700 p-4 rounded-lg font-bold hover:bg-slate-600 transition">View Cloud Storage</button>
-                {% if role == 'admin' %}
-                <button onclick="location.href='/lecturer-portal'" class="bg-red-600/20 text-red-400 border border-red-500/50 p-4 rounded-lg font-bold hover:bg-red-600/30 transition">Admin Console</button>
-                {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-6 rounded shadow">
+                <h3 class="font-bold">Recent Activity</h3>
+                <p class="text-sm text-gray-500 mt-2">No new messages in Discussion Hub.</p>
             </div>
         </div>
     </div>
-
 </body>
 </html>
