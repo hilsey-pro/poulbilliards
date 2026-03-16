@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hilsey AI | Business Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .chat-bubble { max-width: 80%; border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; font-size: 14px; line-height: 1.6; }
+        .ai-msg { background: #f1f5f9; color: #0f172a; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-msg { background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        #lock-overlay { backdrop-blur: 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
+
+    <div class="w-64 bg-slate-900 text-white p-8 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-10 tracking-tighter">HILSEY BIZ</h1>
+        <nav class="space-y-4 flex-1 text-sm font-bold">
+            <a href="dashboard.html" class="block text-slate-400">📊 Dashboard</a>
+            <a href="ai-assistant.html" class="block text-blue-400">🤖 AI Assistant</a>
+            <a href="shop.html" class="block text-slate-400">🛒 Marketplace</a>
+            <a href="profile.html" class="block text-slate-400">👤 My Wallet</a>
+        </nav>
+    </div>
+
+    <div class="flex-1 flex flex-col relative">
+        
+        <div id="lock-overlay" class="absolute inset-0 bg-white/60 z-50 flex flex-col items-center justify-center hidden p-6 text-center">
+            <div class="bg-slate-900 p-10 rounded-[40px] shadow-2xl max-w-sm">
+                <div class="text-5xl mb-6 text-blue-500">🔒</div>
+                <h2 class="text-2xl font-black text-white italic uppercase mb-4">Pro Access Required</h2>
+                <p class="text-slate-400 text-sm mb-8">The AI Assistant is only for Hilsey Pro members. Deposit 10,000 Tsh to unlock.</p>
+                <a href="profile.html" class="block w-full bg-blue-600 text-white py-4 rounded-2xl font-black tracking-widest">GO TO WALLET</a>
+            </div>
+        </div>
+
+        <header class="p-6 border-b bg-white flex justify-between items-center">
+            <div>
+                <h2 class="font-black text-slate-800 uppercase italic">Hilsey AI Assistant</h2>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Powered by Gemini Engine</p>
+            </div>
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">v1.0 Pro</span>
+        </header>
+
+        <div id="chat-window" class="flex-1 overflow-y-auto p-8 flex flex-col">
+            <div class="chat-bubble ai-msg">
+                Habari! I am your Hilsey Business Assistant. I can help you write CVs, draft business reports, or find the right stationery. How can I help you today?
+            </div>
+        </div>
+
+        <div class="p-6 bg-white border-t">
+            <div class="max-w-4xl mx-auto flex gap-4">
+                <input type="text" id="user-input" placeholder="Ask anything... (e.g. 'Draft a professional CV')" class="flex-1 bg-slate-100 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                <button onclick="sendMessage()" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-blue-600 transition">SEND</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for Pro Status
+        let balance = parseInt(localStorage.getItem('userBalance')) || 0;
+        if (balance < 10000) {
+            document.getElementById('lock-overlay').classList.remove('hidden');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const chatWindow = document.getElementById('chat-window');
+
+            if (input.value.trim() !== "") {
+                // User Message
+                const userDiv = document.createElement('div');
+                userDiv.className = 'chat-bubble user-msg';
+                userDiv.innerText = input.value;
+                chatWindow.appendChild(userDiv);
+
+                // Simulate AI Thinking
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'chat-bubble ai-msg italic text-slate-400';
+                aiDiv.innerText = "Thinking...";
+                chatWindow.appendChild(aiDiv);
+
+                const prompt = input.value.toLowerCase();
+                input.value = "";
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                setTimeout(() => {
+                    aiDiv.classList.remove('italic', 'text-slate-400');
+                    if (prompt.includes('cv')) {
+                        aiDiv.innerText = "Of course! I can draft a CV for you. I suggest starting with your Education at TIA, then listing your Business skills. Would you like a template?";
+                    } else if (prompt.includes('price')) {
+                        aiDiv.innerText = "Currently, blue pens are 200 Tsh and A4 Notebooks are 3,500 Tsh in our Marketplace.";
+                    } else {
+                        aiDiv.innerText = "That is a great business question. As your assistant, I recommend analyzing the market demand in Tanzania before proceeding.";
+                    }
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
