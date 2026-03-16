@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Discussion Hub</title>
+    <title>Hilsey Pro | Live Discussion Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src='https://8x8.vc/vpaas-magic-cookie-3a86ff/external_api.js'></script>
     <style>
         body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
         .sidebar { width: 240px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #1e293b; flex-shrink: 0; }
         .nav-item { padding: 15px 24px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 14px; transition: 0.2s; border-left: 4px solid transparent; }
         .nav-item:hover { background: #1e293b; color: white; }
         .active-link { background: rgba(58, 134, 255, 0.1); color: #3a86ff; border-left-color: #3a86ff; font-weight: bold; }
-        
-        /* Video Call Layout */
-        .video-container { flex: 1; background: #020617; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 24px; margin: 20px; overflow: hidden; border: 1px solid #1e293b; }
-        .chat-sidebar { width: 350px; background: white; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; }
-        .control-bar { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 12px 24px; border-radius: 99px; display: flex; gap: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .control-btn { width: 45px; height: 45px; border-radius: 50%; display: flex; items-center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .control-btn:hover { background: rgba(255,255,255,0.1); }
+        #video-frame { flex: 1; background: #000; border-radius: 20px; margin: 20px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
 <body>
@@ -29,76 +24,44 @@
             <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
             <a href="templates.html" class="nav-item"><span>🎓 Templates</span></a>
             <a href="hub.html" class="nav-item active-link"><span>💬 Discussion Hub</span></a>
-            <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
+            <a href="lecture.html" class="nav-item text-xs opacity-50"><span>👨‍🏫 Lecturer Login</span></a>
         </nav>
-        <div class="p-6 border-t border-slate-800 text-xs text-slate-500 uppercase tracking-widest">TIA Academic Network</div>
     </div>
 
-    <div class="flex-1 flex bg-slate-50">
-        
-        <div class="flex-1 flex flex-col">
-            <div class="video-container shadow-2xl">
-                <div class="text-center text-slate-500">
-                    <div class="mb-4 text-6xl">📽️</div>
-                    <h2 class="text-xl font-bold text-white">Live Lecture Feed</h2>
-                    <p class="text-sm opacity-60">Waiting for Lecturer to start the broadcast...</p>
-                </div>
-
-                <div class="control-bar shadow-xl">
-                    <div class="control-btn text-white" onclick="alert('Mic Muted')">🎙️</div>
-                    <div class="control-btn text-white" onclick="alert('Camera Off')">📹</div>
-                    <div class="control-btn text-white" onclick="alert('Sharing Screen...')">🖥️</div>
-                    <div class="control-btn bg-red-500 hover:bg-red-600 text-white" onclick="window.location.href='dashboard.html'">📞</div>
-                </div>
+    <div class="flex-1 flex flex-col bg-slate-900">
+        <div class="p-4 flex justify-between items-center bg-slate-800 border-b border-slate-700">
+            <div>
+                <h2 class="text-white font-bold">TIA Live Lecture Room</h2>
+                <p class="text-xs text-green-400 font-mono">● ENCRYPTED CONNECTION LIVE</p>
             </div>
+            <button onclick="window.location.reload()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-lg">Refresh Call</button>
         </div>
 
-        <div class="chat-sidebar">
-            <div class="p-6 border-b">
-                <h3 class="font-bold text-slate-900">Live Discussion</h3>
-                <p class="text-xs text-green-500 font-bold">● 14 Students Online</p>
-            </div>
-            
-            <div id="message-area" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50">
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200">
-                    <p class="text-[10px] font-bold text-blue-600 uppercase">System</p>
-                    <p class="text-sm text-slate-700">Welcome to the TIA Secure Hub. Please remain respectful during live sessions.</p>
-                </div>
-            </div>
-
-            <div class="p-4 bg-white border-t">
-                <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-1 bg-slate-100 border-none rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-                    <button onclick="sendMessage()" class="bg-blue-600 text-white p-2 px-4 rounded-lg font-bold text-sm">Send</button>
-                </div>
-            </div>
-        </div>
+        <div id="video-frame"></div>
     </div>
 
     <script>
-        function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const area = document.getElementById('message-area');
-            
-            if (input.value.trim() !== "") {
-                const msg = `
-                    <div class="bg-blue-500 text-white p-3 rounded-lg shadow-sm ml-auto max-w-[80%]">
-                        <p class="text-[10px] font-bold uppercase opacity-80 text-right">You</p>
-                        <p class="text-sm text-right">${input.value}</p>
-                    </div>
-                `;
-                area.innerHTML += msg;
-                input.value = "";
-                area.scrollTop = area.scrollHeight;
-            }
-        }
-
-        // Allow "Enter" key to send message
-        document.getElementById('chat-input').addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
-        });
+        // THIS IS THE SERVER MAGIC
+        window.onload = () => {
+            const domain = '8x8.vc';
+            const options = {
+                roomName: 'vpaas-magic-cookie-3a86ff/HilseyProTIA-Room-2026',
+                width: '100%',
+                height: '100%',
+                parentNode: document.querySelector('#video-frame'),
+                configOverwrite: { prejoinPageEnabled: false },
+                interfaceConfigOverwrite: {
+                    TOOLBAR_BUTTONS: [
+                        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+                        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+                        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+                        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone'
+                    ],
+                }
+            };
+            const api = new JitsiMeetExternalAPI(domain, options);
+        };
     </script>
 
 </body>
