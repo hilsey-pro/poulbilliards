@@ -3,33 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Dashboard</title>
+    <title>Hilsey Pro | Smart Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
-        .sidebar { width: 220px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
-        .nav-item { padding: 15px 20px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; border-left: 4px solid transparent; }
-        .active-link { background: rgba(58, 134, 255, 0.1); color: white; border-left-color: #3a86ff; }
-        .main-view { flex: 1; padding: 30px; background: #f1f5f9; overflow-y: auto; }
+        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .sidebar { width: 240px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #1e293b; flex-shrink: 0; }
+        .nav-item { padding: 15px 24px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 14px; transition: 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background: #1e293b; color: white; }
+        .active-link { background: rgba(58, 134, 255, 0.1); color: #3a86ff; border-left-color: #3a86ff; font-weight: bold; }
+        .main-view { flex: 1; padding: 40px; background: #f8fafc; overflow-y: auto; }
+        .stat-card { background: white; padding: 24px; rounded-xl; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div style="padding: 25px; font-weight: bold; color: #3a86ff; text-align: center;">HILSEY PRO</div>
-        <a href="dashboard.html" class="nav-item active-link"><span>📊 Dashboard</span></a>
-        <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
-        <a href="hub.html" class="nav-item"><span>💬 Discussion Hub</span></a>
-        <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
+        <div class="p-8 text-2xl font-black text-blue-500 tracking-tighter italic">HILSEY PRO</div>
+        <nav class="flex-1">
+            <a href="dashboard.html" class="nav-item active-link"><span>📊 Dashboard</span></a>
+            <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
+            <a href="templates.html" class="nav-item"><span>🎓 Templates</span></a>
+            <a href="hub.html" class="nav-item"><span>💬 Discussion Hub</span></a>
+            <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
+        </nav>
+        <div class="p-6 border-t border-slate-800 text-xs text-slate-500 uppercase tracking-widest">TIA Student Portal v2.0</div>
     </div>
+
     <div class="main-view">
-        <h1 class="text-3xl font-bold text-slate-800">Welcome to Hilsey Pro</h1>
-        <p class="text-slate-500 mt-2">TIA Student Management System</p>
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="font-bold text-lg text-blue-600">Latest Assignment</h3>
-                <p class="text-sm text-slate-600 mt-2">Nursing Ethics - Due Friday</p>
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900">Student Overview</h1>
+                <p class="text-slate-500">Welcome back to the TIA Academic Network.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm font-bold text-slate-900">Nursing Student</p>
+                    <p class="text-xs text-green-500 flex items-center justify-end gap-1">
+                        <span class="w-2 h-2 bg-green-500 rounded-full pulse"></span> Online
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <div id="news-alert" class="hidden mb-8 bg-blue-600 text-white p-4 rounded-xl flex items-center justify-between shadow-lg">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📢</span>
+                <div>
+                    <p class="font-bold">New Broadcast from Lecturer!</p>
+                    <p class="text-sm opacity-90" id="broadcast-preview">Check the assignment panel below for details.</p>
+                </div>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-white opacity-50 hover:opacity-100">✕</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2 stat-card border-l-4 border-l-blue-600">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-500 uppercase text-xs tracking-wider">Active Assignments</h3>
+                    <span class="bg-blue-100 text-blue-700 text-[10px] px-2 py-1 rounded-full font-bold">LIVE UPDATES</span>
+                </div>
+                <h2 id="assignment-display" class="text-2xl font-bold text-slate-800">No active assignments from Lecturer.</h2>
+                <p id="assignment-subtext" class="text-slate-500 mt-2 text-sm italic">Status: All caught up!</p>
+                <div class="mt-6 flex gap-3">
+                    <button onclick="window.location.href='workspace.html'" class="bg-slate-900 text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-slate-800 transition">Open Workspace</button>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3 class="font-bold text-slate-500 uppercase text-xs tracking-wider mb-4">Library Access</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer border border-transparent hover:border-slate-200">
+                        <span class="bg-orange-100 p-2 rounded-lg">📄</span>
+                        <div>
+                            <p class="text-sm font-bold">Nursing CV Template</p>
+                            <p class="text-[10px] text-slate-400">Manchester Standard</p>
+                        </div>
+                    </li>
+                    <li class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer border border-transparent hover:border-slate-200">
+                        <span class="bg-purple-100 p-2 rounded-lg">✉️</span>
+                        <div>
+                            <p class="text-sm font-bold">Proposal Cover Letter</p>
+                            <p class="text-[10px] text-slate-400">Formal Internship</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function() {
+            // Check the "Data Cloud" (Browser Storage) for new assignments
+            const liveAssign = localStorage.getItem('latestAssignment');
+            
+            if (liveAssign) {
+                // Update the text to show the new Assignment
+                document.getElementById('assignment-display').innerText = liveAssign;
+                document.getElementById('assignment-subtext').innerText = "Status: New assignment posted. Action required.";
+                
+                // Show the blue "New Broadcast" alert at the top
+                document.getElementById('news-alert').classList.remove('hidden');
+                document.getElementById('broadcast-preview').innerText = "Topic: " + liveAssign;
+            }
+        }
+    </script>
 </body>
 </html>
