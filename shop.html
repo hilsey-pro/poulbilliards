@@ -1,65 +1,126 @@
-<script>
-    let cartItems = [];
-    let total = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hilsey Biz | Mega Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; color: #94a3b8; font-size: 13px; font-weight: 700; transition: 0.2s; }
+        .nav-item:hover { background: #1e293b; color: white; }
+        .nav-active { background: #3b82f6; color: white; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .p-card { background: white; border: 1px solid #f1f5f9; border-radius: 20px; overflow: hidden; transition: 0.3s; }
+        .p-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #3b82f6; }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
 
-    // 1. PULL THE REAL BALANCE FROM THE WALLET
-    let currentBalance = parseInt(localStorage.getItem('userBalance')) || 0;
-
-    function addToCart(name, price) {
-        cartItems.push({name, price});
-        total += price;
-        updateUI();
-    }
-
-    function updateUI() {
-        document.getElementById('cart-total').innerText = total.toLocaleString() + " Tsh";
-        document.getElementById('modal-total').innerText = total.toLocaleString();
+    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0 overflow-y-auto">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-8 tracking-tighter text-center">HILSEY BIZ</h1>
         
-        const list = document.getElementById('cart-items-list');
-        list.innerHTML = "";
-        cartItems.forEach((item, index) => {
-            list.innerHTML += `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
-                    <div>
-                        <p class="font-bold text-slate-800 text-sm">${item.name}</p>
-                        <p class="text-[10px] text-blue-600 font-bold">${item.price.toLocaleString()} Tsh</p>
+        <nav class="space-y-1">
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mb-2">General</p>
+            <a href="dashboard.html" class="nav-item"><span>📊</span> Dashboard</a>
+            <a href="shop.html" class="nav-item nav-active"><span>🛍️</span> Marketplace</a>
+            <a href="profile.html" class="nav-item"><span>💳</span> My Wallet</a>
+
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mt-6 mb-2">Education Hub</p>
+            <a href="lecture.html" class="nav-item"><span>📺</span> Lecture Panel</a>
+            <a href="classes.html" class="nav-item"><span>🏫</span> Class Manager</a>
+            <a href="papers.html" class="nav-item"><span>📝</span> Past Papers</a>
+            <a href="workspace.html" class="nav-item"><span>✍️</span> Assignments</a>
+
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mt-6 mb-2">Business & AI</p>
+            <a href="ai-assistant.html" class="nav-item"><span>🤖</span> Hilsey AI Pro</a>
+            <a href="marketing.html" class="nav-item"><span>📢</span> Marketing Hub</a>
+            <a href="discussion.html" class="nav-item"><span>💬</span> Discussion Hub</a>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-slate-800 text-center">
+            <p class="text-[10px] text-slate-500 font-bold">BALANCE</p>
+            <p id="nav-balance" class="text-lg font-black text-green-400">0 Tsh</p>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col">
+        <header class="p-8 bg-white border-b flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-black italic uppercase">Marketplace</h2>
+                <p class="text-xs text-slate-400 font-bold">100+ Stationery items available in Tanzania</p>
+            </div>
+            <div class="flex gap-4">
+                <input type="text" placeholder="Search products..." class="bg-slate-100 px-6 py-3 rounded-2xl w-80 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-sm">
+                <button onclick="openCart()" class="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-sm">CART (<span id="cart-count">0</span>)</button>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            <div id="mega-grid" class="product-grid">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        // 1. DATA: THE 100+ PRODUCTS
+        const categories = ["Pen", "Notebook", "File", "Marker", "Eraser", "Ruler", "Calculator"];
+        const products = [];
+        
+        // Generate 100 real-looking items
+        for(let i=1; i<=100; i++) {
+            let cat = categories[Math.floor(Math.random() * categories.length)];
+            let price = 0;
+            if(cat === "Pen") price = 250;
+            else if(cat === "Notebook") price = 3500;
+            else if(cat === "File") price = 1500;
+            else if(cat === "Calculator") price = 45000;
+            else price = 500;
+
+            products.push({
+                id: i,
+                name: `${cat} Model-${i+100}`,
+                price: price,
+                img: `https://picsum.photos/400/300?random=${i}` // This pulls a different photo for every item!
+            });
+        }
+
+        // 2. RENDER: SHOW THEM ON THE PAGE
+        const grid = document.getElementById('mega-grid');
+        products.forEach(p => {
+            grid.innerHTML += `
+                <div class="p-card">
+                    <img src="${p.img}" class="w-full h-40 object-cover">
+                    <div class="p-5">
+                        <h4 class="font-bold text-xs uppercase mb-1">${p.name}</h4>
+                        <p class="text-blue-600 font-black text-lg">${p.price.toLocaleString()} <span class="text-[10px]">Tsh</span></p>
+                        <button onclick="addToCart('${p.name}', ${p.price})" class="w-full mt-4 bg-slate-100 hover:bg-blue-600 hover:text-white transition py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Add to Cart</button>
                     </div>
-                    <button onclick="removeItem(${index})" class="text-red-400 text-lg hover:text-red-600">✕</button>
-                </div>`;
+                </div>
+            `;
         });
-    }
 
-    // 2. THE BUSINESS CHECKOUT LOGIC
-    function processCheckout() {
-        if (total === 0) {
-            alert("Your cart is empty!");
-            return;
+        // 3. LOGIC: WALLET & CART
+        let cart = [];
+        let balance = parseInt(localStorage.getItem('userBalance')) || 0;
+        document.getElementById('nav-balance').innerText = balance.toLocaleString() + " Tsh";
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            document.getElementById('cart-count').innerText = cart.length;
         }
 
-        if (currentBalance >= total) {
-            // SUCCESS: Subtract money
-            currentBalance -= total;
-            localStorage.setItem('userBalance', currentBalance); // Save new balance
-            
-            alert("ORDER SUCCESSFUL!\n" + total.toLocaleString() + " Tsh has been deducted from your wallet.\nYour stationery is being prepared.");
-            
-            // Reset Cart
-            cartItems = [];
-            total = 0;
-            updateUI();
-            toggleCart();
-            
-            // Redirect to profile to see the new balance
-            window.location.href = "profile.html";
-        } else {
-            // FAILURE: Not enough money
-            alert("INSUFFICIENT BALANCE!\n\nYour Total: " + total.toLocaleString() + " Tsh\nYour Wallet: " + currentBalance.toLocaleString() + " Tsh\n\nPlease go to 'My Wallet' to top up.");
-            window.location.href = "profile.html";
+        function openCart() {
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            if(confirm(`Total Order: ${total} Tsh\nDo you want to pay?`)) {
+                if(balance >= total) {
+                    balance -= total;
+                    localStorage.setItem('userBalance', balance);
+                    alert("Order Placed! Thank you for shopping with Hilsey Biz.");
+                    location.reload();
+                } else {
+                    alert("Not enough money! Go to 'My Wallet' to top up.");
+                }
+            }
         }
-    }
-
-    function toggleCart() {
-        const modal = document.getElementById('cart-modal');
-        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-    }
-</script>
+    </script>
+</body>
+</html>
