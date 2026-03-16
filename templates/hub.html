@@ -1,101 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Hilsey Pro | Live Hub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Pro | Discussion Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src='https://meet.jit.si/external_api.js'></script>
     <style>
-        :root { --bg: #0B132B; --sidebar: #1C2541; --primary: #3A86FF; --text: #EAEAEA; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { padding: 12px 20px; color: #94a3b8; display: flex; items-center: center; gap: 12px; text-decoration: none; }
-        .status-card { background: #1C2541; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        #video-container { width: 100%; height: 500px; background: #000; border-radius: 12px; overflow: hidden; }
+        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
+        
+        /* THE PERMANENT LEFT SIDEBAR */
+        .sidebar { width: 220px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .nav-item { padding: 15px 20px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; border-left: 4px solid transparent; }
+        .nav-item:hover, .active-link { background: rgba(58, 134, 255, 0.1); color: white; border-left-color: #3a86ff; }
+        .label { padding: 20px 20px 5px; font-size: 10px; color: #475569; font-weight: bold; text-transform: uppercase; }
+
+        /* MAIN CONTENT AREA */
+        .main-view { flex: 1; display: flex; flex-direction: column; padding: 20px; background: #f1f5f9; overflow-y: auto; }
+        
+        /* VIDEO CALL BOX */
+        .video-container { background: #000; border-radius: 12px; height: 400px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .video-controls { position: absolute; bottom: 20px; display: flex; gap: 15px; }
+        .control-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 12px; rounded-full; cursor: pointer; backdrop-filter: blur(5px); }
+        .control-btn:hover { background: #3a86ff; }
+
+        @media (max-width: 600px) {
+            .sidebar { width: 70px; }
+            .nav-item span { display: none; }
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="p-6"><h1 class="text-2xl font-black italic text-white underline decoration-blue-500">HILSEY</h1></div>
-        <nav>
-            <a href="/dashboard" class="nav-item">📊 Dashboard</a>
-            <a href="/" class="nav-item">✍️ Assignment Pad</a>
-            <a href="/hub" class="nav-item active" style="color:white; background:rgba(58,134,255,0.1);">💬 Discussion Hub</a>
-            <a href="/database" class="nav-item">☁️ Student Cloud</a>
-        </nav>
+        <div style="padding: 25px; font-weight: bold; font-style: italic; color: #3a86ff; border-bottom: 1px solid #1e293b; text-align: center;">HILSEY PRO</div>
+        
+        <div class="label">Navigation</div>
+        <a href="dashboard.html" class="nav-item"><span>📊 Dashboard</span></a>
+        <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
+        <a href="templates.html" class="nav-item"><span>🎓 Templates</span></a>
+        <a href="hub.html" class="nav-item active-link"><span>💬 Discussion Hub</span></a>
+        <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
     </div>
 
-    <div class="flex-1 p-8 overflow-y-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="main-view">
+        <h1 class="text-2xl font-bold text-slate-800 mb-4">Discussion Hub & Video Call</h1>
+        
+        <div class="video-container">
+            <div class="text-white text-center">
+                <p class="text-lg">Waiting for others to join...</p>
+                <p class="text-xs opacity-50 mt-2">TIA Study Group Session</p>
+            </div>
             
-            <div class="lg:col-span-2">
-                <div class="status-card p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg">🎥 Classroom Video Call</h3>
-                        <button onclick="startCall()" class="bg-blue-600 px-4 py-2 rounded font-bold text-xs hover:bg-blue-500">Start/Join Call</button>
-                    </div>
-                    <div id="video-container" class="flex items-center justify-center">
-                        <p class="text-gray-500">Click the button to enter the video room</p>
-                    </div>
-                </div>
+            <div class="video-controls">
+                <button class="control-btn">🎤 Mute</button>
+                <button class="control-btn">📷 Camera</button>
+                <button class="control-btn bg-red-600">📵 End</button>
             </div>
+        </div>
 
-            <div class="status-card p-6 flex flex-col h-[600px]">
-                <h3 class="font-bold mb-4">💬 Live Class Chat</h3>
-                <div id="chat-box" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-2 text-sm text-gray-300">
-                    </div>
-                <div class="flex gap-2">
-                    <input type="text" id="msg-input" placeholder="Ask a question..." class="flex-1 bg-[#0B132B] border border-slate-700 rounded p-2 text-xs outline-none focus:border-blue-500">
-                    <button onclick="sendMessage()" class="bg-blue-600 px-3 py-2 rounded font-bold text-xs">Send</button>
-                </div>
+        <div class="mt-6 bg-white p-4 rounded-lg shadow">
+            <h3 class="font-bold border-b pb-2 mb-2">Live Chat</h3>
+            <div class="h-32 text-sm text-gray-500 overflow-y-auto">
+                <p><b>Lecturer:</b> Welcome to the discussion. Please open your Assignment Pad.</p>
             </div>
-
+            <div class="flex mt-2">
+                <input type="text" placeholder="Type a message..." class="flex-1 border p-2 rounded-l">
+                <button class="bg-blue-600 text-white px-4 rounded-r">Send</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        // VIDEO CALL LOGIC
-        function startCall() {
-            const domain = 'meet.jit.si';
-            const options = {
-                roomName: 'HilseyPro_Classroom_Session',
-                width: '100%',
-                height: 500,
-                parentNode: document.querySelector('#video-container'),
-                interfaceConfigOverwrite: { TOOLBAR_BUTTONS: ['microphone', 'camera', 'desktop', 'chat', 'raisehand'] }
-            };
-            document.getElementById('video-container').innerHTML = ""; // Clear placeholder
-            const api = new JitsiMeetExternalAPI(domain, options);
-        }
-
-        // CHAT LOGIC
-        async function loadMessages() {
-            const res = await fetch('/get-messages');
-            const messages = await res.json();
-            const box = document.getElementById('chat-box');
-            box.innerHTML = messages.map(m => `
-                <div class="bg-white/5 p-2 rounded">
-                    <p class="text-[10px] font-bold text-blue-400">${m.user} <span class="text-gray-500 font-normal">${m.time}</span></p>
-                    <p>${m.text}</p>
-                </div>
-            `).join('');
-            box.scrollTop = box.scrollHeight;
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('msg-input');
-            if(!input.value) return;
-            await fetch('/send-message', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({text: input.value})
-            });
-            input.value = "";
-            loadMessages();
-        }
-
-        setInterval(loadMessages, 3000); // Auto-refresh chat every 3 seconds
-        loadMessages();
-    </script>
 </body>
 </html>
