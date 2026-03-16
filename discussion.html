@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hilsey Biz | Discussion Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .video-container { position: relative; background: #0f172a; border-radius: 32px; overflow: hidden; aspect-ratio: 16/9; }
+        #local-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; color: #94a3b8; font-size: 13px; font-weight: 700; transition: 0.2s; }
+        .nav-item:hover { background: #1e293b; color: white; }
+        .nav-active { background: #3b82f6; color: white; }
+        .control-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 15px; border-radius: 50%; transition: 0.3s; }
+        .control-btn:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
+
+    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0 overflow-y-auto">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-8 tracking-tighter text-center uppercase">Hilsey Biz</h1>
+        <nav class="space-y-1">
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mb-2 tracking-widest">Main Dashboard</p>
+            <a href="dashboard.html" class="nav-item"><span>📊</span> Overview</a>
+            <a href="shop.html" class="nav-item"><span>🛍️</span> Marketplace</a>
+            <a href="profile.html" class="nav-item"><span>💳</span> My Wallet</a>
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mt-6 mb-2 tracking-widest">Education Panel</p>
+            <a href="lecture.html" class="nav-item"><span>📺</span> Lecture Panel</a>
+            <a href="classes.html" class="nav-item"><span>🏫</span> Class Manager</a>
+            <a href="papers.html" class="nav-item"><span>📝</span> Past Papers</a>
+            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mt-6 mb-2 tracking-widest">Innovation & Social</p>
+            <a href="ai-assistant.html" class="nav-item"><span>🤖</span> Hilsey AI Pro</a>
+            <a href="discussion.html" class="nav-item nav-active"><span>💬</span> Discussion Hub</a>
+        </nav>
+    </div>
+
+    <div class="flex-1 flex flex-col p-10">
+        <header class="mb-8 flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-black italic uppercase text-slate-900">Live Discussion</h2>
+                <p class="text-xs text-slate-400 font-bold uppercase">Room: TIA-BUSINESS-DEPT-01</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="flex h-3 w-3 rounded-full bg-red-500 animate-pulse"></span>
+                <span class="text-xs font-black text-slate-600 uppercase">Live (3 Classmates)</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+            <div class="lg:col-span-2 flex flex-col">
+                <div class="video-container flex-1 shadow-2xl border-4 border-white">
+                    <video id="local-video" autoplay playsinline></video>
+                    
+                    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4">
+                        <button class="control-btn" title="Mute">🎤</button>
+                        <button class="control-btn" title="Stop Video">📹</button>
+                        <button class="control-btn bg-red-600 hover:bg-red-700" title="Leave">📞</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[32px] shadow-sm border border-slate-200 p-6 flex flex-col">
+                <h3 class="font-black text-sm uppercase mb-4 italic">Room Chat</h3>
+                <div class="flex-1 overflow-y-auto space-y-4 mb-4 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-2xl">
+                        <p class="font-black text-blue-600">Juma:</p>
+                        <p class="text-slate-600">Has the teacher sent the PDF for the Assignment?</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl">
+                        <p class="font-black text-purple-600">Sarah:</p>
+                        <p class="text-slate-600">Yes, check the EDU Hub under 'Marketing Reports'.</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <input type="text" placeholder="Type a message..." class="w-full bg-slate-100 p-4 rounded-2xl outline-none text-xs font-bold">
+                    <button class="absolute right-3 top-2 text-xl">➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CAMERA LOGIC
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const videoElement = document.getElementById('local-video');
+                videoElement.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                alert("Camera Error: Please make sure you have given permission and your camera is plugged in.");
+            }
+        }
+
+        // Start the camera immediately when the page loads
+        window.onload = startCamera;
+    </script>
+</body>
+</html>
