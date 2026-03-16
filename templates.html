@@ -1,54 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Pro | Library</title>
+    <meta charset="UTF-8"><title>Hilsey Pro | Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { margin: 0; display: flex; height: 100vh; background: #0f172a; font-family: sans-serif; overflow: hidden; }
-        .sidebar { width: 220px; background: #0b132b; color: white; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
-        .nav-item { padding: 15px 20px; color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; font-size: 14px; border-left: 4px solid transparent; }
-        .active-link { background: rgba(58, 134, 255, 0.1); color: white; border-left-color: #3a86ff; }
-        .card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
-    </style>
 </head>
-<body>
-    <div class="sidebar">
-        <div style="padding: 25px; font-weight: bold; color: #3a86ff; text-align: center;">HILSEY PRO</div>
-        <a href="dashboard.html" class="nav-item"><span>📊 Dashboard</span></a>
-        <a href="workspace.html" class="nav-item"><span>✍️ Workspace</span></a>
-        <a href="templates.html" class="nav-item active-link"><span>🎓 Templates</span></a>
-        <a href="hub.html" class="nav-item"><span>💬 Discussion Hub</span></a>
-        <a href="lecture.html" class="nav-item"><span>👨‍🏫 Lecturer Hub</span></a>
+<body class="bg-slate-50 flex">
+    <div class="w-64 bg-slate-900 h-screen text-white p-6">
+        <h1 class="text-xl font-bold mb-10 italic">HILSEY LIBRARY</h1>
+        <nav class="space-y-4">
+            <a href="dashboard.html" class="block text-slate-400">Dashboard</a>
+            <a href="workspace.html" class="block text-slate-400">New Blank Document</a>
+        </nav>
     </div>
-
-    <div class="flex-1 p-10 bg-slate-50 overflow-y-auto">
-        <h1 class="text-3xl font-bold text-slate-800 mb-2">Template Library</h1>
-        <p class="text-slate-500 mb-8">Professional layouts for TIA Students</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 cursor-pointer" onclick="window.location.href='workspace.html'">
-                <div class="text-4xl mb-4">📄</div>
-                <h3 class="font-bold text-lg">Nursing CV (Manchester)</h3>
-                <p class="text-xs text-slate-500 mt-2 italic">Clean, single-page layout for hospitals.</p>
-                <button class="mt-4 w-full bg-blue-50 text-blue-600 font-bold py-2 rounded-lg">Use This</button>
+    <div class="flex-1 p-10 overflow-y-auto">
+        <h2 class="text-3xl font-bold mb-8 italic text-slate-800">Professional TIA Templates</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-blue-500 cursor-pointer transition" 
+                 onclick="useTemplate('cv')">
+                <h3 class="text-xl font-bold">Nursing CV (Manchester Style)</h3>
+                <p class="text-slate-500 text-sm">A modern, international layout used by recruiters.</p>
             </div>
 
-            <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 cursor-pointer" onclick="window.location.href='workspace.html'">
-                <div class="text-4xl mb-4">✉️</div>
-                <h3 class="font-bold text-lg">Proposal Cover Letter</h3>
-                <p class="text-xs text-slate-500 mt-2 italic">Standard TIA cover letter for internships.</p>
-                <button class="mt-4 w-full bg-blue-50 text-blue-600 font-bold py-2 rounded-lg">Use This</button>
-            </div>
-
-            <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 cursor-pointer" onclick="window.location.href='workspace.html'">
-                <div class="text-4xl mb-4">🗒️</div>
-                <h3 class="font-bold text-lg">Blank Report</h3>
-                <p class="text-xs text-slate-500 mt-2 italic">For custom TIA coursework and notes.</p>
-                <button class="mt-4 w-full bg-blue-50 text-blue-600 font-bold py-2 rounded-lg">Use This</button>
+            <div class="bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-blue-500 cursor-pointer transition" 
+                 onclick="useTemplate('letter')">
+                <h3 class="text-xl font-bold">Professional Cover Letter</h3>
+                <p class="text-slate-500 text-sm">Example: Daniel Carter's Marketing Letter.</p>
             </div>
         </div>
     </div>
+
+    <script>
+        function useTemplate(type) {
+            // This stores the template name so the Workspace knows what to load
+            localStorage.setItem('activeTemplate', type);
+            window.location.href = 'workspace.html';
+        }
+    </script>
 </body>
 </html>
