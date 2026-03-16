@@ -1,42 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Hilsey Pro | Workspace</title>
+    <meta charset="UTF-8"><title>Hilsey Pro | Smart Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>
+        .ql-toolbar { background: #f8fafc; border-bottom: 1px solid #e2e8f0 !important; position: sticky; top: 0; z-index: 1000; }
+        .ql-container { border: none !important; font-family: 'Times New Roman', serif; }
+        #editor-wrapper { background: #f1f5f9; padding: 40px 20px; min-height: 100vh; }
+        #editor { 
+            background: white; 
+            width: 210mm; 
+            min-height: 297mm; 
+            margin: 0 auto; 
+            padding: 25mm; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body class="bg-slate-200">
-    <div class="flex flex-col h-screen">
-        <div class="bg-white border-b shadow-sm">
-            <div id="toolbar-container"></div>
+<body class="bg-slate-100">
+
+    <div class="bg-white border-b p-2 flex justify-between items-center px-6 sticky top-0 z-[1001]">
+        <div class="flex gap-4">
+            <button onclick="window.location.href='templates.html'" class="text-sm font-bold text-blue-600 hover:bg-blue-50 px-3 py-1 rounded">← Back to Library</button>
+            <span class="text-slate-300">|</span>
+            <span class="text-sm font-bold text-slate-500">Document Mode: <span id="mode-name" class="text-slate-900 italic">Editing Template</span></span>
         </div>
-        
-        <div class="flex-1 overflow-y-auto p-10">
-            <div id="editor" class="bg-white max-w-4xl mx-auto min-h-[1056px] shadow-2xl p-12 outline-none">
-                <h1 class="text-center text-2xl font-serif">STUDENT REPORT</h1>
-                <p>Start typing your TIA research here...</p>
-            </div>
-        </div>
+        <button onclick="window.print()" class="bg-blue-600 text-white px-5 py-1 rounded-full font-bold text-sm shadow-md">Export PDF</button>
+    </div>
+
+    <div id="editor-wrapper">
+        <div id="editor"></div>
     </div>
 
     <script>
+        // Initialize Microsoft Word Tools
         var quill = new Quill('#editor', {
+            theme: 'snow',
             modules: {
                 toolbar: [
                     [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-                    ['bold', 'italic', 'underline', 'strike'],
+                    ['bold', 'italic', 'underline'],
                     [{ 'color': [] }, { 'background': [] }],
-                    [{ 'script': 'sub'}, { 'script': 'super' }],
-                    [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     [{ 'align': [] }],
-                    ['link', 'image', 'video'],
+                    ['image', 'link'],
                     ['clean']
                 ]
-            },
-            theme: 'snow'
+            }
         });
+
+        // The Template Content Library
+        const library = {
+            cv: `
+                <h1 style="text-align:center">ISABELLA MARTÍNEZ</h1>
+                <p style="text-align:center">Barcelona, Spain | +34 612 458 921 | isabella.m@email.com</p>
+                <hr>
+                <h3>Professional Summary</h3>
+                <p>Strategic marketing specialist with over five years of experience developing brand campaigns. Known for data-driven insights and creative thinking.</p>
+                <h3>Professional Experience</h3>
+                <p><b>Marketing Manager</b> - BrightWave Media Agency (2021-Present)</p>
+                <ul>
+                    <li>Increased client online engagement by 45%.</li>
+                    <li>Managed marketing budgets exceeding €500,000.</li>
+                </ul>
+                <h3>Education</h3>
+                <p>Bachelor of Business Administration - University of Barcelona</p>
+            `,
+            letter: `
+                <p>Dear Hiring Manager,</p>
+                <p>I am writing to express my interest in the Marketing Assistant position at Horizon Digital Solutions. With a strong academic background in business administration, I am eager to contribute my skills to your team.</p>
+                <p>I am particularly drawn to Horizon because of its reputation for creative marketing strategies. I believe my analytical mindset would allow me to make a positive contribution.</p>
+                <p>Sincerely,<br><b>Daniel Carter</b></p>
+            `,
+            report: `
+                <h1 style="text-align:center">FIELD OBSERVATION REPORT</h1>
+                <p><b>Student:</b> Aisha Rahman</p>
+                <p><b>Institution:</b> University of Kuala Lumpur</p>
+                <hr>
+                <h3>1. Introduction</h3>
+                <p>This report presents observations from an eight-week placement at Urban Trend Retail Store.</p>
+                <h3>2. Objectives</h3>
+                <p>To understand retail management practices and develop professional workplace skills.</p>
+                <h3>3. Conclusion</h3>
+                <p>The placement offered valuable insight into practical business operations.</p>
+            `,
+            proposal: `
+                <h1 style="text-align:center">PROJECT PROPOSAL</h1>
+                <p><b>Title:</b> Campus Transportation App</p>
+                <p><b>Prepared by:</b> Jonathan Lee</p>
+                <hr>
+                <h3>Background</h3>
+                <p>University campuses often experience transportation inefficiencies due to limited parking space.</p>
+                <h3>Objectives</h3>
+                <p>Develop a mobile application that provides real-time tracking of campus shuttle buses.</p>
+            `
+        };
+
+        // Logic to Load the Template
+        window.onload = function() {
+            const choice = localStorage.getItem('selectedTemplate') || 'cv';
+            document.getElementById('mode-name').innerText = choice.toUpperCase() + " Template";
+            
+            // Inject the HTML into the editor
+            quill.clipboard.dangerouslyPasteHTML(library[choice]);
+            
+            // Clean up memory
+            localStorage.removeItem('selectedTemplate');
+        };
     </script>
 </body>
 </html>
