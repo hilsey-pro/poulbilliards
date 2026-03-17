@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hilsey Biz | Gateway</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Biz | Secure Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 flex items-center justify-center h-screen font-sans">
+<body class="bg-slate-900 flex items-center justify-center h-screen font-sans p-6">
 
     <div class="bg-white w-full max-w-md rounded-[40px] p-12 shadow-2xl text-center border-b-8 border-blue-600">
         <h1 class="text-3xl font-black italic text-slate-900 mb-2 uppercase tracking-tighter">Hilsey Biz</h1>
@@ -18,7 +19,7 @@
             </div>
             <div>
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-4">Security Password</label>
-                <input type="password" id="pass-id" placeholder="MUST MATCH ID" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold uppercase text-sm">
+                <input type="password" id="pass-id" placeholder="MUST MATCH ID" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-500 font-bold uppercase text-sm">
             </div>
         </div>
 
@@ -33,11 +34,10 @@
             const passValue = document.getElementById('pass-id').value.trim();
 
             if (idValue !== "" && idValue === passValue) {
-                // Save the data so other pages can see it
+                // Save session data
                 localStorage.setItem('empireOwner', "William Edward");
                 localStorage.setItem('empireID', idValue);
-                
-                // Jump to the dashboard
+                // Redirect to main dashboard
                 window.location.href = "dashboard.html";
             } else {
                 const errorLine = document.getElementById('auth-error');
