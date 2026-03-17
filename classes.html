@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hilsey Biz | Class Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
+
+    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-8 tracking-tighter text-center uppercase">Hilsey Biz</h1>
+        <nav class="space-y-1">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>📊</span> Dashboard</a>
+            <a href="classes.html" class="flex items-center gap-3 p-3 bg-blue-600 text-white rounded-xl font-bold text-sm"><span>🏫</span> Class Manager</a>
+            <a href="papers.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>📝</span> Past Papers</a>
+            <a href="shop.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>🛍️</span> Marketplace</a>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10 overflow-y-auto">
+        <header class="mb-10">
+            <h2 class="text-3xl font-black italic uppercase">Lecture Timetable</h2>
+            <p class="text-xs text-slate-400 font-bold uppercase">Department: Accountancy & Business</p>
+        </header>
+
+        <div class="grid grid-cols-1 gap-6">
+            <div class="bg-white p-6 rounded-[30px] border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-black text-blue-500 uppercase">Monday | 08:00 AM - 10:00 AM</p>
+                    <h3 class="text-lg font-black">Financial Accounting I</h3>
+                    <p class="text-slate-400 text-xs font-medium">Room: TIA Main Hall A</p>
+                </div>
+                <span class="bg-green-100 text-green-600 px-4 py-2 rounded-full text-[10px] font-black">ONGOING</span>
+            </div>
+
+            <div class="bg-white p-6 rounded-[30px] border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-black text-purple-500 uppercase">Tuesday | 11:00 AM - 01:00 PM</p>
+                    <h3 class="text-lg font-black">Business Mathematics</h3>
+                    <p class="text-slate-400 text-xs font-medium">Room: Block B - Room 4</p>
+                </div>
+                <span class="bg-slate-100 text-slate-400 px-4 py-2 rounded-full text-[10px] font-black">UPCOMING</span>
+            </div>
+
+            <div class="bg-white p-6 rounded-[30px] border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-black text-orange-500 uppercase">Wednesday | 02:00 PM - 04:00 PM</p>
+                    <h3 class="text-lg font-black">Principles of Marketing</h3>
+                    <p class="text-slate-400 text-xs font-medium">Room: Marketing Lab</p>
+                </div>
+                <span class="bg-slate-100 text-slate-400 px-4 py-2 rounded-full text-[10px] font-black">UPCOMING</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
