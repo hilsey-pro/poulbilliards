@@ -1,8 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hilsey Marketplace</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Hilsey Mega Marketplace</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #020617;
+      padding: 20px;
+    }
+
+    nav {
+      margin: 20px 0;
+    }
+
+    nav button {
+      padding: 10px 20px;
+      margin: 5px;
+      background: #22c55e;
+      border: none;
+      cursor: pointer;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .marketplace {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .item-card {
+      background: #1e293b;
+      margin: 15px;
+      padding: 15px;
+      width: 220px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .item-card button {
+      background: #22c55e;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .item-card h3 {
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -32,8 +89,32 @@
     <p>Price: Tsh 5,000</p>
     <button onclick="buyItem('Executive Pen', 5000)">Buy</button>
   </div>
+
+  <div class="item-card">
+    <h3>Notebook</h3>
+    <p>Price: Tsh 8,000</p>
+    <button onclick="buyItem('Notebook', 8000)">Buy</button>
+  </div>
+
+  <div class="item-card">
+    <h3>Protractor</h3>
+    <p>Price: Tsh 2,500</p>
+    <button onclick="buyItem('Protractor', 2500)">Buy</button>
+  </div>
 </section>
 
-<script src="script.js"></script>
+<script>
+  let wallet = 50000; // initial wallet balance
+
+  function buyItem(itemName, price) {
+    if(wallet >= price) {
+      wallet -= price;
+      alert(`Purchased ${itemName} for Tsh ${price}\nRemaining Wallet: Tsh ${wallet}`);
+    } else {
+      alert(`Not enough funds for ${itemName}. Wallet: Tsh ${wallet}`);
+    }
+  }
+</script>
+
 </body>
 </html>
