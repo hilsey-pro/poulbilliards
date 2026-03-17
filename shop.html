@@ -2,93 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hilsey Biz | Mega Marketplace</title>
+    <title>Hilsey Biz | Marketplace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; color: #94a3b8; font-weight: 700; font-size: 13px; }
-        .nav-item:hover { background: #1e293b; color: white; }
         .active-nav { background: #3b82f6; color: white; }
-        .p-card { background: white; border: 1px solid #f1f5f9; border-radius: 24px; overflow: hidden; transition: 0.3s; }
-        .p-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
 
     <div class="w-72 bg-slate-900 text-white p-8 flex flex-col shrink-0">
-        <h1 class="text-2xl font-black text-blue-500 italic mb-12 tracking-tighter uppercase">HILSEY BIZ</h1>
+        <h1 class="text-2xl font-black text-blue-500 italic mb-12 uppercase tracking-tighter">HILSEY BIZ</h1>
         <nav class="space-y-2 flex-1">
             <a href="dashboard.html" class="nav-item"><span>📊</span> Dashboard</a>
             <a href="shop.html" class="nav-item active-nav"><span>🛍️</span> Marketplace</a>
-            <a href="papers.html" class="nav-item"><span>📝</span> Past Papers</a>
-            <a href="classes.html" class="nav-item"><span>🏫</span> Class Manager</a>
-            <a href="discussion.html" class="nav-item"><span>💬</span> Discussion Hub</a>
+            <a href="workspace.html" class="nav-item"><span>✍️</span> Working Space</a>
+            <a href="gateway.html" class="nav-item text-red-400 mt-20"><span>🚪</span> Logout</a>
         </nav>
-        <div class="mt-auto p-4 bg-slate-800 rounded-2xl border border-slate-700">
-            <p id="nav-balance" class="text-xl font-black text-green-400 text-center">0 Tsh</p>
-        </div>
     </div>
 
-    <div class="flex-1 flex flex-col">
-        <header class="p-10 bg-white border-b flex justify-between items-center">
-            <div>
-                <h2 class="text-3xl font-black italic uppercase">Stationery Mart</h2>
-                <p class="text-xs text-slate-400 font-bold">100+ items at TIA Student rates</p>
-            </div>
-            <button onclick="checkCart()" class="bg-blue-600 text-white px-8 py-4 rounded-3xl font-black text-sm uppercase">Cart (<span id="count">0</span>)</button>
+    <div class="flex-1 flex flex-col p-10 overflow-y-auto">
+        <header class="mb-10 flex justify-between items-center">
+            <h2 class="text-3xl font-black italic uppercase">Stationery Mart</h2>
+            <div class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase shadow-lg">Wallet: <span id="wal-bal">0</span> Tsh</div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-10">
-            <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                </div>
-        </main>
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            </div>
     </div>
 
     <script>
         const products = [
-            { name: "Executive Pen", price: 200, img: "https://images.unsplash.com/photo-1585336261022-69c66d160f8c?w=400" },
-            { name: "A4 Counter Book", price: 3500, img: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400" },
-            { name: "Scientific Calc", price: 25000, img: "https://images.unsplash.com/photo-1574607383476-f517f220d398?w=400" },
-            { name: "HB Pencil Pack", price: 1500, img: "https://images.unsplash.com/photo-1510811617201-4903332822d1?w=400" }
+            { name: "Executive Ballpoint Pen", price: 500, img: "https://images.unsplash.com/photo-1511556820780-d912e42b4980?auto=format&fit=crop&q=80&w=400" },
+            { name: "A4 Accountable Book", price: 4500, img: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=400" },
+            { name: "Casio Scientific Calculator", price: 35000, img: "https://images.unsplash.com/photo-1594814171821-2e58c1f60fbb?auto=format&fit=crop&q=80&w=400" },
+            { name: "HP Pencil Pack (12pcs)", price: 2500, img: "https://images.unsplash.com/photo-1510811617201-4903332822d1?auto=format&fit=crop&q=80&w=400" }
         ];
 
-        const grid = document.getElementById('grid');
-        for (let i = 0; i < 50; i++) {
-            const p = products[i % products.length];
+        const grid = document.getElementById('product-grid');
+        products.forEach(p => {
             grid.innerHTML += `
-                <div class="p-card">
-                    <img src="${p.img}&sig=${i}" class="w-full h-40 object-cover">
-                    <div class="p-6">
+                <div class="bg-white rounded-[40px] overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition">
+                    <img src="${p.img}" class="w-full h-48 object-cover">
+                    <div class="p-8">
                         <h4 class="font-black text-xs uppercase mb-2">${p.name}</h4>
-                        <p class="text-xl font-black text-blue-600">${p.price.toLocaleString()} Tsh</p>
-                        <button onclick="buy('${p.name}', ${p.price})" class="w-full mt-4 bg-slate-900 text-white py-3 rounded-xl font-bold text-[10px] uppercase">Add to Cart</button>
+                        <p class="text-xl font-black text-blue-600 mb-6">${p.price.toLocaleString()} Tsh</p>
+                        <button class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition">Add to Cart</button>
                     </div>
-                </div>
-            `;
-        }
+                </div>`;
+        });
 
-        let cart = [];
-        let balance = parseInt(localStorage.getItem('userBalance')) || 0;
-        document.getElementById('nav-balance').innerText = balance.toLocaleString() + " Tsh";
-
-        function buy(n, p) {
-            cart.push({n, p});
-            document.getElementById('count').innerText = cart.length;
-        }
-
-        function checkCart() {
-            let t = cart.reduce((s, i) => s + i.p, 0);
-            if(confirm(`Pay ${t} Tsh?`)) {
-                if(balance >= t) {
-                    balance -= t;
-                    localStorage.setItem('userBalance', balance);
-                    alert("Order Placed!");
-                    location.reload();
-                } else {
-                    alert("Need more funds!");
-                }
-            }
-        }
+        document.getElementById('wal-bal').innerText = (localStorage.getItem('userBalance') || 0).toLocaleString();
     </script>
 </body>
 </html>
