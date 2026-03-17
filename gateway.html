@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hilsey Biz | Secure Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -10,39 +9,47 @@
 
     <div class="bg-white w-full max-w-md rounded-[40px] p-12 shadow-2xl text-center border-b-8 border-blue-600">
         <h1 class="text-3xl font-black italic text-slate-900 mb-2 uppercase tracking-tighter">Hilsey Biz</h1>
-        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-10">Securing William Edward's Empire</p>
+        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-10">Student & Faculty Portal</p>
 
         <div class="space-y-6 text-left">
             <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase ml-4">Registration ID</label>
-                <input type="text" id="reg-id" placeholder="ENTER ID" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold uppercase text-sm">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-4 text-slate-400">Username / Email</label>
+                <input type="text" id="user-input" placeholder="e.g. student@tia.ac.tz" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold text-sm">
             </div>
             <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase ml-4">Security Password</label>
-                <input type="password" id="pass-id" placeholder="MUST MATCH ID" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-500 font-bold uppercase text-sm">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-4 text-slate-400">Security Password</label>
+                <input type="password" id="pass-input" placeholder="••••••••" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold text-sm">
             </div>
         </div>
 
-        <button onclick="launchEmpire()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black mt-10 hover:bg-blue-600 transition shadow-xl tracking-widest uppercase text-sm">Launch Dashboard</button>
+        <button onclick="login()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black mt-10 hover:bg-blue-600 transition shadow-xl tracking-widest uppercase text-sm">Verify & Enter</button>
         
-        <p id="auth-error" class="text-red-500 text-[10px] font-bold mt-4 uppercase hidden italic">Critical Error: Credentials do not match!</p>
+        <p id="error" class="text-red-500 text-[10px] font-bold mt-4 uppercase hidden italic">Access Denied: Invalid Credentials</p>
     </div>
 
     <script>
-        function launchEmpire() {
-            const idValue = document.getElementById('reg-id').value.trim();
-            const passValue = document.getElementById('pass-id').value.trim();
+        function login() {
+            const user = document.getElementById('user-input').value.trim();
+            const pass = document.getElementById('pass-input').value.trim();
 
-            if (idValue !== "" && idValue === passValue) {
-                // Save session data
-                localStorage.setItem('empireOwner', "William Edward");
-                localStorage.setItem('empireID', idValue);
-                // Redirect to main dashboard
+            if (user === "" || pass === "") {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            // LECTURE/ADMIN SECURITY (Developer Passwords)
+            if (pass === "developer2021" || pass === "developer2022") {
+                localStorage.setItem('userRole', 'staff');
+                localStorage.setItem('userEmail', user);
+                window.location.href = "lecture.html";
+            } 
+            // STUDENT ACCESS
+            else if (user === pass) {
+                localStorage.setItem('userRole', 'student');
+                localStorage.setItem('userEmail', user);
                 window.location.href = "dashboard.html";
             } else {
-                const errorLine = document.getElementById('auth-error');
-                errorLine.classList.remove('hidden');
-                setTimeout(() => errorLine.classList.add('hidden'), 3000);
+                document.getElementById('error').classList.remove('hidden');
             }
         }
     </script>
