@@ -4,49 +4,43 @@
     <meta charset="UTF-8">
     <title>Hilsey Biz | Secure Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .input-box { width: 100%; bg: #f1f5f9; padding: 20px; border-radius: 20px; outline: none; border: 2px solid #e2e8f0; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+        .input-box:focus { border-color: #3b82f6; }
+    </style>
 </head>
 <body class="bg-slate-900 flex items-center justify-center h-screen font-sans p-6">
-
-    <div class="bg-white w-full max-w-md rounded-[40px] p-12 shadow-2xl text-center border-b-8 border-blue-600">
+    <div class="bg-white w-full max-w-md rounded-[40px] p-12 shadow-2xl text-center">
         <h1 class="text-3xl font-black italic text-slate-900 mb-2 uppercase tracking-tighter">Hilsey Biz</h1>
-        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-10">Student & Faculty Portal</p>
-
-        <div class="space-y-6 text-left">
-            <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase ml-4 text-slate-400">Username / Email</label>
-                <input type="text" id="user-input" placeholder="e.g. student@tia.ac.tz" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold text-sm">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase ml-4 text-slate-400">Security Password</label>
-                <input type="password" id="pass-input" placeholder="••••••••" class="w-full bg-slate-100 p-5 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 font-bold text-sm">
-            </div>
+        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-10">Tanzania Institute of Accountancy Portal</p>
+        <div class="space-y-6 text-left mb-10">
+            <input type="text" id="reg-input" placeholder="DSM/BACC/25/001" class="input-box">
+            <input type="password" id="pass-input" placeholder="MUST MATCH ID" class="input-box">
         </div>
-
-        <button onclick="login()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black mt-10 hover:bg-blue-600 transition shadow-xl tracking-widest uppercase text-sm">Verify & Enter</button>
-        
-        <p id="error" class="text-red-500 text-[10px] font-bold mt-4 uppercase hidden italic">Access Denied: Invalid Credentials</p>
+        <button onclick="login()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black tracking-widest uppercase hover:bg-blue-600 transition shadow-xl">Secure Login</button>
+        <p id="error" class="text-red-500 text-[10px] font-bold mt-4 uppercase hidden">Error: Credentials must match exactly!</p>
     </div>
-
     <script>
+        // FORCED LOGOUT (Session Clear)
+        localStorage.removeItem('userReg');
+        localStorage.removeItem('userRole');
+
         function login() {
-            const user = document.getElementById('user-input').value.trim();
-            const pass = document.getElementById('pass-input').value.trim();
+            const reg = document.getElementById('reg-input').value.trim().toUpperCase();
+            const pass = document.getElementById('pass-input').value.trim().toUpperCase();
 
-            if (user === "" || pass === "") {
-                alert("Please fill in all fields");
-                return;
-            }
-
-            // LECTURE/ADMIN SECURITY (Developer Passwords)
-            if (pass === "developer2021" || pass === "developer2022") {
+            // STAFF LOGINS
+            if(pass === "DEVELOPER2021" || pass === "DEVELOPER2022") {
+                localStorage.setItem('userReg', reg || "STAFF");
                 localStorage.setItem('userRole', 'staff');
-                localStorage.setItem('userEmail', user);
                 window.location.href = "lecture.html";
-            } 
-            // STUDENT ACCESS
-            else if (user === pass) {
+            }
+            // STUDENT LOGINS (Reg matches Password)
+            else if(reg !== "" && reg === pass) {
+                localStorage.setItem('userReg', reg);
                 localStorage.setItem('userRole', 'student');
-                localStorage.setItem('userEmail', user);
+                // Ensure monetization wallet exists
+                if(!localStorage.getItem('userBalance')) localStorage.setItem('userBalance', 50000);
                 window.location.href = "dashboard.html";
             } else {
                 document.getElementById('error').classList.remove('hidden');
