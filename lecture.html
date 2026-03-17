@@ -2,84 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hilsey Biz | Admin Control</title>
+    <title>Hilsey Biz | Lecture Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-white font-sans">
-
-    <div id="lock-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-6">
-        <div class="bg-white p-8 rounded-2xl text-slate-800 w-full max-w-md shadow-2xl text-center border-t-8 border-blue-600">
-            <h1 class="text-2xl font-black text-slate-900 mb-2 italic">ADMIN LOGIN</h1>
-            <p class="text-sm text-slate-500 mb-6">Enterprise Access Required</p>
-            <input type="password" id="access-key" placeholder="Enter Admin Password" class="w-full border-2 p-4 rounded-xl mb-4 text-center text-lg outline-none focus:border-blue-600">
-            <button onclick="unlock()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg">Authenticate</button>
-            <p id="err" class="text-red-500 mt-4 hidden text-sm font-bold">⚠️ UNAUTHORIZED ACCESS ATTEMPTED</p>
-        </div>
+<body class="bg-slate-50 flex h-screen font-sans">
+    
+    <div class="w-72 bg-slate-900 text-white p-8 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-12 uppercase tracking-tighter text-center">HILSEY BIZ</h1>
+        <nav class="space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>📊</span> Dashboard</a>
+            <a href="lecture.html" class="flex items-center gap-3 p-3 bg-blue-600 text-white rounded-xl font-bold text-sm"><span>📺</span> Lecture Panel</a>
+            <a href="workspace.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>✍️</span> Working Space</a>
+        </nav>
     </div>
 
-    <div id="main-ui" class="hidden flex h-screen">
-        <div class="w-64 bg-slate-950 p-6 border-r border-slate-800 flex flex-col">
-            <h2 class="text-blue-500 font-black mb-10 tracking-widest">HILSEY BIZ ADMIN</h2>
-            <nav class="space-y-4 flex-1">
-                <div class="text-[10px] text-slate-500 font-bold uppercase mb-2">Management</div>
-                <button class="w-full text-left p-3 rounded-lg bg-blue-600 font-bold text-sm">📦 Inventory Control</button>
-                <button class="w-full text-left p-3 rounded-lg hover:bg-slate-800 text-sm">📈 Sales Reports</button>
-                <button class="w-full text-left p-3 rounded-lg hover:bg-slate-800 text-sm">👥 Customer List</button>
-            </nav>
-            <a href="dashboard.html" class="block mt-10 text-slate-500 hover:text-white text-xs">← Back to Dashboard</a>
+    <div class="flex-1 p-12 overflow-y-auto">
+        <h2 class="text-3xl font-black italic uppercase mb-8">Lecture Admin Control</h2>
+        
+        <div class="bg-white p-10 rounded-[40px] shadow-sm border border-slate-200">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block">Post New Assignment / Message to Dashboard</label>
+            <textarea id="assign-input" placeholder="Type instructions or credentials here..." class="w-full h-40 bg-slate-50 p-6 rounded-3xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 mb-6"></textarea>
+            
+            <button onclick="postAssignment()" class="bg-slate-900 text-white px-10 py-5 rounded-3xl font-black uppercase tracking-widest hover:bg-blue-600 transition">Broadcast to Students</button>
         </div>
 
-        <div class="flex-1 p-10 bg-slate-100 text-slate-900 overflow-y-auto">
-            <div class="flex justify-between items-center mb-10">
-                <h1 class="text-3xl font-black italic">Inventory Management</h1>
-                <div class="flex gap-2">
-                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Cloud Sync: Active</span>
-                </div>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-3xl">
-                <h2 class="text-lg font-bold mb-6 text-slate-700">Add New Stationery Item</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="text-xs font-bold text-slate-400 uppercase">Product Name</label>
-                        <input type="text" id="p-name" placeholder="e.g. Spiral Notebook A5" class="w-full p-3 border rounded-lg mt-1 outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase">Category</label>
-                        <select id="p-cat" class="w-full p-3 border rounded-lg mt-1">
-                            <option>Writing Tools</option>
-                            <option>Paper Products</option>
-                            <option>Desk Organization</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase">Unit Price ($)</label>
-                        <input type="number" id="p-price" placeholder="0.00" class="w-full p-3 border rounded-lg mt-1">
-                    </div>
-                </div>
-                <button onclick="saveProduct()" class="mt-8 bg-slate-900 text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:bg-blue-600 transition">Update Global Inventory</button>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-blue-50 p-8 rounded-[30px] border border-blue-100">
+                <h4 class="font-black uppercase text-blue-600 text-xs mb-2">TIA Cloud Credentials</h4>
+                <p class="text-xs text-slate-500 font-bold">Connected: TIA/BACC/2026/SECURE_LINK</p>
             </div>
         </div>
     </div>
 
     <script>
-        function unlock() {
-            const key = document.getElementById('access-key').value;
-            if(key === "DEVELOPER-2026") {
-                document.getElementById('lock-screen').remove();
-                document.getElementById('main-ui').classList.remove('hidden');
-            } else {
-                document.getElementById('err').classList.remove('hidden');
-            }
-        }
-
-        function saveProduct() {
-            const name = document.getElementById('p-name').value;
-            if(name) {
-                // Here we "save" the business data
-                localStorage.setItem('lastAddedProduct', name);
-                alert("SUCCESS: " + name + " has been added to the database.");
-                document.getElementById('p-name').value = "";
+        function postAssignment() {
+            const msg = document.getElementById('assign-input').value;
+            if(msg) {
+                localStorage.setItem('latestAssignment', msg);
+                alert("Message posted to Dashboard!");
+                window.location.href = "dashboard.html";
             }
         }
     </script>
