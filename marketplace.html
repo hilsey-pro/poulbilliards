@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hilsey Marketplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Mega Marketplace</h1>
+</header>
+
+<nav>
+  <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+</nav>
+
+<section class="marketplace">
+  <div class="item-card">
+    <h3>Calculator</h3>
+    <p>Price: Tsh 20,000</p>
+    <button onclick="buyItem('Calculator', 20000)">Buy</button>
+  </div>
+
+  <div class="item-card">
+    <h3>Accountable Book</h3>
+    <p>Price: Tsh 10,000</p>
+    <button onclick="buyItem('Accountable Book', 10000)">Buy</button>
+  </div>
+
+  <div class="item-card">
+    <h3>Executive Pen</h3>
+    <p>Price: Tsh 5,000</p>
+    <button onclick="buyItem('Executive Pen', 5000)">Buy</button>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
