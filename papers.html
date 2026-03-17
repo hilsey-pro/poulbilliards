@@ -4,67 +4,34 @@
     <meta charset="UTF-8">
     <title>Hilsey Biz | Past Papers</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; color: #94a3b8; font-size: 13px; font-weight: 700; transition: 0.2s; }
-        .nav-item:hover { background: #1e293b; color: white; }
-        .nav-active { background: #3b82f6; color: white; }
-        .dept-card { background: white; padding: 30px; border-radius: 35px; border: 1px solid #f1f5f9; transition: 0.3s; }
-        .dept-card:hover { border-color: #3b82f6; box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
-    </style>
 </head>
-<body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
-
-    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0 overflow-y-auto">
-        <h1 class="text-2xl font-black text-blue-500 italic mb-8 tracking-tighter text-center uppercase">Hilsey Biz</h1>
-        <nav class="space-y-1">
-            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mb-2">Main</p>
-            <a href="dashboard.html" class="nav-item"><span>📊</span> Dashboard</a>
-            <a href="shop.html" class="nav-item"><span>🛍️</span> Marketplace</a>
-            <p class="text-[10px] text-slate-500 font-black uppercase px-4 mt-6 mb-2">Education</p>
-            <a href="papers.html" class="nav-item nav-active"><span>📝</span> Past Papers</a>
-            <a href="classes.html" class="nav-item"><span>🏫</span> Class Manager</a>
-            <a href="discussion.html" class="nav-item"><span>💬</span> Discussion Hub</a>
+<body class="bg-slate-50 flex h-screen font-sans">
+    
+    <div class="w-72 bg-slate-900 text-white p-8 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-12 uppercase text-center">HILSEY BIZ</h1>
+        <nav class="space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-400 font-bold text-sm"><span>📊</span> Dashboard</a>
+            <a href="papers.html" class="flex items-center gap-3 p-3 bg-blue-600 text-white rounded-xl font-bold text-sm"><span>📝</span> Past Papers</a>
         </nav>
     </div>
 
-    <div class="flex-1 flex flex-col p-10 overflow-y-auto">
-        <header class="mb-10 flex justify-between items-center">
-            <div>
-                <h2 class="text-3xl font-black italic uppercase text-slate-900">Exam Archive</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase">William Edward's Academic Resources</p>
-            </div>
-            <input type="text" placeholder="Search Module Code..." class="bg-white border p-4 rounded-2xl w-64 shadow-sm outline-none focus:ring-2 focus:ring-blue-500 text-sm font-bold">
-        </header>
-
+    <div class="flex-1 p-12 overflow-y-auto">
+        <h2 class="text-3xl font-black italic uppercase mb-8">Exam Library (Online)</h2>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="dept-card">
-                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-4 text-blue-600 font-black">AC</div>
-                <h3 class="text-xl font-black mb-4">Accountancy</h3>
-                <div class="space-y-2">
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-blue-600 hover:text-white transition">Certificate Papers</button>
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-blue-600 hover:text-white transition">Diploma Year 1 & 2</button>
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-blue-600 hover:text-white transition">Bachelor (BACC) Exams</button>
-                </div>
+            <div class="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm">
+                <h3 class="text-xl font-black mb-4">Financial Accounting</h3>
+                <p class="text-slate-400 text-[10px] font-black uppercase mb-6">Bachelor Year 1</p>
+                <a href="https://www.necta.go.tz/past_papers" target="_blank" class="block w-full text-center bg-slate-100 p-4 rounded-2xl font-black text-xs hover:bg-blue-600 hover:text-white transition">VIEW EXAM PDF</a>
             </div>
 
-            <div class="dept-card">
-                <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mb-4 text-purple-600 font-black">HR</div>
-                <h3 class="text-xl font-black mb-4">Human Resource</h3>
-                <div class="space-y-2">
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-purple-600 hover:text-white transition">HRM Level 4 & 5</button>
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-purple-600 hover:text-white transition">Degree Level Papers</button>
-                </div>
+            <div class="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm">
+                <h3 class="text-xl font-black mb-4">HR Management</h3>
+                <p class="text-slate-400 text-[10px] font-black uppercase mb-6">Diploma Level</p>
+                <a href="https://www.necta.go.tz/past_papers" target="_blank" class="block w-full text-center bg-slate-100 p-4 rounded-2xl font-black text-xs hover:bg-purple-600 hover:text-white transition">VIEW EXAM PDF</a>
             </div>
-
-            <div class="dept-card">
-                <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center mb-4 text-orange-600 font-black">MK</div>
-                <h3 class="text-xl font-black mb-4">Marketing</h3>
-                <div class="space-y-2">
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-orange-600 hover:text-white transition">Public Relations</button>
-                    <button class="w-full text-left p-4 bg-slate-50 rounded-2xl text-[11px] font-black uppercase hover:bg-orange-600 hover:text-white transition">Procurement Papers</button>
-                </div>
+            
             </div>
-        </div>
     </div>
 </body>
 </html>
