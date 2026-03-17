@@ -2,129 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hilsey Biz | Live Discussion</title>
+    <title>Hilsey Biz | Discussion Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .video-container { position: relative; background: #0f172a; border-radius: 32px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .video-box { position: relative; background: #000; border-radius: 40px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.3); }
         #local-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        .control-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); padding: 18px; border-radius: 50%; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
-        .control-btn:hover { background: #3b82f6; transform: scale(1.1); }
-        .btn-active { background: #ef4444 !important; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; color: #94a3b8; font-size: 13px; font-weight: 700; transition: 0.2s; }
-        .nav-item:hover { background: #1e293b; color: white; }
+        .control-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .control-btn:hover { background: #3b82f6; transform: translateY(-3px); }
+        .btn-off { background: #ef4444 !important; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; color: #94a3b8; font-size: 13px; font-weight: 700; }
         .nav-active { background: #3b82f6; color: white; }
     </style>
 </head>
 <body class="bg-slate-50 flex h-screen overflow-hidden font-sans">
 
-    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0 overflow-y-auto">
-        <h1 class="text-2xl font-black text-blue-500 italic mb-8 tracking-tighter text-center uppercase">Hilsey Biz</h1>
+    <div class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0">
+        <h1 class="text-2xl font-black text-blue-500 italic mb-8 text-center uppercase">Hilsey Biz</h1>
         <nav class="space-y-1">
-            <a href="dashboard.html" class="nav-item"><span>📊</span> Overview</a>
+            <a href="dashboard.html" class="nav-item"><span>📊</span> Dashboard</a>
             <a href="shop.html" class="nav-item"><span>🛍️</span> Marketplace</a>
             <a href="discussion.html" class="nav-item nav-active"><span>💬</span> Discussion Hub</a>
-            <a href="profile.html" class="nav-item"><span>💳</span> My Wallet</a>
         </nav>
     </div>
 
     <div class="flex-1 flex flex-col p-10">
         <header class="mb-8 flex justify-between items-center">
             <div>
-                <h2 class="text-3xl font-black italic uppercase text-slate-900">Discussion Room</h2>
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Admin: Hilsey Biz | ID: TIA-LIVE-99</p>
+                <h2 class="text-3xl font-black italic uppercase">Live Lecture</h2>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Connected as: William Edward</p>
             </div>
-            <button onclick="shareToWhatsApp()" class="bg-[#25D366] text-white px-6 py-3 rounded-2xl font-black text-xs flex items-center gap-2 hover:opacity-90 transition shadow-lg">
-                <span>SHARE TO WHATSAPP</span>
-            </button>
+            <button onclick="window.open('https://wa.me/?text=Join our Discussion on Hilsey Biz!', '_blank')" class="bg-[#25D366] text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest">Share to WhatsApp</button>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 flex-1">
             <div class="lg:col-span-2 flex flex-col">
-                <div class="video-container flex-1">
-                    <video id="local-video" autoplay playsinline muted></video>
+                <div class="video-box flex-1">
+                    <video id="local-video" autoplay playsinline></video>
                     
-                    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-6">
-                        <button id="mute-btn" onclick="toggleMic()" class="control-btn" title="Toggle Mic">🎙️</button>
-                        <button id="video-btn" onclick="toggleVideo()" class="control-btn" title="Toggle Video">📹</button>
-                        <button onclick="endCall()" class="control-btn bg-red-600 hover:bg-red-700" title="End Call">📞</button>
+                    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-6">
+                        <button onclick="toggleMic()" id="mic-btn" class="control-btn">🎙️</button>
+                        <button onclick="toggleVid()" id="vid-btn" class="control-btn">📹</button>
+                        <button onclick="location.href='dashboard.html'" class="control-btn bg-red-600 hover:bg-red-700">📞</button>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[40px] shadow-sm border border-slate-200 p-8 flex flex-col">
-                <h3 class="font-black text-sm uppercase mb-6 italic border-b pb-4">Live Message Feed</h3>
-                <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
-                    </div>
-                <div class="relative flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Say something..." class="flex-1 bg-slate-100 p-4 rounded-2xl outline-none text-xs font-bold focus:ring-2 focus:ring-blue-500">
-                    <button onclick="sendMsg()" class="bg-blue-600 text-white p-4 rounded-2xl font-black">⚡</button>
+            <div class="bg-white rounded-[40px] border border-slate-200 p-8 flex flex-col">
+                <h3 class="font-black text-xs uppercase mb-6 tracking-widest text-slate-400">Class Chat</h3>
+                <div id="chat" class="flex-1 overflow-y-auto space-y-4 text-xs font-bold mb-6">
+                    <div class="bg-slate-50 p-4 rounded-2xl">Habari! Ready for the session?</div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="msg" placeholder="Message..." class="flex-1 bg-slate-100 p-4 rounded-2xl outline-none font-bold text-xs">
+                    <button onclick="send()" class="bg-blue-600 text-white p-4 rounded-2xl font-black">⚡</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let localStream;
-        let micEnabled = true;
-        let videoEnabled = true;
+        let stream;
+        let mic = true;
+        let vid = true;
 
-        // 1. START CAMERA ON LOAD
-        async function init() {
+        async function start() {
             try {
-                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('local-video').srcObject = localStream;
-            } catch (e) {
-                alert("Please enable camera/mic permissions!");
-            }
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('local-video').srcObject = stream;
+            } catch (e) { alert("Camera Blocked!"); }
         }
 
-        // 2. TOGGLE MIC
         function toggleMic() {
-            micEnabled = !micEnabled;
-            localStream.getAudioTracks()[0].enabled = micEnabled;
-            document.getElementById('mute-btn').classList.toggle('btn-active');
-            document.getElementById('mute-btn').innerText = micEnabled ? "🎙️" : "🔇";
+            mic = !mic;
+            stream.getAudioTracks()[0].enabled = mic;
+            document.getElementById('mic-btn').classList.toggle('btn-off');
+            document.getElementById('mic-btn').innerText = mic ? "🎙️" : "🔇";
         }
 
-        // 3. TOGGLE VIDEO
-        function toggleVideo() {
-            videoEnabled = !videoEnabled;
-            localStream.getVideoTracks()[0].enabled = videoEnabled;
-            document.getElementById('video-btn').classList.toggle('btn-active');
-            document.getElementById('video-btn').innerText = videoEnabled ? "📹" : "🚫";
+        function toggleVid() {
+            vid = !vid;
+            stream.getVideoTracks()[0].enabled = vid;
+            document.getElementById('vid-btn').classList.toggle('btn-off');
+            document.getElementById('vid-btn').innerText = vid ? "📹" : "🚫";
         }
 
-        // 4. END CALL
-        function endCall() {
-            if(confirm("Exit the discussion room?")) {
-                localStream.getTracks().forEach(track => track.stop());
-                window.location.href = "dashboard.html";
+        function send() {
+            const m = document.getElementById('msg');
+            if(m.value) {
+                document.getElementById('chat').innerHTML += `<div class="bg-blue-50 p-4 rounded-2xl text-blue-600">William: ${m.value}</div>`;
+                m.value = "";
             }
         }
 
-        // 5. WHATSAPP SHARE
-        function shareToWhatsApp() {
-            const url = window.location.href;
-            const text = encodeURIComponent("Hey! Join our live discussion on Hilsey Biz: " + url);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
-        }
-
-        // 6. CHAT LOGIC
-        function sendMsg() {
-            const input = document.getElementById('chat-input');
-            const box = document.getElementById('chat-box');
-            if(input.value) {
-                box.innerHTML += `
-                    <div class="bg-blue-50 p-4 rounded-2xl border-l-4 border-blue-500">
-                        <p class="font-black text-[10px] text-blue-600 uppercase">You</p>
-                        <p class="text-slate-700 font-medium">${input.value}</p>
-                    </div>`;
-                input.value = "";
-                box.scrollTop = box.scrollHeight;
-            }
-        }
-
-        window.onload = init;
+        window.onload = start;
     </script>
 </body>
 </html>
