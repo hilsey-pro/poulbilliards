@@ -1,22 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hilsey Hub - Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Hilsey Biz | Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-900 font-sans text-white">
+    <header class="bg-slate-800 p-6 shadow-lg flex justify-between items-center">
+        <h1 class="text-2xl font-black italic uppercase tracking-tighter">Hilsey Biz</h1>
+        <button onclick="logout()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition">Logout</button>
+    </header>
 
-<div class="login-box">
-  <h1>Hilsey Secure Gateway</h1>
+    <main class="max-w-6xl mx-auto mt-12 p-6">
+        <h2 class="text-4xl font-black mb-10 text-center uppercase">Welcome to the Empire</h2>
 
-  <input type="text" id="reg" placeholder="Registration Number (DSM/...)">
-  <input type="password" id="pass" placeholder="Password">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Marketplace Card -->
+            <a href="marketplace.html" class="bg-white text-slate-900 rounded-[40px] p-10 shadow-2xl hover:scale-105 transition transform text-center">
+                <div class="bg-slate-100 w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-4xl">🛒</span>
+                </div>
+                <h3 class="text-xl font-black uppercase mb-2">Marketplace</h3>
+                <p class="text-slate-500 text-sm font-bold uppercase">Buy academic tools</p>
+            </a>
 
-  <button onclick="login()">Enter</button>
+            <!-- Past Papers Card -->
+            <a href="past-papers.html" class="bg-white text-slate-900 rounded-[40px] p-10 shadow-2xl hover:scale-105 transition transform text-center border-b-8 border-blue-600">
+                <div class="bg-slate-100 w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-4xl">📚</span>
+                </div>
+                <h3 class="text-xl font-black uppercase mb-2">Past Papers</h3>
+                <p class="text-slate-500 text-sm font-bold uppercase">Archive & Resources</p>
+            </a>
 
-  <p id="error"></p>
-</div>
+            <!-- Workspace Card -->
+            <a href="workspace.html" class="bg-white text-slate-900 rounded-[40px] p-10 shadow-2xl hover:scale-105 transition transform text-center">
+                <div class="bg-slate-100 w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-4xl">✍️</span>
+                </div>
+                <h3 class="text-xl font-black uppercase mb-2">Workspace</h3>
+                <p class="text-slate-500 text-sm font-bold uppercase">Assignment Editor</p>
+            </a>
+        </div>
+    </main>
 
-<script src="script.js"></script>
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>
