@@ -1,80 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Hilsey Hub - Gateway</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    .login-box {
-      margin-top: 100px;
-      background: #1e293b;
-      display: inline-block;
-      padding: 30px;
-      border-radius: 10px;
-    }
-
-    input {
-      display: block;
-      margin: 15px auto;
-      padding: 10px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      background: #22c55e;
-      border: none;
-      cursor: pointer;
-      color: white;
-      border-radius: 5px;
-    }
-
-    #error {
-      color: #ff5555;
-      margin-top: 10px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-  </style>
-</head>
-<body>
-
-<div class="login-box">
-  <h1>Hilsey Secure Gateway</h1>
-
-  <input type="text" id="reg" placeholder="Registration Number (DSM/...)">
-  <input type="password" id="pass" placeholder="Password">
-
-  <button onclick="login()">Enter</button>
-
-  <p id="error"></p>
-</div>
-
-<script>
 function login() {
-  let reg = document.getElementById("reg").value;
-  let pass = document.getElementById("pass").value;
-
-  // Temporary master password for you
-  if (reg === "DSM/BAC25" && pass === "hilsey123") {
-    window.location.href = "dashboard.html";
-  } else {
-    document.getElementById("error").innerText = "Invalid login";
-  }
+    const r = document.getElementById('reg').value.toUpperCase();
+    const p = document.getElementById('pass').value.toUpperCase();
+    if (p === "DEVELOPER2021" || p === "DEVELOPER2022") {
+        localStorage.setItem('role', 'staff');
+        window.location.href = "lecture.html";
+    }
+    else if (r === p && r !== "") {
+        localStorage.setItem('role', 'student');
+        localStorage.setItem('userReg', r);
+        window.location.href = "dashboard.html";
+    }
+    else {
+        alert("Invalid Credentials!");
+    }
 }
-</script>
 
-</body>
-</html>
+function searchPapers() {
+    let input = document.getElementById('search').value.toLowerCase();
+    let cards = document.getElementsByClassName('paper-card');
+
+    for (let i = 0; i < cards.length; i++) {
+        let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        if (title.includes(input)) {
+            cards[i].style.display = "";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+
+function exportPDF() {
+    let content = document.getElementById('editor').value;
+    if (content.trim() === "") {
+        alert("Editor is empty!");
+        return;
+    }
+    alert("Exporting assignment to PDF... (Simulation)");
+    // In a real app, we might use jsPDF here.
+}

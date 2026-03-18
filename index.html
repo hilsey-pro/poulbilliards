@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hilsey Hub - Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8"><title>Hilsey Biz | Secure Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-<div class="login-box">
-  <h1>Hilsey Secure Gateway</h1>
-
-  <input type="text" id="reg" placeholder="Registration Number (DSM/...)">
-  <input type="password" id="pass" placeholder="Password">
-
-  <button onclick="login()">Enter</button>
-
-  <p id="error"></p>
-</div>
-
-<script src="script.js"></script>
+<body class="bg-slate-900 flex items-center justify-center h-screen font-sans">
+    <div class="bg-white w-full max-w-md rounded-[40px] p-12 shadow-2xl text-center border-b-8 border-blue-600">
+        <h1 class="text-3xl font-black italic text-slate-900 mb-2 uppercase tracking-tighter">Hilsey Biz</h1>
+        <p class="text-slate-400 text-[10px] font-black uppercase mb-10">TIA Student Portal</p>
+        <div class="space-y-4 text-left mb-8">
+            <input type="text" id="reg" placeholder="REGISTRATION NUMBER" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold text-sm uppercase">
+            <input type="password" id="pass" placeholder="PASSWORD" class="w-full bg-slate-100 p-5 rounded-3xl outline-none font-bold text-sm uppercase">
+        </div>
+        <button onclick="login()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black uppercase tracking-widest hover:bg-blue-600 transition">Enter Empire</button>
+    </div>
+    <script>
+        function login() {
+            const r = document.getElementById('reg').value.toUpperCase();
+            const p = document.getElementById('pass').value.toUpperCase();
+            if (p === "DEVELOPER2021" || p === "DEVELOPER2022") { localStorage.setItem('role','staff'); window.location.href="lecture.html"; }
+            else if (r === p && r !== "") { localStorage.setItem('role','student'); localStorage.setItem('userReg', r); window.location.href="dashboard.html"; }
+            else { alert("Invalid Credentials!"); }
+        }
+    </script>
 </body>
 </html>
