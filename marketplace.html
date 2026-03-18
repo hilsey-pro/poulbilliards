@@ -1,120 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hilsey Mega Marketplace</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #020617;
-      padding: 20px;
-    }
-
-    nav {
-      margin: 20px 0;
-    }
-
-    nav button {
-      padding: 10px 20px;
-      margin: 5px;
-      background: #22c55e;
-      border: none;
-      cursor: pointer;
-      color: white;
-      border-radius: 5px;
-    }
-
-    .marketplace {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .item-card {
-      background: #1e293b;
-      margin: 15px;
-      padding: 15px;
-      width: 220px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .item-card button {
-      background: #22c55e;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .item-card h3 {
-      margin: 10px 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Mega Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .product-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-img {
+            width: 100%;
+            height: 120px;
+            background: #0f172a;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .price {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+        .search-bar {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        .search-bar input { margin: 0; }
+        .cart-indicator {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            z-index: 50;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>Mega Marketplace</h1>
-</header>
+    <main class="main-content">
+        <header class="flex-row">
+            <div>
+                <h1>Mega Shop</h1>
+                <p style="color: var(--text-muted);">Quality academic supplies at your fingertips</p>
+            </div>
+            <div class="cart-indicator" onclick="toggleCart()">
+                🛒 Cart (<span id="cartCount">0</span>)
+            </div>
+        </header>
 
-<nav>
-  <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
-</nav>
+        <div class="search-bar">
+            <input type="text" id="productSearch" placeholder="Search for calculators, pens, books..." onkeyup="filterProducts()">
+            <select id="categoryFilter" style="width: 200px;" onchange="filterProducts()">
+                <option value="all">All Categories</option>
+                <option value="stationery">Stationery</option>
+                <option value="electronics">Electronics</option>
+                <option value="books">Books</option>
+            </select>
+        </div>
 
-<section class="marketplace">
-  <div class="item-card">
-    <h3>Calculator</h3>
-    <p>Price: Tsh 20,000</p>
-    <button onclick="buyItem('Calculator', 20000)">Buy</button>
-  </div>
+        <section class="hub-grid" id="productGrid">
+            <!-- Products will be injected by script -->
+        </section>
+    </main>
 
-  <div class="item-card">
-    <h3>Accountable Book</h3>
-    <p>Price: Tsh 10,000</p>
-    <button onclick="buyItem('Accountable Book', 10000)">Buy</button>
-  </div>
+    <script src="script.js"></script>
+    <script>
+        const products = [
+            { id: 1, name: "Scientific Calculator", price: 25000, category: "electronics", icon: "🔢" },
+            { id: 2, name: "Executive Notebook", price: 8000, category: "books", icon: "📒" },
+            { id: 3, name: "Matriculation Pen Set", price: 3500, category: "stationery", icon: "🖋️" },
+            { id: 4, name: "Graphing Book", price: 2000, category: "books", icon: "📐" },
+            { id: 5, name: "Mechanical Pencil", price: 1500, category: "stationery", icon: "✏️" },
+            { id: 6, name: "Pocket Printer", price: 85000, category: "electronics", icon: "🖨️" },
+            { id: 7, name: "Flash Drive 64GB", price: 15000, category: "electronics", icon: "💾" },
+            { id: 8, name: "Study Lamp", price: 22000, category: "electronics", icon: "💡" },
+        ];
 
-  <div class="item-card">
-    <h3>Executive Pen</h3>
-    <p>Price: Tsh 5,000</p>
-    <button onclick="buyItem('Executive Pen', 5000)">Buy</button>
-  </div>
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = items.map(p => `
+                <div class="product-card">
+                    <div class="product-img">${p.icon}</div>
+                    <h3 style="margin: 0;">${p.name}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">${p.category.toUpperCase()}</p>
+                    <div class="price">Tsh ${p.price.toLocaleString()}</div>
+                    <button onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>
+            `).join('');
+        }
 
-  <div class="item-card">
-    <h3>Notebook</h3>
-    <p>Price: Tsh 8,000</p>
-    <button onclick="buyItem('Notebook', 8000)">Buy</button>
-  </div>
+        function filterProducts() {
+            const term = document.getElementById('productSearch').value.toLowerCase();
+            const cat = document.getElementById('categoryFilter').value;
 
-  <div class="item-card">
-    <h3>Protractor</h3>
-    <p>Price: Tsh 2,500</p>
-    <button onclick="buyItem('Protractor', 2500)">Buy</button>
-  </div>
-</section>
+            const filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(term);
+                const matchesCat = cat === 'all' || p.category === cat;
+                return matchesSearch && matchesCat;
+            });
+            renderProducts(filtered);
+        }
 
-<script>
-  let wallet = 50000; // initial wallet balance
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            state.cart.push(product);
+            saveState();
+            document.getElementById('cartCount').innerText = state.cart.length;
+            notify(`Added ${product.name} to cart`);
+        }
 
-  function buyItem(itemName, price) {
-    if(wallet >= price) {
-      wallet -= price;
-      alert(`Purchased ${itemName} for Tsh ${price}\nRemaining Wallet: Tsh ${wallet}`);
-    } else {
-      alert(`Not enough funds for ${itemName}. Wallet: Tsh ${wallet}`);
-    }
-  }
-</script>
+        function toggleCart() {
+            if (state.cart.length === 0) {
+                notify("Your cart is empty");
+                return;
+            }
+            const total = state.cart.reduce((sum, item) => sum + item.price, 0);
+            if (confirm(`Checkout ${state.cart.length} items for Tsh ${total.toLocaleString()}?`)) {
+                if (state.wallet >= total) {
+                    state.wallet -= total;
+                    state.cart = [];
+                    saveState();
+                    document.getElementById('cartCount').innerText = "0";
+                    notify("Order placed successfully! Updates sent to dashboard.");
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    notify("Insufficient funds in wallet!");
+                }
+            }
+        }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            document.getElementById('cartCount').innerText = state.cart.length;
+        });
+    </script>
 </body>
 </html>

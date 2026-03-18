@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Group Workspace</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .group-sidebar {
+            width: 200px;
+            background: var(--secondary-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            height: fit-content;
+        }
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .member-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+        .member-status.online { background: #22c55e; }
+        .workspace {
+            flex-grow: 1;
+            background: var(--secondary-bg);
+            border-radius: 0.5rem;
+            padding: 2rem;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+        .task-item {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header class="flex-row">
+            <div>
+                <h1>Group 14 Workspace</h1>
+                <p style="color: var(--text-muted);">BAC25/S2 Assignment: Principles of Macro-Economics</p>
+            </div>
+            <div class="badge">Group Logic: 20 Students</div>
+        </header>
+
+        <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+            <div class="group-sidebar">
+                <h4 style="margin-top: 0; font-size: 0.8rem; color: var(--text-muted);">MEMBERS (20)</h4>
+                <div class="member-item"><span class="member-status online"></span> You (Kelvin J.)</div>
+                <div class="member-item"><span class="member-status online"></span> Sarah P. (Lead)</div>
+                <div class="member-item"><span class="member-status"></span> Ahmed M.</div>
+                <div class="member-item"><span class="member-status online"></span> Juliet S.</div>
+                <div class="member-item"><span class="member-status"></span> Daniel K.</div>
+                <p style="font-size: 0.75rem; color: var(--accent-color); cursor: pointer;">View all 20 members</p>
+            </div>
+
+            <div class="workspace">
+                <h2 style="margin-top: 0;">Collaborative Editor</h2>
+                <textarea id="groupEditor" placeholder="Start drafting the assignment here..." rows="12" style="background: #020617; border-color: #334155;"></textarea>
+
+                <div class="flex-row mt-2" style="margin-top: 1rem;">
+                    <div style="color: var(--text-muted); font-size: 0.8rem;">Last saved: Just now</div>
+                    <div class="flex-row" style="gap: 1rem;">
+                        <button style="width: auto; background: transparent; border: 1px solid #334155;" onclick="notify('Generating PDF...')">Export PDF</button>
+                        <button style="width: auto;" onclick="notify('Submission recorded!')">Final Submission</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 3rem;">Task Coordination</h3>
+                <div class="task-list">
+                    <div class="task-item">
+                        <span>Research Phase: Introduction</span>
+                        <span class="badge" style="background: #0f172a; color: var(--accent-color); border: 1px solid var(--accent-color);">Sarah P.</span>
+                    </div>
+                    <div class="task-item">
+                        <span>Data Collection: Inflation Trends</span>
+                        <span class="badge" style="background: #0f172a; color: #f59e0b; border: 1px solid #f59e0b;">Ahmed M.</span>
+                    </div>
+                    <div class="task-item">
+                        <span>Formatting & References</span>
+                        <span class="badge" style="background: #0f172a; color: #94a3b8; border: 1px solid #94a3b8;">Pending</span>
+                    </div>
+                    <button class="mt-2" style="width: auto; padding: 0.5rem 1rem;" onclick="notify('New task added')">+ Add Task</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

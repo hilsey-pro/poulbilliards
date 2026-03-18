@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Career Center</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .job-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        .job-card:hover { border-color: var(--accent-color); transform: translateY(-2px); }
+        .job-title { color: var(--accent-color); font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .job-meta { display: flex; gap: 1.5rem; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+        .job-meta span { display: flex; align-items: center; gap: 0.25rem; }
+        .application-form {
+            background: var(--secondary-bg);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--accent-color);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            z-index: 200;
+            display: none;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 150;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header>
+            <h1>Career Hub</h1>
+            <p style="color: var(--text-muted);">Bridging students to the professional world.</p>
+        </header>
+
+        <section style="margin-top: 2rem;">
+            <div class="job-card">
+                <div class="job-title">Intern Financial Analyst</div>
+                <div class="job-meta">
+                    <span>🏢 Standard Bank Group</span>
+                    <span>📍 Dar es Salaam</span>
+                    <span>💰 Tsh 1,200,000 / mo</span>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-muted);">Seeking a proactive BAC25 student for a 3-month summer internship. You will assist the risk management team and learn corporate accounting practices.</p>
+                <button style="width: auto; padding: 0.5rem 1.5rem; margin-top: 1rem;" onclick="openApplication('Intern Financial Analyst', 'Standard Bank Group')">Apply Now</button>
+            </div>
+
+            <div class="job-card">
+                <div class="job-title">Graduate Marketing Trainee</div>
+                <div class="job-meta">
+                    <span>🚀 Hilsey Media Corp</span>
+                    <span>📍 Hybrid</span>
+                    <span>💰 Tsh 1,500,000 / mo</span>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-muted);">Fresh graduates preferred, but final year students are welcome to apply. Experience with digital strategy and content creation is a plus.</p>
+                <button style="width: auto; padding: 0.5rem 1.5rem; margin-top: 1rem;" onclick="openApplication('Graduate Marketing Trainee', 'Hilsey Media Corp')">Apply Now</button>
+            </div>
+
+            <div class="job-card">
+                <div class="job-title">Junior Software Developer</div>
+                <div class="job-meta">
+                    <span>💻 TechSolutions Ltd</span>
+                    <span>📍 Remote</span>
+                    <span>💰 Negotiable</span>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-muted);">Entry-level role for developers. Familiarity with HTML/CSS/JS is required. Will be working on internal academic tools and student platforms.</p>
+                <button style="width: auto; padding: 0.5rem 1.5rem; margin-top: 1rem;" onclick="openApplication('Junior Software Developer', 'TechSolutions Ltd')">Apply Now</button>
+            </div>
+        </section>
+
+        <div class="overlay" id="overlay" onclick="closeApplication()"></div>
+        <div class="application-form" id="appForm">
+            <h2 id="appTitle">Apply for Intern Financial Analyst</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;" id="appCompany">Standard Bank Group</p>
+            <form id="actualAppForm">
+                <label>Select CV / Resume</label>
+                <select>
+                    <option>Kelvin_J_BAC25_CV.pdf</option>
+                    <option>Kelvin_J_Creative_CV.pdf</option>
+                    <option>Upload New CV...</option>
+                </select>
+
+                <label>Cover Letter</label>
+                <textarea rows="6" placeholder="Briefly explain why you're a good fit..."></textarea>
+
+                <div class="flex-row mt-2" style="margin-top: 1.5rem;">
+                    <button type="button" style="width: auto; background: transparent; border: 1px solid #334155;" onclick="closeApplication()">Cancel</button>
+                    <button type="submit" style="width: auto; padding: 0.75rem 2rem;">Send Application</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function openApplication(job, company) {
+            document.getElementById('appTitle').innerText = `Apply for ${job}`;
+            document.getElementById('appCompany').innerText = company;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('appForm').style.display = 'block';
+        }
+
+        function closeApplication() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('appForm').style.display = 'none';
+        }
+
+        document.getElementById('actualAppForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            notify("Application sent successfully! Good luck.");
+            closeApplication();
+        });
+    </script>
+</body>
+</html>

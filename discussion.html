@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Discussion Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .channel-list {
+            width: 200px;
+            background: var(--secondary-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            height: fit-content;
+        }
+        .channel-item {
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-radius: 0.25rem;
+        }
+        .channel-item.active {
+            color: var(--accent-color);
+            background: #0f172a;
+        }
+        .thread-container {
+            flex-grow: 1;
+            background: var(--secondary-bg);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .post {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+        .pinned {
+            border-left-color: #f59e0b;
+            background: #1e1b4b;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header>
+            <h1>Discussion Hub</h1>
+            <p style="color: var(--text-muted);">BAC25 Course Channels</p>
+        </header>
+
+        <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+            <div class="channel-list">
+                <h4 style="margin-top: 0; font-size: 0.8rem; color: var(--text-muted);">CHANNELS</h4>
+                <div class="channel-item active"># general</div>
+                <div class="channel-item"># assignments</div>
+                <div class="channel-item"># accounting-help</div>
+                <div class="channel-item"># economics-chat</div>
+                <div class="channel-item"># resources</div>
+            </div>
+
+            <div class="thread-container">
+                <div class="post pinned">
+                    <div class="flex-row">
+                        <span style="font-weight: bold; color: #f59e0b;">📌 Dr. Mwakalinga (Lecturer)</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">2 hours ago</span>
+                    </div>
+                    <p style="margin: 0.5rem 0;">Final project guidelines for Semester 2 are now uploaded in the Study Hub. Please review the 20-student group logic before Friday.</p>
+                </div>
+
+                <div class="post">
+                    <div class="flex-row">
+                        <span style="font-weight: bold;">Kelvin J.</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">45 mins ago</span>
+                    </div>
+                    <p style="margin: 0.5rem 0;">Does anyone have the link for the Tuesday morning seminar? The old one isn't working.</p>
+                    <div style="font-size: 0.8rem; color: var(--accent-color); cursor: pointer;">Reply (2)</div>
+                </div>
+
+                <div class="post">
+                    <div class="flex-row">
+                        <span style="font-weight: bold;">Sarah P.</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">10 mins ago</span>
+                    </div>
+                    <p style="margin: 0.5rem 0;">I'm looking for Group 14 members. We need to start the research proposal!</p>
+                </div>
+
+                <div style="margin-top: auto; border-top: 1px solid #334155; padding-top: 1rem;">
+                    <textarea placeholder="Write a message in #general..." rows="2" style="margin-bottom: 0.5rem;"></textarea>
+                    <div class="flex-row">
+                        <button style="width: auto; background: transparent; border: 1px solid #334155; font-size: 0.8rem;">Attach File</button>
+                        <button style="width: auto;" onclick="notify('Message sent!')">Post Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Service Center</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .service-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            border: 1px solid #334155;
+            transition: var(--transition);
+        }
+        .service-card:hover { border-color: var(--accent-color); transform: translateY(-4px); }
+        .service-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .request-form {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header>
+            <h1>Service Hub</h1>
+            <p style="color: var(--text-muted);">Request on-demand academic services from verified suppliers.</p>
+        </header>
+
+        <section class="hub-grid" style="margin-top: 2rem;">
+            <div class="service-card" onclick="selectService('Printing')">
+                <div class="service-icon">🖨️</div>
+                <h3>Quick Printing</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">B&W or Color. Collected at Hub within 15 mins.</p>
+                <div style="color: var(--accent-color); margin-top: 1rem;">From Tsh 500</div>
+            </div>
+            <div class="service-card" onclick="selectService('CV Creation')">
+                <div class="service-icon">💼</div>
+                <h3>CV Creation</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Professional CV and Cover Letter design.</p>
+                <div style="color: var(--accent-color); margin-top: 1rem;">From Tsh 5,000</div>
+            </div>
+            <div class="service-card" onclick="selectService('Formatting')">
+                <div class="service-icon">📖</div>
+                <h3>Thesis Formatting</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Ensure your research follows APA/MLA standards.</p>
+                <div style="color: var(--accent-color); margin-top: 1rem;">From Tsh 10,000</div>
+            </div>
+        </section>
+
+        <section id="requestSection" class="request-form" style="display: none;">
+            <h2 id="serviceTitle">Request Printing Service</h2>
+            <form id="serviceForm">
+                <label>Options (e.g., Color/Grayscale, Page Count)</label>
+                <input type="text" placeholder="Explain your requirements..." required>
+
+                <label>Upload Document</label>
+                <input type="file" style="padding: 0.5rem; border: 1px dashed #334155;">
+
+                <div class="flex-row mt-2" style="margin-top: 1.5rem;">
+                    <p style="font-weight: bold;">Estimated Cost: <span id="estPrice">Tsh 0</span></p>
+                    <button type="submit" style="width: auto;">Submit Request</button>
+                </div>
+            </form>
+        </section>
+
+        <section style="margin-top: 3rem;">
+            <h3>Your Recent Requests</h3>
+            <div style="background: var(--secondary-bg); border-radius: 0.5rem; padding: 1rem; color: var(--text-muted); text-align: center;">
+                No active service requests found.
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function selectService(name) {
+            document.getElementById('requestSection').style.display = 'block';
+            document.getElementById('serviceTitle').innerText = `Request ${name} Service`;
+            document.getElementById('estPrice').innerText = name === 'Printing' ? 'Tsh 1,500' : (name === 'CV Creation' ? 'Tsh 5,000' : 'Tsh 12,000');
+            notify(`Selected ${name} service`);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        document.getElementById('serviceForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            notify("Service request submitted! A supplier will contact you shortly.");
+            setTimeout(() => location.reload(), 2000);
+        });
+    </script>
+</body>
+</html>

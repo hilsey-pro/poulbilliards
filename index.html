@@ -1,22 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hilsey Hub - Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Gateway</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="gateway-container">
 
-<div class="login-box">
-  <h1>Hilsey Secure Gateway</h1>
+    <div class="login-card">
+        <h1 style="color: var(--accent-color); margin-bottom: 0.5rem;">Hilsey Hub</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Gateway to Academic Excellence</p>
 
-  <input type="text" id="reg" placeholder="Registration Number (DSM/...)">
-  <input type="password" id="pass" placeholder="Password">
+        <form id="loginForm">
+            <label style="display: block; text-align: left; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">REGISTRATION NUMBER</label>
+            <input type="text" id="regNumber" placeholder="e.g., DSM/BAC25/..." required>
 
-  <button onclick="login()">Enter</button>
+            <label style="display: block; text-align: left; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">ACCESS ROLE</label>
+            <select id="userRole">
+                <option value="student">Student</option>
+                <option value="supplier">Supplier</option>
+                <option value="admin">Administrator</option>
+            </select>
 
-  <p id="error"></p>
-</div>
+            <label style="display: block; text-align: left; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">SECURE PIN</label>
+            <input type="password" id="pin" placeholder="••••" required>
 
-<script src="script.js"></script>
+            <button type="submit">Authenticate</button>
+        </form>
+
+        <p id="errorMsg" style="color: #ef4444; font-size: 0.8rem; margin-top: 1rem;"></p>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #334155;">
+            <p style="font-size: 0.75rem; color: var(--text-muted);">New to the Hub? <a href="#" style="color: var(--accent-color);">Contact Registrar</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const reg = document.getElementById('regNumber').value;
+            const role = document.getElementById('userRole').value;
+            const pin = document.getElementById('pin').value;
+
+            // Simplified validation for demo
+            if (reg && pin === "1234") {
+                login(role, reg);
+            } else {
+                document.getElementById('errorMsg').innerText = "Invalid credentials. Try PIN 1234.";
+            }
+        });
+    </script>
 </body>
 </html>

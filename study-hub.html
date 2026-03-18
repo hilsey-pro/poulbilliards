@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Study Center</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tab-bar {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 2rem;
+        }
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        .paper-card {
+            background: var(--secondary-bg);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .quiz-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header>
+            <h1>Study Hub</h1>
+            <p style="color: var(--text-muted);">Curated materials for BAC25 students</p>
+        </header>
+
+        <div class="tab-bar">
+            <div class="tab active" onclick="switchTab('notes')">Lecture Notes</div>
+            <div class="tab" onclick="switchTab('papers')">Past Papers</div>
+            <div class="tab" onclick="switchTab('quizzes')">Active Quizzes</div>
+        </div>
+
+        <section id="notesSection" class="content-section">
+            <div class="hub-grid">
+                <div class="hub-card">
+                    <h3>Financial Accounting</h3>
+                    <p>Modules 1-5: Principles of double-entry, trial balance and final accounts.</p>
+                    <button class="mt-2" style="width: auto;">View Notes</button>
+                </div>
+                <div class="hub-card">
+                    <h3>Macro Economics</h3>
+                    <p>Keynesian theory, GDP calculation, and fiscal policy frameworks.</p>
+                    <button class="mt-2" style="width: auto;">View Notes</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="papersSection" class="content-section" style="display: none;">
+            <div class="paper-card">
+                <div>
+                    <h4 style="margin: 0;">Business Law 2023 - Semester 1</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0;">PDF • 1.2 MB</p>
+                </div>
+                <button style="width: auto;">Download</button>
+            </div>
+            <div class="paper-card">
+                <div>
+                    <h4 style="margin: 0;">Economics 2022 - End of Year</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0;">PDF • 800 KB</p>
+                </div>
+                <button style="width: auto;">Download</button>
+            </div>
+        </section>
+
+        <section id="quizzesSection" class="content-section" style="display: none;">
+            <div class="hub-grid">
+                <div class="quiz-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⏱️</div>
+                    <h3>Weekly Logic Quiz</h3>
+                    <p style="margin-bottom: 1.5rem;">15 Questions • 20 Minutes</p>
+                    <button onclick="navigateTo('quizzes.html')">Start Attempt</button>
+                </div>
+                <div class="quiz-card">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                    <h3>Accounting Mock</h3>
+                    <p style="margin-bottom: 1.5rem;">30 Questions • 45 Minutes</p>
+                    <button onclick="notify('Available from Monday')">Locked</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.getElementById(`${tabId}Section`).style.display = 'block';
+        }
+    </script>
+</body>
+</html>

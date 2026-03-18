@@ -1,22 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Hilsey Hub - Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Control Center</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="login-box">
-  <h1>Hilsey Secure Gateway</h1>
+    <main class="main-content">
+        <header class="flex-row">
+            <div>
+                <h1 style="margin-bottom: 0;">Control Center</h1>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;" id="welcomeMsg">Welcome back, Student</p>
+            </div>
+            <div class="flex-row" style="gap: 1rem;">
+                <div class="badge wallet-balance">Tsh 50,000.00</div>
+                <div style="background: var(--secondary-bg); padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                    🔔
+                </div>
+            </div>
+        </header>
 
-  <input type="text" id="reg" placeholder="Registration Number (DSM/...)">
-  <input type="password" id="pass" placeholder="Password">
+        <section class="hub-grid">
+            <a href="marketplace.html" class="hub-card">
+                <h3>🛒 Mega Shop</h3>
+                <p>Order stationery, books, and essential academic supplies. Instant delivery on campus.</p>
+                <div class="mt-2" style="font-size: 0.8rem; color: var(--accent-color);">12 New Items Available</div>
+            </a>
 
-  <button onclick="login()">Enter</button>
+            <a href="study-hub.html" class="hub-card">
+                <h3>📚 Study Hub</h3>
+                <p>Access notes, past papers, and structured quizzes based on your course curriculum.</p>
+                <div class="mt-2" style="font-size: 0.8rem; color: var(--accent-color);">3 Quizzes Pending</div>
+            </a>
 
-  <p id="error"></p>
-</div>
+            <a href="discussion.html" class="hub-card">
+                <h3>💬 Discussion Hub</h3>
+                <p>Join course-based channels, discuss with peers, and see pinned messages from lecturers.</p>
+                <div class="mt-2" style="font-size: 0.8rem; color: var(--accent-color);">5 Active Threads</div>
+            </a>
 
-<script src="script.js"></script>
+            <a href="groups.html" class="hub-card">
+                <h3>👥 Group Work</h3>
+                <p>Manage your 20-person group assignments, share files, and coordinate tasks easily.</p>
+                <div class="mt-2" style="font-size: 0.8rem; color: var(--accent-color);">Deadline in 2 Days</div>
+            </a>
+
+            <a href="services.html" class="hub-card">
+                <h3>🛠️ Service Hub</h3>
+                <p>Get printing, CV creation, and document formatting services from verified suppliers.</p>
+            </a>
+
+            <a href="templates.html" class="hub-card">
+                <h3>📄 Template Store</h3>
+                <p>Browse premium CV templates, research proposals, and research formatting guides.</p>
+            </a>
+
+            <a href="careers.html" class="hub-card">
+                <h3>💼 Career Hub</h3>
+                <p>Bridge the gap to your future. Explore job listings and application management tools.</p>
+            </a>
+
+            <a href="analytics.html" class="hub-card admin-only" id="adminCard" style="display: none;">
+                <h3>📊 Hub Analytics</h3>
+                <p>Track sales, user activity, and platform performance. (Admin Only)</p>
+            </a>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (state.user) {
+                document.getElementById('welcomeMsg').innerText = `Welcome back, ${state.user.name} (${state.user.role})`;
+
+                if (state.user.role === 'admin') {
+                    document.getElementById('adminCard').style.display = 'block';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

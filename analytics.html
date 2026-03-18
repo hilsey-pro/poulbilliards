@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Hub - Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .stat-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0.5rem 0;
+        }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; }
+        .chart-placeholder {
+            height: 300px;
+            background: #020617;
+            border-radius: 1rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 2rem;
+        }
+        .bar {
+            width: 40px;
+            background: var(--accent-color);
+            border-radius: 0.25rem 0.25rem 0 0;
+            transition: height 1s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-content">
+        <header>
+            <h1>Hub Analytics</h1>
+            <p style="color: var(--text-muted);">Real-time performance and user activity metrics.</p>
+        </header>
+
+        <section class="hub-grid" style="margin-top: 2rem;">
+            <div class="stat-card">
+                <div class="stat-label">DAILY ACTIVE USERS</div>
+                <div class="stat-value">1,248</div>
+                <div style="font-size: 0.8rem; color: var(--accent-color);">↑ 12% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">TOTAL SALES (TSH)</div>
+                <div class="stat-value">845,000</div>
+                <div style="font-size: 0.8rem; color: var(--accent-color);">↑ 24% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">SERVICE REQUESTS</div>
+                <div class="stat-value">32</div>
+                <div style="font-size: 0.8rem; color: #ef4444;">↓ 5% from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">ACTIVE GROUPS</div>
+                <div class="stat-value">52</div>
+                <div style="font-size: 0.8rem; color: var(--accent-color);">↑ 8% from last week</div>
+            </div>
+        </section>
+
+        <h3 style="margin-top: 3rem;">User Engagement Trends</h3>
+        <div class="chart-placeholder">
+            <div class="bar" style="height: 40%;"></div>
+            <div class="bar" style="height: 60%;"></div>
+            <div class="bar" style="height: 55%;"></div>
+            <div class="bar" style="height: 85%;"></div>
+            <div class="bar" style="height: 70%;"></div>
+            <div class="bar" style="height: 90%;"></div>
+            <div class="bar" style="height: 75%;"></div>
+        </div>
+        <div class="flex-row" style="padding: 0 2rem; margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem;">
+            <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+        </div>
+
+        <section style="margin-top: 4rem;">
+            <h3>Top Performing Products</h3>
+            <div style="background: var(--secondary-bg); border-radius: 1rem; overflow: hidden; margin-top: 1rem;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead style="background: #020617; font-size: 0.8rem; color: var(--text-muted);">
+                        <tr>
+                            <th style="padding: 1rem;">PRODUCT</th>
+                            <th style="padding: 1rem;">SALES</th>
+                            <th style="padding: 1rem;">REVENUE (TSH)</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 0.9rem;">
+                        <tr style="border-bottom: 1px solid #334155;">
+                            <td style="padding: 1rem;">Scientific Calculator</td>
+                            <td style="padding: 1rem;">18</td>
+                            <td style="padding: 1rem;">450,000</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #334155;">
+                            <td style="padding: 1rem;">Research Proposal Template</td>
+                            <td style="padding: 1rem;">24</td>
+                            <td style="padding: 1rem;">120,000</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem;">Executive Notebook</td>
+                            <td style="padding: 1rem;">12</td>
+                            <td style="padding: 1rem;">96,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (state.user?.role !== 'admin') {
+                notify("Access Denied: Administrative permissions required.");
+                setTimeout(() => navigateTo('dashboard.html'), 2000);
+            }
+        });
+    </script>
+</body>
+</html>
