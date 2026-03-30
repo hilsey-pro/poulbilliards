@@ -1,0 +1,23 @@
+0 verbose cli /home/poulbilliards/.nvm/versions/node/v20.20.2/bin/node /home/poulbilliards/.nvm/versions/node/v20.20.2/lib/node_modules/npm/bin/npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v20.20.2
+3 silly config load:file:/home/poulbilliards/.nvm/versions/node/v20.20.2/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/poulbilliards/.npmrc
+5 silly config load:file:/home/poulbilliards/.nvm/versions/node/v20.20.2/etc/npmrc
+6 verbose title npm exec prisma db push --force-reset
+7 verbose argv "exec" "--" "prisma" "db" "push" "--force-reset"
+8 verbose logfile logs-max:10 dir:/home/poulbilliards/.npm/_logs/2026-03-30T13_52_18_980Z-
+9 verbose logfile /home/poulbilliards/.npm/_logs/2026-03-30T13_52_18_980Z-debug-0.log
+10 silly logfile start cleaning logs, removing 1 files
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+13 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+14 http fetch GET 200 https://registry.npmjs.org/prisma 942ms (cache revalidated)
+15 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+16 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+17 verbose cwd /home/poulbilliards
+18 verbose os Linux 5.10.16.3-microsoft-standard-WSL2
+19 verbose node v20.20.2
+20 verbose npm  v10.8.2
+21 verbose exit 1
+22 verbose code 1

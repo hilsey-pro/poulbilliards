@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}
+
+enum ResourceType {
+  NOTE
+  PAST_PAPER
+  EXAM
+  ASSIGNMENT
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  image        String?
+  resources    Resource[]
+  chatSessions ChatSession[]
+  createdAt    DateTime      @default(now())
+}
+
+model Course {
+  id        String     @id @default(cuid())
+  code      String     @unique // e.g., "BACC211"
+  name      String     // e.g., "Intermediate Accounting"
+  resources Resource[]
+}
+
+model Resource {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String
+  fileSize    Int?         // Metadata for "Why is this 500MB?"
+  fileType    String?      // pdf, docx, etc.
+  type        ResourceType @default(NOTE)
+  course      Course       @relation(fields: [courseId], references: [id])
+  courseId    String
+  author      User         @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime     @default(now())
+
+  @@index([courseId])
+  @@index([type])
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  chats     Chat[]
+  createdAt DateTime @default(now())
+}
+
+model Chat {
+  id          String      @id @default(cuid())
+  query       String      @db.Text
+  response    String      @db.Text
+  session     ChatSession @relation(fields: [sessionId], references: [id])
+  sessionId   String
+  createdAt   DateTime    @default(now())
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  description String   @db.Text
+  link        String
+  location    String?
+  category    String   // e.g., "Accounting", "IT"
+  createdAt   DateTime @default(now())
+}
