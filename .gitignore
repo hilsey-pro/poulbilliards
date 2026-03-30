@@ -1,0 +1,15 @@
+node_modules
+.next
+.local
+.env
+*.db
+build
+dist
+node_modules
+.next
+.local
+.env
+node_modules
+.next
+.local
+.env

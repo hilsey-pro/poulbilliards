@@ -1,0 +1,30 @@
+const bcrypt = require('bcrypt');
+
+// Student login
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    if (result.rows.length === 0) return res.status(400).json({ error: 'User not found' });
+
+    const user = result.rows[0];
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(400).json({ error: 'Incorrect password' });
+
+    res.json({ message: 'Login successful', user: { id: user.id, username: user.username, class: user.class } });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.get('/', (req, res) => {
+    res.send('Hello Students! Welcome to TIA Portal.');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});

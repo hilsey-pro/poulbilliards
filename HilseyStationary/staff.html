@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STAFF | Hilsey Stationary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10 font-sans">
+    <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden">
+        <div class="bg-red-600 p-6 text-white flex justify-between items-center">
+            <h1 class="text-2xl font-black italic">HILSEY STAFF TERMINAL</h1>
+            <span class="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-bold animate-pulse">LIVE ORDERS</span>
+        </div>
+        
+        <div class="p-8">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-400 text-xs uppercase border-b">
+                        <th class="pb-4">Time</th>
+                        <th class="pb-4">Student Reg</th>
+                        <th class="pb-4">Doc Type</th>
+                        <th class="pb-4">Status</th>
+                        <th class="pb-4 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="queueBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function loadQueue() {
+            const res = await fetch('http://127.0.0.1:5000/api/print/queue');
+            const data = await res.json();
+            const body = document.getElementById('queueBody');
+            body.innerHTML = data.map(j => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-4 text-sm">${j.time}</td>
+                    <td class="py-4 font-bold text-blue-600">${j.reg}</td>
+                    <td class="py-4 text-sm text-gray-600">${j.type}</td>
+                    <td class="py-4 text-xs font-bold ${j.status=='Pending'?'text-orange-500':'text-green-500'}">${j.status}</td>
+                    <td class="py-4 text-right">
+                        <button class="bg-black text-white px-4 py-1 rounded text-xs font-bold hover:bg-blue-600">OPEN & PRINT</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        setInterval(loadQueue, 3000); // Auto-refresh every 3 seconds
+        loadQueue();
+    </script>
+</body>
+</html>

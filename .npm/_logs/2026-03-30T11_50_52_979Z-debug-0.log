@@ -1,0 +1,33 @@
+0 verbose cli /home/poulbilliards/.nvm/versions/node/v18.20.8/bin/node /home/poulbilliards/.nvm/versions/node/v18.20.8/lib/node_modules/npm/bin/npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v18.20.8
+3 silly config load:file:/home/poulbilliards/.nvm/versions/node/v18.20.8/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/poulbilliards/.npmrc
+5 silly config load:file:/home/poulbilliards/.nvm/versions/node/v18.20.8/etc/npmrc
+6 verbose title npm exec create-next-app@latest hillsey-pro --typescript --tailwind --eslint --app
+7 verbose argv "exec" "--" "create-next-app@latest" "hillsey-pro" "--typescript" "--tailwind" "--eslint" "--app"
+8 verbose logfile logs-max:10 dir:/home/poulbilliards/.npm/_logs/2026-03-30T11_50_52_979Z-
+9 verbose logfile /home/poulbilliards/.npm/_logs/2026-03-30T11_50_52_979Z-debug-0.log
+10 silly logfile start cleaning logs, removing 1 files
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+13 http fetch GET 200 https://registry.npmjs.org/create-next-app 2507ms (cache miss)
+14 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+15 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+16 silly idealTree buildDeps
+17 silly fetch manifest create-next-app@16.2.1
+18 silly packumentCache full:https://registry.npmjs.org/create-next-app cache-miss
+19 http fetch GET 200 https://registry.npmjs.org/create-next-app 3864ms (cache miss)
+20 silly packumentCache full:https://registry.npmjs.org/create-next-app set size:undefined disposed:false
+21 silly placeDep ROOT create-next-app@16.2.1 OK for:  want: 16.2.1
+22 warn EBADENGINE Unsupported engine {
+22 warn EBADENGINE   package: 'create-next-app@16.2.1',
+22 warn EBADENGINE   required: { node: '>=20.9.0' },
+22 warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+22 warn EBADENGINE }
+23 silly reify moves {}
+24 silly audit bulk request { 'create-next-app': [ '16.2.1' ] }
+25 silly tarball no local data for create-next-app@https://registry.npmjs.org/create-next-app/-/create-next-app-16.2.1.tgz. Extracting by manifest.
+26 http fetch GET 200 https://registry.npmjs.org/create-next-app/-/create-next-app-16.2.1.tgz 475ms (cache miss)
+27 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 518ms
+28 silly audit report {}

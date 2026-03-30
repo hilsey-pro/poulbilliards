@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilsey Pro | AI Student Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+        #ai-chat { display: none; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen pb-20">
+
+<nav class="bg-slate-800 p-4 shadow-lg flex justify-between items-center border-b border-blue-500/30">
+    <h1 class="text-2xl font-bold text-blue-400 italic">Hilsey Pro</h1>
+    <span class="text-xs text-green-400 bg-green-900/30 px-2 py-1 rounded border border-green-500/30">
+        AI Active 🤖
+    </span>
+</nav>
+
+<main class="p-6 max-w-4xl mx-auto">
+    <div class="glass p-8 rounded-2xl border border-slate-700 shadow-2xl">
+        <h2 id="main-title" class="text-2xl font-bold mb-6 text-gray-100">
+            Habari, William Edward
+        </h2>
+
+        <div id="hub-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="study-btn" class="group bg-slate-700 p-6 rounded-xl border-l-4 border-blue-500 hover:bg-slate-600 cursor-pointer transition-all shadow-lg hover:scale-[1.02]">
+                <h3 class="font-bold text-blue-300 text-xl">📚 Study Hub</h3>
+                <p class="text-sm text-gray-400 mt-2">Accounting & DS Assignments.</p>
+            </div>
+
+            <div id="career-btn" class="group bg-slate-700 p-6 rounded-xl border-l-4 border-green-500 hover:bg-slate-600 cursor-pointer transition-all shadow-lg hover:scale-[1.02]">
+                <h3 class="font-bold text-green-300 text-xl">📈 Career Hub</h3>
+                <p class="text-sm text-gray-400 mt-2">DSE Market Trends.</p>
+            </div>
+        </div>
+        
+        <div id="reset-zone" class="mt-8 pt-4 border-t border-slate-700 text-center hidden">
+            <button onclick="location.reload()" class="text-xs text-gray-500 hover:text-blue-400 underline">Return to Dashboard</button>
+        </div>
+    </div>
+</main>
+
+<div class="fixed bottom-5 right-5 z-50">
+    <div id="ai-chat" class="glass w-80 mb-4 rounded-xl border border-blue-500/50 shadow-2xl overflow-hidden">
+        <div class="bg-blue-600 p-3 font-bold text-sm flex justify-between">
+            <span>Hilsey AI Co-pilot</span>
+            <button id="close-ai">✖</button>
+        </div>
+        <div id="chat-box" class="h-64 p-4 overflow-y-auto text-sm space-y-3 bg-slate-900/50">
+            <p class="text-blue-300 italic">AI: How can I help with your Accounting assignments today, William?</p>
+        </div>
+        <div class="p-2 border-t border-slate-700 flex gap-2">
+            <input id="ai-input" type="text" class="bg-slate-800 text-xs p-2 rounded flex-1 outline-none border border-slate-600 focus:border-blue-400" placeholder="Ask about Cash Books or NMB...">
+            <button id="send-ai" class="bg-blue-600 px-3 py-1 rounded text-xs font-bold">Send</button>
+        </div>
+    </div>
+    <button id="open-ai" class="bg-blue-600 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl hover:scale-110 transition-transform">🤖</button>
+</div>
+
+<script>
+/* ========= DATA BANK ========= */
+const studyData = [
+    { title: "Three Column Cash Book", detail: "Mr. Mwalongo: April balances are Cash 11M and Bank 38.5M.", tag: "Accounting" },
+    { title: "Verification of Assets", detail: "Checking Title Deeds and physical existence of buildings.", tag: "Audit" },
+    { title: "DS: Population Pressure", detail: "How growth leads to resource scarcity and deforestation.", tag: "Development" }
+];
+
+const careerData = [
+    { name: "NMB Bank PLC", trend: "+12.5%", desc: "Horizontal Growth" },
+    { name: "CRDB Bank PLC", trend: "+8.2%", desc: "Vertical Strength" }
+];
+
+/* ========= UI LOGIC ========= */
+const aiChat = document.getElementById("ai-chat");
+const mainTitle = document.getElementById("main-title");
+const hubGrid = document.getElementById("hub-grid");
+const resetZone = document.getElementById("reset-zone");
+
+document.getElementById("open-ai").onclick = () => aiChat.style.display = "block";
+document.getElementById("close-ai").onclick = () => aiChat.style.display = "none";
+
+// Study Hub Click
+document.getElementById("study-btn").onclick = () => {
+    mainTitle.textContent = "Study Hub: My Notes";
+    resetZone.classList.remove("hidden");
+    hubGrid.innerHTML = studyData.map(item => `
+        <div class="col-span-1 md:col-span-2 p-4 bg-slate-800 rounded-xl border border-slate-700">
+            <div class="flex justify-between items-center mb-1">
+                <h4 class="text-blue-400 font-bold">${item.title}</h4>
+                <span class="text-[10px] bg-blue-900 px-2 py-1 rounded text-blue-200">${item.tag}</span>
+            </div>
+            <p class="text-xs text-gray-400">${item.detail}</p>
+        </div>
+    `).join('');
+};
+
+// Career Hub Click
+document.getElementById("career-btn").onclick = () => {
+    mainTitle.textContent = "Career Hub: DSE Trends";
+    resetZone.classList.remove("hidden");
+    hubGrid.innerHTML = careerData.map(stock => `
+        <div class="col-span-1 md:col-span-2 flex justify-between items-center p-4 bg-slate-800 rounded-xl border-l-4 border-green-500">
+            <div><p class="font-bold">${stock.name}</p><p class="text-[10px] text-gray-500">${stock.desc}</p></div>
+            <span class="text-green-400 font-bold">${stock.trend}</span>
+        </div>
+    `).join('');
+};
+
+/* ========= AI BRAIN ========= */
+const chatBox = document.getElementById("chat-box");
+const input = document.getElementById("ai-input");
+
+const sendMessage = () => {
+    const msg = input.value.trim().toLowerCase();
+    if (!msg) return;
+
+    chatBox.innerHTML += `<p class="text-right text-gray-500">You: ${input.value}</p>`;
+
+    let reply = "I'm still learning that topic. Try asking about 'Cash Book' or 'NMB'.";
+    if (msg.includes("cash")) reply = "Mr. Mwalongo's balances: Cash TZS 11M, Bank TZS 38.5M.";
+    if (msg.includes("nmb")) reply = "NMB is showing 12.5% growth. Use this for your Horizontal Analysis.";
+    if (msg.includes("debt")) reply = "The debt problem stems from high interest rates and external borrowing dependency.";
+
+    setTimeout(() => {
+        chatBox.innerHTML += `<p class="text-blue-300 italic">AI: ${reply}</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 400);
+
+    input.value = "";
+};
+
+document.getElementById("send-ai").onclick = sendMessage;
+input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+</script>
+
+</body>
+</html>
